@@ -277,83 +277,6 @@ class QuickPayGateway extends PaymentMethodPluginBase implements OffsitePaymentM
                     $form[$name] = array('#type' => 'hidden', '#value' => $value);
                 }
             }
-                    
-            // $form['version'] = array(
-            //     '#type' => 'hidden',
-            //     '#default_value' => QUICKPAY_VERSION,
-            //     '#attributes' => array(
-            //         'id' => 'order_review_version',
-            //     ),
-            // );
-
-            // $form['merchant_id'] = array(
-            //     '#type' => 'hidden',
-            //     '#default_value' => $this->configuration['api']['merchant_id'],
-            //     '#attributes' => array(
-            //         'id' => 'order_review_merchant_id',
-            //     ),
-            // );
-
-            // $form['agreement_id'] = array(
-            //     '#type' => 'hidden',
-            //     '#default_value' => $this->configuration['api']['agreement_id'],
-            //     '#attributes' => array(
-            //         'id' => 'order_review_agreement_id',
-            //     ),
-            // );
-
-            // $form['order_id'] = array(
-            //     '#type' => 'hidden',
-            //     '#default_value' => $order->id(),
-            //     '#attributes' => array(
-            //         'id' => 'order_review_order_id',
-            //     ),
-            // );
-
-            // $form['amount'] = array(
-            //     '#type' => 'hidden',
-            //     '#default_value' => $order->getTotal(),
-            //     '#attributes' => array(
-            //         'id' => 'order_review_amount',
-            //     ),
-            // );
-            // if($this->configuration['currency'] == $order->getCurrency()){
-            //     $form['currency'] = array(
-            //         '#type' => 'hidden',
-            //         '#default_value' => $order->getCurrency(),
-            //         '#attributes' => array(
-            //             'id' => 'order_review_currency',
-            //         ),
-            //     );
-            // }
-
-            // if($this->configuration['callbacks']['continue_url']){
-            //     $form['continueurl'] = array(
-            //         '#type' => 'hidden',
-            //         '#default_value' => $base_url . '/'. $this->configuration['callbacks']['continue_url'],
-            //         '#attributes' => array(
-            //             'id' => 'order_review_continue_url',
-            //         ),
-            //     );
-            // }
-
-            // if($this->configuration['callbacks']['cancel_url']){
-            //     $form['cancel_url'] = array(
-            //         '#type' => 'hidden',
-            //         '#default_value' => $base_url . '/'. $this->configuration['callbacks']['cancel_url'],
-            //         '#attributes' => array(
-            //             'id' => 'order_review_callbackurl',
-            //         ),
-            //     );
-            // }
-
-            // $form['checksum'] = array(
-            //     '#type' => 'hidden',
-            //     '#default_value' => $tokenn,
-            //     '#attributes' => array(
-            //         'id' => 'order_review_checksum',
-            //     ),
-            // );
             
             $form['actions'] = array('#type' => 'actions');
             
@@ -376,29 +299,8 @@ class QuickPayGateway extends PaymentMethodPluginBase implements OffsitePaymentM
             \Drupal::logger('uc_paytrek')->error('Paytrek API keys are not configured. Payments cannot be made without them.', array());
             return FALSE;
         }
-
-        $private_key = $this->configuration['merchant_id'];
-        // try {
-        //     \Paytrek\Paytrek::setApiKey($private_key);
-        // } catch (Exception $e) {
-        //     \Drupal::logger('uc_Paytrek')->notice('Error setting the Paytrek API Key. Payments will not be processed: %error', array('%error' => $e->getMessage()));
-        // }
         return TRUE;
     }
-
-    // function review_form_with_quickpay(OrderInterface $order, array $form, FormStateInterface $form_state){
-    //     var_dump('test');
-    //     exit;
-    //     $form['quickpay_token'] = array(
-    //         '#type' => 'hidden',
-    //         '#default_value' => 'default',
-    //         '#attributes' => array(
-    //             'id' => 'edit-panes-payment-details-quickpay-token',
-    //         ),
-    //     );   
-    //     return $form;
-    // }
-
     /**
       * Calculate the hash for the request.
       *
