@@ -1,0 +1,4 @@
+uc_quickpay.form:
+  defaults:
+    _title: 'Form'
+    _form: '\Drupal\uc_quickpay\Form\QuickPayHiddenReview'

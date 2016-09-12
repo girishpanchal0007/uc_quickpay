@@ -1,0 +1,31 @@
+# Schema for the configuration files of the uc_paytrek module.
+payment_method.settings.quickpay_gateway:
+    type: mapping
+    label: 'Test gateway plugin configuration settings'
+    mapping:
+        testmode:
+            type: boolean
+        merchant_id:
+            type: string
+            label: 'Merchant ID'
+        private_key:
+            type: string
+            label: 'Private key'
+        agreement_id:
+            type: string
+            label: 'Agreement ID'
+        api_key:
+            type: string
+            label: 'API key'
+        language:
+            type: string
+            label: 'Select Language'
+        currency:
+            type: string
+            label: 'Select Currency'
+        continue_url:
+            type: string
+            label: 'Continue URL'
+        cancel_url:
+            type: string
+            label: 'Cancel URL'

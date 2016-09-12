@@ -1,0 +1,12 @@
+uc_quickpay:
+  version: 'v10'
+  js:
+    js/quickpay.js: {}
+    js/uc_quickpay.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+  css:
+    theme:
+      css/uc_quickpay.css: {}
