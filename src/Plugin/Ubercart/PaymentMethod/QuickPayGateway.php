@@ -78,7 +78,14 @@ class QuickPayGateway extends PaymentMethodPluginBase implements OffsitePaymentM
             '#title' => t('API key'),
             '#default_value' => $this->configuration['api']['api_key'],
             '#description' => t('This is the Payment Window API key.'),
-        );
+        );  
+        
+        $form['api']['pre_order_id'] = array(
+            '#type' => 'textfield',
+            '#title' => t('Order id prefix'),
+            '#default_value' => $this->configuration['api']['pre_order_id'],
+            '#description' => t('Prefix for order ids. Order ids must be uniqe when sent to QuickPay, use this to resolve clashes.'),
+        );        
 
         $form['language'] = array(
             '#type' => 'select',
@@ -145,7 +152,7 @@ class QuickPayGateway extends PaymentMethodPluginBase implements OffsitePaymentM
     }
 
     public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-        $elements = ['merchant_id', 'private_key', 'agreement_id', 'api_key'];
+        $elements = ['merchant_id', 'private_key', 'agreement_id', 'api_key', 'pre_order_id'];
 
         foreach ($elements as $element_name) {
             $raw_key = $form_state->getValue(['settings', 'api', $element_name]);
@@ -179,7 +186,7 @@ class QuickPayGateway extends PaymentMethodPluginBase implements OffsitePaymentM
         * {@inheritdoc}
     */
     public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-        foreach (['merchant_id', 'private_key', 'agreement_id', 'api_key'] as $item) {
+        foreach (['merchant_id', 'private_key', 'agreement_id', 'api_key', 'pre_order_id'] as $item) {
             $this->configuration['api'][$item] = $form_state->getValue(['settings', 'api', $item]);
         }
         $this->configuration['language'] = $form_state->getValue('language');
@@ -195,11 +202,11 @@ class QuickPayGateway extends PaymentMethodPluginBase implements OffsitePaymentM
             "version"      => QUICKPAY_VERSION,
             "merchant_id"  => $this->configuration['api']['merchant_id'],
             "agreement_id" => $this->configuration['api']['agreement_id'],
-            "order_id"     => $order->id(),
+            "order_id"     => $this->configuration['api']['pre_order_id'] . $order->id(),
             "amount"       => $order->getTotal(),
             "currency"     => $this->configuration['currency'],
-            "continueurl" => $this->configuration['callbacks']['continue_url'],
-            "cancelurl"   => $this->configuration['callbacks']['cancel_url'],
+            "continueurl"  => $this->configuration['callbacks']['continue_url'],
+            "cancelurl"    => $this->configuration['callbacks']['cancel_url'],
         );
 
         $params["checksum"] = $this->getChecksum($params, $this->configuration['api_key']);
@@ -246,28 +253,34 @@ class QuickPayGateway extends PaymentMethodPluginBase implements OffsitePaymentM
             
             $data = array(
                 // Display information.
-                'version' => QUICKPAY_VERSION,
-                'merchant_id' => $this->configuration['api']['merchant_id'],
+                'version'      => QUICKPAY_VERSION,
+                'merchant_id'  => $this->configuration['api']['merchant_id'],
                 'agreement_id' => $this->configuration['api']['agreement_id'],
-                'order_id' => $order->id(),
-                'currency' => $order->getCurrency(),
-                'amount' => $order->getTotal(),
+                'order_id'     => $this->configuration['api']['pre_order_id'] . $order->id(),
+                'currency'     => $order->getCurrency(),
+                'amount'       => $order->getTotal(),
 
-                'continueurl' => $base_url . '/'. $this->configuration['callbacks']['continue_url'],
-                'cancel_url' => $base_url . '/'. $this->configuration['callbacks']['cancel_url'],
+                'continueurl'  => $base_url . '/'. $this->configuration['callbacks']['continue_url'],
+                'cancel_url'   => $base_url . '/'. $this->configuration['callbacks']['cancel_url'],
 
-                'language' => $this->configuration['language'],
+                // 'callbackurl'  => '',
+
+                'type'     => 'payment',
+
+                'language'     => $this->configuration['language'],
+
+                // 'payment_methods'  => '',
+                'autocapture' => '0',
 
                 // Prepopulating forms/address overriding.
-                'address1' => substr($address->street1, 0, 100),
-                'address2' => substr($address->street2, 0, 100),
-                'city' => substr($address->city, 0, 40),
-                'country' => $country,
-                'email' => $order->getEmail(),
-                'first_name' => substr($address->first_name, 0, 32),
-                'last_name' => substr($address->last_name, 0, 64),
-                'state' => $address->zone,
-                'zip' => $address->postal_code,
+                // 'invoice_address[name]' =>  substr($address->first_name, 0, 32) . substr($address->last_name, 0, 64),
+                // 'address1' => substr($address->street1, 0, 100),
+                // 'address2' => substr($address->street2, 0, 100),
+                // 'city' => substr($address->city, 0, 40),
+                // 'country' => $country,
+                // 'email' => $order->getEmail(),
+                // 'state' => $address->zone,
+                // 'zip' => $address->postal_code,
 
                 'checksum' => $tokenn,
             );
