@@ -261,7 +261,7 @@ class QuickPayGateway extends PaymentMethodPluginBase implements OffsitePaymentM
 
                 'continueurl'  => $base_url . '/'. $this->configuration['callbacks']['continue_url'],
                 'cancel_url'   => $base_url . '/'. $this->configuration['callbacks']['cancel_url'],
-                'callbackurl'  => $base_url . '/uc_qucikpay/',
+                //'callbackurl'  => $base_url . '/uc_qucikpay/',
 
                 'language'     => $this->configuration['language'],
                
