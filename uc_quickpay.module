@@ -12,6 +12,16 @@ use \Drupal\Core\Form\FormState;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Form\FormStateInterface;
 
+use Drupal\Component\Utility\Xss;
+use Drupal\uc_order\Entity\Order;
+use Drupal\uc_order\OrderInterface;
+use Drupal\uc_payment\Entity\PaymentMethod;
+use Drupal\uc_payment\Entity\PaymentReceipt;
+use Drupal\uc_payment\ExpressPaymentMethodPluginInterface;
+use Drupal\uc_payment\Form\OffsitePaymentMethodForm;
+use Drupal\uc_payment\OffsitePaymentMethodPluginInterface;
+use Drupal\uc_payment\PaymentReceiptInterface;
+
 /**
  * Implements hook_help().
  */
@@ -47,6 +57,15 @@ use Drupal\Core\Form\FormStateInterface;
 
 define('QUICKPAY_VERSION', 'v10');
 
+function uc_quickpay_form_uc_cart_checkout_review_form_alter(&$form, FormStateInterface $form_state) {
+    global $base_url;
+    $order = $form_state->get('uc_order');
+    $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
+    
+    if($plugin->getPluginId() == 'quickpay_gateway'){
+        unset($form['actions']['submit']);
+    }
+}
 function _uc_quickpay_check_api_keys($configuration) {
   return $configuration['merchant_id'] &&
     $configuration['private_key'] &&
