@@ -214,15 +214,20 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
         $form = parent::cartDetails($order, $form, $form_state);
 
-        // $form["cc_number"] = array(
-        //     '#attributes' => array(
-        //         'data-quickpay' => 'cardnumber'
-        //     ),
-        // );
-       
-        // var_dump($form["cc_number"]);
+        //var_dump($form);
         // exit;
+        //cc_exp_month  cc_exp_year cc_cvv data-quickpay="cardnumber"
+        $form["cc_number"]['#attributes'] = array('data-quickpay' => 'cardnumber'); 
+        $form["cc_cvv"]['#attributes'] = array('data-quickpay' => 'cvd'); 
 
+        $form['date_year'] = array(
+            '#type' => 'hidden',
+            '#default_value' => '',
+            '#attributes' => array(
+                'data-quickpay' => 'expiration',
+                'id' => 'cc-date-year',
+            ),
+        );
 
         return $form;
     }
@@ -258,8 +263,16 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
     }
 
-
-    
+    /**
+     * Return Quickpay client.
+     *
+     * @return Quickpay\Quickpay
+     *   The client.
+    */
+    public function client() {
+        module_load_include('php', 'uc_quickpay', 'lib/QuickPay/QuickPay');
+        return new Quickpay\Quickpay(':' . $this->configuration['api']['api_key']);
+    }
     // /**
     // * {@inheritdoc}
     // */
