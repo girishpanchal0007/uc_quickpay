@@ -1,7 +1,7 @@
 uc_quickpay:
   version: 'v10'
   js:
-    https://payment.quickpay.net/embedded/v1/quickpay.js: {type: external}
+    js/quickpay.js: {}
     js/uc_quickpay.js: {}
   dependencies:
     - core/jquery

@@ -8,7 +8,6 @@
  * set the IPN URL to http://{yoursite.com}/uc_Paytrek/ipn. See
  * https://drupal.org/node/1311198 for further information.
  */
-use \Drupal\Core\Form\FormState;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Form\FormStateInterface;
 

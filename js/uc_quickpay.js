@@ -26,7 +26,7 @@ jQuery(document).ready(function($) {
         },
         beforeCreateToken: function(form) {
         	jQuery('input.error').removeClass('error');
-        	jQuery('.uc-cart-checkout-form #edit-continue').html('Please wait...');
+        	//jQuery('.uc-cart-checkout-form #edit-continue').html('Please wait...');
         },
         failure: function(form, source, message) {
         	if (source === 'validation') {
@@ -36,7 +36,11 @@ jQuery(document).ready(function($) {
         	} else {
           	    alert(source + ': ' + message);
         	}
-        	jQuery('.uc-cart-checkout-form #edit-continue').html('Pay');
+        	//jQuery('.uc-cart-checkout-form #edit-continue').html('Pay');
+        },
+        success: function(form, token){
+            jQuery('.uc-cart-checkout-form #edit-continue').attr('name', 'op');
         }
+
     });
 });
