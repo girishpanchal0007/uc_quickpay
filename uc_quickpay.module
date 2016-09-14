@@ -57,15 +57,18 @@ use Drupal\uc_payment\PaymentReceiptInterface;
 
 define('QUICKPAY_VERSION', 'v10');
 
-function uc_quickpay_form_uc_cart_checkout_review_form_alter(&$form, FormStateInterface $form_state) {
-    global $base_url;
-    $order = $form_state->get('uc_order');
-    $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
-    
-    if($plugin->getPluginId() == 'quickpay_gateway'){
-        unset($form['actions']['submit']);
-    }
+function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
+    $form['#attached']['library'][] = 'uc_quickpay/uc_quickpay';
 }
+// function uc_quickpay_form_uc_cart_checkout_review_form_alter(&$form, FormStateInterface $form_state) {
+//     global $base_url;
+//     $order = $form_state->get('uc_order');
+//     $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
+    
+//     if($plugin->getPluginId() == 'quickpay_gateway'){
+//         unset($form['actions']['submit']);
+//     }
+// }
 function _uc_quickpay_check_api_keys($configuration) {
   return $configuration['merchant_id'] &&
     $configuration['private_key'] &&
