@@ -1,16 +1,21 @@
 <?php
-namespace Drupal\uc_quickpay\lib\QuickPay;
+/**
+ * @file
+ * Definition of Drupal\uc_quickpay\Entity\QuickPay.
+ */
 
-use Drupal\uc_quickpay\lib\QuickPay\API\Client;
-use Drupal\uc_quickpay\lib\QuickPay\API\Request;
+namespace Drupal\uc_quickpay\Entity;
 
-class QuickPay
-{
-    /**
+use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayClients;
+use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayRequest;
+
+class QuickPay {
+
+  	/**
      * Contains the QuickPay_Request object
      *
      * @access public
-     **/
+    **/
     public $request;
 
     /**
@@ -25,7 +30,8 @@ class QuickPay
     */
     public function __construct($auth_string = '')
     {
-        $client = new Client($auth_string);
-        $this->request = new Request($client);
+        $client = new QuickPayClients($auth_string);
+        $this->request = new QuickPayRequest($client);
     }
+
 }

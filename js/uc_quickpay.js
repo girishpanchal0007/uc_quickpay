@@ -1,20 +1,28 @@
 jQuery(document).ready(function($) {
     jQuery('input#edit-panes-payment-details-cc-number').removeAttr('name');
-    // jQuery('select#edit-panes-payment-details-cc-exp-month').removeAttr('name');
-    // jQuery('select#edit-panes-payment-details-cc-exp-year').removeAttr('name');
-    jQuery('input#cc-date-year').removeAttr('name');
+    jQuery('select#edit-panes-payment-details-cc-exp-month').removeAttr('name');
+    jQuery('select#edit-panes-payment-details-cc-exp-year').removeAttr('name');
+    // jQuery.each(jQuery("input[type='hidden']"), function(index, val) {
+    //     if(jQuery(this).data('quickpay') == "expiration" ){
+    //         jQuery(this).removeAttr('name');
+    //     }
+    // });
     jQuery('input#edit-panes-payment-details-cc-cvv').removeAttr('name');
-    // jQuery('#edit-continue').click(function(event) {
+    jQuery('input#cc-date-year').removeAttr('name');
+    //jQuery("input[name='panes[payment][details][quickpay_submit]").attr('name','op')
+    //jQuery('.uc-cart-checkout-form #edit-cancel').attr('disabled', true);
+    // jQuery('#edit-panes-payment-details-cc-exp-year').change(function(event) {
     //     /* Act on the event */
     //     var ExMonth = jQuery('#edit-panes-payment-details-cc-exp-month').val();
     //     var ExYear = jQuery('#edit-panes-payment-details-cc-exp-year').val().slice("-2");
     //     if(ExMonth < 10){
-    //         jQuery('#cc-date-year').val('0' + ExMonth + '/' + ExYear);
+    //         jQuery("input[type='hidden']").val('0' + ExMonth + ' / ' + ExYear);
     //     }
     //     else{
-    //         jQuery('#cc-date-year').val(ExMonth + '/' + ExYear);  
+    //         jQuery("input[type='hidden']").val(ExMonth + ' / ' + ExYear);  
     //     }
     // });
+    // jQuery('#edit-panes-payment-details-cc-exp-year').change(function(event) {
 });
 
 jQuery(document).ready(function($) {
@@ -26,6 +34,12 @@ jQuery(document).ready(function($) {
         },
         beforeCreateToken: function(form) {
         	jQuery('input.error').removeClass('error');
+            jQuery.each(jQuery("input[type='hidden']"), function(index, val) {
+                if(jQuery(this).data('quickpay') == "expiration" ){
+                    jQuery(this).removeClass('error');
+                    jQuery(this).addClass('valid');
+                }
+            });
         	//jQuery('.uc-cart-checkout-form #edit-continue').html('Please wait...');
         },
         failure: function(form, source, message) {
@@ -39,7 +53,8 @@ jQuery(document).ready(function($) {
         	//jQuery('.uc-cart-checkout-form #edit-continue').html('Pay');
         },
         success: function(form, token){
-            jQuery('.uc-cart-checkout-form #edit-continue').attr('name', 'op');
+
+            // jQuery('.uc-cart-checkout-form #edit-continue').attr('name', 'op');
         }
 
     });

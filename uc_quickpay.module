@@ -58,6 +58,7 @@ define('QUICKPAY_VERSION', 'v10');
 
 function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
     $form['#attached']['library'][] = 'uc_quickpay/uc_quickpay';
+    //unset($form['actions']['cancel']);
 }
 // function uc_quickpay_form_uc_cart_checkout_review_form_alter(&$form, FormStateInterface $form_state) {
 //     global $base_url;

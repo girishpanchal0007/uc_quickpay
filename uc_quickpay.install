@@ -25,18 +25,57 @@
  * Implements hook_requirements().
  */
 function uc_quickpay_requirements($phase) {
+    // $required_minimum_version = 'v10';
+    // $php_api_version = "";
+
+    // if (class_exists('Quickpay')) {
+    //     $php_api_version = Quickpay::VERSION;
+    // }
+
+    // $version_is_ok = version_compare($php_api_version, $required_minimum_version, 'ge');
+    // $requirements['uc_quickpay_api'] = array(
+    //     'title' => t('Quickpay PHP Library for Ubercart Quickpay'),
+    //     'value' => t('Version @version', ['@version' => $php_api_version]),
+    //     'description' => t('Quickpay PHP Library is installed'),
+    // );
+
+    // $requirements['uc_quickpay_api']['value'] = !empty($php_api_version) ? $php_api_version : t('Not Installed');
+    // $requirements['uc_quickpay_api']['severity'] = $version_is_ok ? REQUIREMENT_OK : REQUIREMENT_ERROR;
+
+    // if (!$version_is_ok) {
+    //     $requirements['uc_quickpay_api']['description'] = $version_is_ok ? t('Please install Quickpay PHP Library') : t("Quickpay PHP API library is not recent enough. Version needs to be @version or higher", ['@version' => $required_minimum_version]);
+    // }
+
+    // $plugins = _uc_quickpay_get_plugin_info();
+    // foreach ($plugins as $plugin) {
+    //     $requirement_key = "uc_quickpay_api_keys_{$plugin['id']}";
+
+    //     $requirements[$requirement_key] = array(
+    //       'title' => t('Quickpay API Keys for uc_stripe "@plugin" payment method', ['@plugin' => $plugin['id']]),
+    //       'value' => t('Configured'),
+    //     );
+
+    //     if ($phase == 'runtime' && !_uc_quickpay_check_api_keys($plugin['settings'])) {
+    //       $requirements[$requirement_key]['title'] = t('Quickpay API Keys.');
+    //       $requirements[$requirement_key]['value'] = t('Not configured');
+    //       $requirements[$requirement_key]['severity'] = REQUIREMENT_ERROR;
+    //       $requirements[$requirement_key]['description'] = t('The Quickpay API keys are not fully configured for the @name payment method.', ['@name' => $plugin['id']]);
+    //     }
+    // }
+
     $requirements = array();
-    $t = get_t();
 
     $has_curl = function_exists('curl_init');
+
     $requirements['uc_quickpay_curl'] = array(
-        'title' => $t('cURL for Quickpay'),
-        'value' => $has_curl ? $t('Enabled') : $t('Not found'),
+        'title' => t('cURL for Quickpay'),
+        'value' => $has_curl ? t('Enabled') : t('Not found'),
     );
 
     if (!$has_curl) {
         $requirements['uc_quickpay_curl']['description'] = $t('The PHP <a href="@curl_url">cURL</a> library is required for communicating with Quickpay.');
         $requirements['uc_quickpay_curl']['severity'] = REQUIREMENT_ERROR;
     }
+
     return $requirements;
 }

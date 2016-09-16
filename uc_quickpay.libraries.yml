@@ -1,3 +1,11 @@
+# quickpay:
+#   remote: https://github.com/QuickPay/quickpay-php-client
+#   version: "1.0"
+#   license:
+#     name: quickpay/quickpay-php-client
+#     url: https://github.com/QuickPay/quickpay-php-client/blob/master/README.md
+#     gpl-compatible: true
+
 uc_quickpay:
   version: 'v10'
   js:
@@ -10,3 +18,4 @@ uc_quickpay:
   css:
     theme:
       css/uc_quickpay.css: {}
+
