@@ -20,14 +20,13 @@ use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
  * )
  */
 class QuickPayGateway extends CreditCardPaymentMethodBase {
-
-   /**
+    /**
      * Returns the set of card types which are used by this payment method.
      *
      * @return array
      *   An array with keys as needed by the chargeCard() method and values
      *   that can be displayed to the customer.
-   */
+    */
     public function getEnabledTypes() {
         return [
             'visa' => $this->t('Visa'),
@@ -291,7 +290,6 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         //$libraries_path = libraries_get_path('QuickPay');
         //include('/var/www/ecomm/modules/custom/uc_quickpay/lib/QuickPay/QuickPay.php');
 
-
     }
 
     // // on submit order review form process
@@ -302,6 +300,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         $user = \Drupal::currentUser();
         global $base_url;  
 
+        //$amount = uc_currency_format($amount, FALSE, FALSE, FALSE);
         $quickpay_token = \Drupal::service('user.private_tempstore')->get('uc_quickpay')->get('card_token');
 
         try {
@@ -325,13 +324,13 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
             'order_id' => $this->configuration['api']['pre_order_id'] . $order->id(),
             'invoice_address' => [ 
                 'email'    => $order->getEmail(), 
-                'name'     => $order->getAddress('billing')->first_name . $order->getAddress('billing')->last_name,
+                'name'     => $order->getAddress('billing')->first_name .' '. $order->getAddress('billing')->last_name,
                 'street'   => $order->getAddress('billing')->street1,
                 'city'     => $order->getAddress('billing')->city,
-                'zip_code' => $order->getAddress('billing')->zone,
+                'zip_code' => $order->getAddress('billing')->postal_code,
                 'region'   => $order->getAddress('billing')->zone,
-                'country_code'  => $order->getAddress('billing')->country,
-                'phone_number'  => $order->getAddress('billing')->phone,
+                //'country_code'  => $order->getAddress('billing')->country,
+                //'phone_number'  => $order->getAddress('billing')->phone,
             ],
         );
         $payments = $client->request->post('/payments', $form);
@@ -361,10 +360,11 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
             \Drupal::service('user.private_tempstore')->get('uc_quickpay')->set('uc_quickpay_payment_id', $payment->id);
 
             $amount = $order->getTotal();
+            $multipleamount = $amount * 100;
             $currency_info = $order->getCurrency();
             // Authorise the payment.
             $data = array(
-                'amount' => $amount,
+                'amount' => $multipleamount,
                 'card'   => [ 
                     'token' => $quickpay_token,
                     'status' => ' ',
@@ -388,20 +388,18 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
                 uc_order_comment_save($order->id(), $user->id(), $authorize_res->message, 'admin');
             }
             $payments_res = $authorize_res->asObject();
-            
-            var_dump($payments_res);
-            exit;
-            $message = $this->t('Credit card charged: @amount', ['@amount' => $amount.$order->getCurrency()]);
-            
-            $order->qp_status_code = $authorize->qp_status_code;
-            $order->qp_status_msg  = $authorize->qp_status_msg;
-            $order->aq_status_code = $authorize->aq_status_code;
-            $order->aq_status_msg  = $authorize->aq_status_msg;
+        
+            $message = $this->t('Credit card charged: @amount', ['@amount' => uc_currency_format($amount)]);
+            // $order->qp_status_code = $authorize->qp_status_code;
+            // $order->qp_status_msg  = $authorize->qp_status_msg;
+            // $order->aq_status_code = $authorize->aq_status_code;
+            // $order->aq_status_msg  = $authorize->aq_status_msg;
             uc_order_comment_save($order->id(), $user->id(), $message, 'admin');
             //drupal_set_message('Payment created : ' . $authorize_res->message, 'status', FALSE);
             // Change Order Status "in_checkout to Payment received"
             $order->setStatusId('payment_received')->save();
 
+            
 
             $result = array(
                 'success' => TRUE,
@@ -411,6 +409,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
             );
 
             return $result;
+            
             // $transaction = new QuickpayTransaction($this);
             // $transaction->loadResponse($authorize_res->as_object());
         }
@@ -428,22 +427,23 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     //     return new Quickpay(':' . $this->configuration['api']['api_key']);
     // }
 
-  //   /**
-  //    * Returns the amount adjusted by the multiplier for the currency.
-  //    *
-  //    * @param decimal $amount
-  //    *   The amount.
-  //    * @param array|string $currency_info
-  //    *   An currencyInfo() array, or a currency code.
-  //   */
-  //   public static function wireAmount($amount, $currency_info) {
-  //       if (!is_array($currency_info)) {
-  //           $currency_info = Quickpay::currencyInfo($currency_info);
-  //       }
-  //       return (function_exists('bcmul') ?
-  //           bcmul($amount, $currency_info['multiplier']) :
-  //           $amount * $currency_info['multiplier']);
-  // }
+    /**
+     * Returns the amount adjusted by the multiplier for the currency.
+     *
+     * @param decimal $amount
+     *   The amount.
+     * @param array|string $currency_info
+     *   An currencyInfo() array, or a currency code.
+    */
+    // public static function wireAmount($amount, $currency_info) {
+    //     if (!is_array($currency_info)) {
+    //         $currency_info = Quickpay::currencyInfo($currency_info);
+    //     }
+    //     return (function_exists('bcmul') ?
+    //         bcmul($amount, $currency_info['multiplier']) :
+    //         $amount * $currency_info['multiplier']);
+    // }
+
     // /**
     // * {@inheritdoc}
     // */
