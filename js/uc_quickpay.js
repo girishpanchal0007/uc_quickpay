@@ -1,12 +1,7 @@
 jQuery(document).ready(function($) {
     jQuery('input#edit-panes-payment-details-cc-number').removeAttr('name');
-    jQuery('select#edit-panes-payment-details-cc-exp-month').removeAttr('name');
-    jQuery('select#edit-panes-payment-details-cc-exp-year').removeAttr('name');
-    // jQuery.each(jQuery("input[type='hidden']"), function(index, val) {
-    //     if(jQuery(this).data('quickpay') == "expiration" ){
-    //         jQuery(this).removeAttr('name');
-    //     }
-    // });
+    // jQuery('select#edit-panes-payment-details-cc-exp-month').removeAttr('name');
+    // jQuery('select#edit-panes-payment-details-cc-exp-year').removeAttr('name');
     jQuery('input#edit-panes-payment-details-cc-cvv').removeAttr('name');
     jQuery('input#cc-date-year').removeAttr('name');
     //jQuery("input[name='panes[payment][details][quickpay_submit]").attr('name','op')
@@ -26,9 +21,11 @@ jQuery(document).ready(function($) {
 });
 
 jQuery(document).ready(function($) {
+    var merchantId = drupalSettings.uc_quickpay.merchant_id;
+    var agreementId = drupalSettings.uc_quickpay.agreement_id;
     QuickPay.Embedded.Form(jQuery('.uc-cart-checkout-form'), {   
-        merchant_id: 21882,
-        agreement_id: 79491,
+        merchant_id: merchantId,
+        agreement_id: agreementId,
         brandChanged: function(brand) {
             //jQuery('.form-item-panes-payment-details-cc-number').html(brand);
         },
@@ -53,8 +50,8 @@ jQuery(document).ready(function($) {
         	//jQuery('.uc-cart-checkout-form #edit-continue').html('Pay');
         },
         success: function(form, token){
-
-            // jQuery('.uc-cart-checkout-form #edit-continue').attr('name', 'op');
+            jQuery('input#edit-panes-payment-details-cc-number').attr('name', 'panes[payment][details][cc_number]');
+            jQuery('.uc-cart-checkout-form #edit-continue').attr('name', 'op');
         }
 
     });
