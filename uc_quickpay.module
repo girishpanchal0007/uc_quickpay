@@ -8,7 +8,6 @@
  * set the IPN URL to http://{yoursite.com}/uc_Paytrek/ipn. See
  * https://drupal.org/node/1311198 for further information.
  */
-use Drupal\uc_quickpay\Plugin\Ubercart\PaymentMethod\QuickPayGateway;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -28,35 +27,11 @@ use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
 /**
  * Implements hook_help().
  */
-// function uc_paytrek_help($route_name, RouteMatchInterface $route_match) {
+// function uc_quickpay_help($route_name, RouteMatchInterface $route_match) {
 //     
 // }
 
-/**
- * Implements hook_uc_payment_gateway().
- */
-// function uc_paytrek_uc_payment_gateway() {
-//   	if (!\Drupal::moduleHandler()->moduleExists('uc_credit')) {
-//     	drupal_set_message(t('You must <a href=":modules">enable the Credit Card module</a> to use Paytrek Payment Gateway.', [':modules' => Url::fromRoute('system.modules_list', [], ['fragment' => 'edit-modules-ubercart-payment'])->toString()]), 'warning');
-// 	    return;
-//   	}
 
-//   	$gateways['paytrek_gateway'] = array(
-//     	'title' => t('Paytrek Payment Gateway'),
-//     	'description' => t('Process credit card payments using Website Paytrek.'),
-//     	'settings' => 'uc_paytrek_settings_form',
-//     	'credit' => 'uc_paytrek_charge',
-//     	'credit_txn_types' => array(UC_CREDIT_AUTH_ONLY, UC_CREDIT_PRIOR_AUTH_CAPTURE, UC_CREDIT_AUTH_CAPTURE),
-//   	);
-// 	return $gateways;
-// }
-
-/**
- * Check that all API keys are configured.
- *
- * @return bool
- *   TRUE if all 4 keys have a value.
- */
 
 define('QUICKPAY_VERSION', 'v10');
 
@@ -95,22 +70,29 @@ function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInter
     $form['actions']['order_refund']['#submit'][]  = 'uc_quickpay_form_order_refund_process';
 }
 // to create quickpay refund process using "Refund" button on order panel
-// function uc_quickpay_form_order_refund_process(){
-//     var_dump($client);
-//     exit;
-//     $data = array(
-//       'amount' => $this->wireAmount($amount),
-//     );
+function uc_quickpay_form_order_refund_process(){
+    var_Dump($client);
+    $data = array(
+        'amount' => 155.00,
+    );
 
-//     $refund_res = $client->request->post("/payments/{$quickpay_client_id}/refund?synchronized", $data);
+    $refund_res = $client->request->post("/payments/{28891005}/refund", $data);
+    exit;
 
-//     if (!$refund_res->is_success()) {
-//       $this->qp->logError('Error refunding payment.', $refund_res);
-//       throw new QuickpayException('Error refunding payment.');
-//     }
+    if (!$refund_res->is_success()) {
+      $this->qp->logError('Error refunding payment.', $refund_res);
+      throw new QuickpayException('Error refunding payment.');
+    }
 
-//     $this->loadResponse($refund_res->as_object());
-// }
+    $this->loadResponse($refund_res->as_object());
+}
+
+/**
+ * Check that all API keys are configured.
+ *
+ * @return bool
+ *   TRUE if all 4 keys have a value.
+ */
 function _uc_quickpay_check_api_keys($configuration) {
     return $configuration['api']['merchant_id'] &&
         $configuration['api']['private_key'] &&
