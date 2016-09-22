@@ -73,27 +73,27 @@ function uc_quickpay_form_order_refund_process(&$form, FormStateInterface $form_
 	$configuration = $plugin->getConfiguration();
 
 	$order_amount = $order->getTotal();
+	$amount_currency = uc_currency_format($order_amount, FALSE, FALSE, FALSE);
 
 	$payment_load = uc_payment_load_payments($refund_order_id);
+
 	$receipt_data_arr = '';
 	foreach($payment_load as $payment_receipt){
 		$receipt_data_arr = $payment_receipt->get('data')->getValue();
 	}
-	var_dump($receipt_data_arr);
 	$receipt_data =  unserialize($receipt_data_arr[0]);
-	$refund_payment_id = $receipt_data->id;
-	
-	exit;	
+	$refund_payment_id = $receipt_data['response_payment_id'];
+
 	$client = new QuickPay(":{$configuration['api']['api_key']}");
 
-
-	$data = array(
-		'amount' => 100,
+	$refund_data = array(
+		'amount' => $amount_currency,
 	);
 
-	$refund_res = $client->request->post("/payments/{29247570}/refund", $data);
+	$refund_res = $client->request->post("/payments/{$refund_payment_id}/refund?synchronized", $refund_data);
 	var_dump($refund_res);
-
+	exit;
+	
 	if (!$refund_res->is_success()) {
 	  $this->qp->logError('Error refunding payment.', $refund_res);
 	  throw new QuickpayException('Error refunding payment.');

@@ -403,7 +403,18 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
                 uc_order_comment_save($order->id(), $order->getOwnerId(), $message, 'admin');         
 
                 // it's store in payment_receipt.
-                $serialize_data = serialize($payment_capture);
+                $payment_data = array(
+                    'payment_token' => $card_token, 
+                    'response_payment_id' => $payment_capture->id, 
+                    'merchant_id' => $payment_capture->merchant_id,
+                    'response_order_id' => $payment_capture->order_id,
+                    'payment_status' => $payment_capture->accepted,
+                    'payment_mode' => $payment_capture->test_mode,
+                    'payment_mode' => $payment_capture->acquirer,
+                    'client' => $this->client(),
+                );
+
+                $serialize_data = serialize($payment_data);
                 
                 $result = array(
                     'success' => TRUE,
