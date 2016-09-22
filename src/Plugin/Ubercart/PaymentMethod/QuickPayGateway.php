@@ -22,14 +22,6 @@ use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
  * )
  */
 class QuickPayGateway extends CreditCardPaymentMethodBase {
-
-    /**
-      * {@inheritdoc}
-    */
-    public function getDisplayLabel($label) {
-        return ['#plain_text' => $label];
-    }
-
     /**
      * Returns the set of card types which are used by this payment method.
      *

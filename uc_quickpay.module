@@ -8,18 +8,11 @@
  * set the IPN URL to http://{yoursite.com}/uc_Paytrek/ipn. See
  * https://drupal.org/node/1311198 for further information.
  */
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Form\FormStateInterface;
-
-use Drupal\Component\Utility\Xss;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
-use Drupal\uc_payment\Entity\PaymentMethod;
 use Drupal\uc_payment\Entity\PaymentReceipt;
-use Drupal\uc_payment\ExpressPaymentMethodPluginInterface;
-use Drupal\uc_payment\Form\OffsitePaymentMethodForm;
-use Drupal\uc_payment\OffsitePaymentMethodPluginInterface;
-use Drupal\uc_payment\PaymentReceiptInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 use Drupal\uc_quickpay\Entity\QuickPay;
 use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
@@ -36,18 +29,18 @@ use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
 define('QUICKPAY_VERSION', 'v10');
 
 function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
-    $form['#attached']['library'][] = 'uc_quickpay/uc_quickpay';
-    //$form['actions']['submit']['#submit'][]  = 'uc_quickpay_form_submit_handler';
-    // Add submit handler to preserve CC details for the back button.
-    //$form['actions']['back']['#submit'][] = 'uc_credit_cart_review_back_submit';
+	$form['#attached']['library'][] = 'uc_quickpay/uc_quickpay';
+	//$form['actions']['submit']['#submit'][]  = 'uc_quickpay_form_submit_handler';
+	// Add submit handler to preserve CC details for the back button.
+	//$form['actions']['back']['#submit'][] = 'uc_credit_cart_review_back_submit';
 
-    //unset($form['actions']['cancel']);
+	//unset($form['actions']['cancel']);
 }
 // function uc_quickpay_form_uc_cart_checkout_review_form_alter(&$form, FormStateInterface $form_state) {
 //     global $base_url;
 //     $order = $form_state->get('uc_order');
 //     $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
-    
+	
 //     if($plugin->getPluginId() == 'quickpay_gateway'){
 //         unset($form['actions']['submit']);
 //     }
@@ -55,36 +48,57 @@ function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface
 
 // order view form alter.
 function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInterface $form_state) {    
-    $form['actions'] = array('#type' => 'actions');
+	$form['actions'] = array('#type' => 'actions');
 
-    $form['actions']['order_refund'] = array(
-        "#type" => 'submit',
-        "#value" => 'Refund',
-        "#attributes" => array(
-            'id' => 'quickpay-refund',
-            'autocomplete' => 'off',
-        ),
-        '#weight' => 15,
-    );
+	$form['actions']['order_refund'] = array(
+		"#type" => 'submit',
+		"#value" => 'Refund',
+		"#attributes" => array(
+			'id' => 'quickpay-refund',
+			'autocomplete' => 'off',
+		),
+		'#weight' => 15,
+	);
 
-    $form['actions']['order_refund']['#submit'][]  = 'uc_quickpay_form_order_refund_process';
+	$form['actions']['order_refund']['#submit'][]  = 'uc_quickpay_form_order_refund_process';
 }
 // to create quickpay refund process using "Refund" button on order panel
-function uc_quickpay_form_order_refund_process(){
-    var_Dump($client);
-    $data = array(
-        'amount' => 155.00,
-    );
+function uc_quickpay_form_order_refund_process(&$form, FormStateInterface $form_state){
+	// get order id which customer want to refund.
+	$refund_order_id = $form['order_id']["#value"];
+	// load order using order id.
+	$order = Order::load($refund_order_id);
 
-    $refund_res = $client->request->post("/payments/{28891005}/refund", $data);
-    exit;
+	$plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
+	$configuration = $plugin->getConfiguration();
 
-    if (!$refund_res->is_success()) {
-      $this->qp->logError('Error refunding payment.', $refund_res);
-      throw new QuickpayException('Error refunding payment.');
-    }
+	$order_amount = $order->getTotal();
 
-    $this->loadResponse($refund_res->as_object());
+	$payment_load = uc_payment_load_payments($refund_order_id);
+	$receipt_data_arr = '';
+	foreach($payment_load as $payment_receipt){
+		$receipt_data_arr = $payment_receipt->get('data')->getValue();
+	}
+	var_dump($receipt_data_arr);
+	$receipt_data =  unserialize($receipt_data_arr[0]);
+	$refund_payment_id = $receipt_data->id;
+	
+	exit;	
+	$client = new QuickPay(":{$configuration['api']['api_key']}");
+
+
+	$data = array(
+		'amount' => 100,
+	);
+
+	$refund_res = $client->request->post("/payments/{29247570}/refund", $data);
+	var_dump($refund_res);
+
+	if (!$refund_res->is_success()) {
+	  $this->qp->logError('Error refunding payment.', $refund_res);
+	  throw new QuickpayException('Error refunding payment.');
+	}
+
 }
 
 /**
@@ -94,10 +108,10 @@ function uc_quickpay_form_order_refund_process(){
  *   TRUE if all 4 keys have a value.
  */
 function _uc_quickpay_check_api_keys($configuration) {
-    return $configuration['api']['merchant_id'] &&
-        $configuration['api']['private_key'] &&
-        $configuration['api']['agreement_id'] &&
-        $configuration['api']['api_key'];
+	return $configuration['api']['merchant_id'] &&
+		$configuration['api']['private_key'] &&
+		$configuration['api']['agreement_id'] &&
+		$configuration['api']['api_key'];
 }
 
 /**
@@ -110,12 +124,12 @@ function _uc_quickpay_check_api_keys($configuration) {
  */
 function uc_quickpay_uc_checkout_complete($order, $account) {
 
-    if ($order->payment_method == "credit") {
-        // Pull the QuickPay customer ID from the temp storage.
-        // It got there in uc_QuickPay_checkout_form_customsubmit()
-        // This is only really necessary for uc_recurring
-        $quickpay_client_id = \Drupal::service('user.private_tempstore')->get('uc_quickpay')->get('uc_quickpay_payment_id');
+	if ($order->payment_method == "credit") {
+		// Pull the QuickPay customer ID from the temp storage.
+		// It got there in uc_QuickPay_checkout_form_customsubmit()
+		// This is only really necessary for uc_recurring
+		$quickpay_client_id = \Drupal::service('user.private_tempstore')->get('uc_quickpay')->get('uc_quickpay_payment_id');
 
-        \Drupal::getContainer('user.data')->set('uc_quickpay', $account->id(), 'uc_quickpay_payment_id', $quickpay_client_id);
-    }
+		\Drupal::getContainer('user.data')->set('uc_quickpay', $account->id(), 'uc_quickpay_payment_id', $quickpay_client_id);
+	}
 }
