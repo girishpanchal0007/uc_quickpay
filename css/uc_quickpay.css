@@ -1,6 +1,3 @@
-.form-item-panes-payment-details-cc-exp-month{
-  display: none;
-}
-.form-item-panes-payment-details-cc-exp-year{
-  display: none;
+#order-pane-update form#uc-order-view-update-form .form-actions{
+	display: inline-block;
 }

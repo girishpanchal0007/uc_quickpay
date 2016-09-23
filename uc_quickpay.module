@@ -34,19 +34,27 @@ function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface
 }
 // order view form alter.
 function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInterface $form_state) {    
-	$form['actions'] = array('#type' => 'actions');
+	// get order id which customer want to refund.
+	$refund_order_id = $form['order_id']["#value"];
+	// load order using order id.
+	$order = Order::load($refund_order_id);
+	// get payment detail.
+	$payment_detail = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
 
-	$form['actions']['order_refund'] = array(
-		"#type" => 'submit',
-		"#value" => 'Refund',
-		"#attributes" => array(
-			'id' => 'quickpay-refund',
-			'autocomplete' => 'off',
-		),
-		'#weight' => 15,
-	);
+	if($payment_detail->getPluginId() == "quickpay_gateway"){
 
-	$form['actions']['order_refund']['#submit'][]  = 'uc_quickpay_form_order_refund_process';
+		$form['actions'] = array('#type' => 'actions');
+		$form['actions']['order_refund'] = array(
+			"#type" => 'submit',
+			"#value" => 'Refund',
+			"#attributes" => array(
+				'id' => 'quickpay-refund',
+				'autocomplete' => 'off',
+			),
+			'#weight' => 15,
+		);
+		$form['actions']['order_refund']['#submit'][]  = 'uc_quickpay_form_order_refund_process';
+	}
 }
 // to create quickpay refund process using "Refund" button on order panel
 function uc_quickpay_form_order_refund_process(&$form, FormStateInterface $form_state){
@@ -70,13 +78,14 @@ function uc_quickpay_form_order_refund_process(&$form, FormStateInterface $form_
 	$receipt_data =  unserialize($receipt_data_arr[0]);
 	$refund_payment_id = $receipt_data['response_payment_id'];
 
-	$client = new QuickPay(":{$configuration['api']['api_key']}");
+	$client = new QuickPay(":{$configuration['api']['user_api_key']}");
 
 	$refund_data = array(
 		'amount' => $amount_currency,
 	);
 
 	$refund_res = $client->request->post("/payments/{$refund_payment_id}/refund?synchronized", $refund_data);
+
 	var_dump($refund_res);
 	exit;
 	
@@ -95,8 +104,8 @@ function uc_quickpay_form_order_refund_process(&$form, FormStateInterface $form_
  */
 function _uc_quickpay_check_api_keys($configuration) {
 	return $configuration['api']['merchant_id'] &&
-		$configuration['api']['private_key'] &&
+		$configuration['api']['user_api_key'] &&
 		$configuration['api']['agreement_id'] &&
-		$configuration['api']['api_key'];
+		$configuration['api']['payment_api_key'];
 }
 

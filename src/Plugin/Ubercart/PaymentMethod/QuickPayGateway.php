@@ -82,16 +82,16 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         return parent::defaultConfiguration() + [
             'testmode'  => TRUE,
             'api' => [
-                'merchant_id'  => '',
-                'private_key'  => '',
-                'agreement_id' => '',
-                'api_key'      => '',
-                'language'     => '',
-                'currency'     => '',
+                'merchant_id'     => '',
+                'user_api_key'    => '',
+                'agreement_id'    => '',
+                'payment_api_key' => '',
+                'language'        => '',
+                'currency'        => '',
                 ],
             'callbacks' => [
-                'continue_url' => '',
-                'cancel_url'   => '',
+                'continue_url'    => '',
+                'cancel_url'      => '',
                 ]
         ];
     }
@@ -115,25 +115,25 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
             '#description' => t('The Merchant ID as shown in the QuickPay admin.'),
         );
 
-        $form['api']['private_key'] = array(
+        $form['api']['user_api_key'] = array(
             '#type' => 'textfield',
-            '#title' => t('Private key'),
-            '#default_value' => $this->configuration['api']['private_key'],
-            '#description' => t('Your private key.'),
+            '#title' => t('API user key'),
+            '#default_value' => $this->configuration['api']['user_api_key'],
+            '#description' => t('This is an API user key.'),
         );
 
         $form['api']['agreement_id'] = array(
             '#type' => 'textfield',
             '#title' => t('Agreement ID'),
             '#default_value' => $this->configuration['api']['agreement_id'],
-            '#description' => t('This is the Payment Window Agreement ID.'),
+            '#description' => t('This is a payment window agreement ID.'),
         );
 
-        $form['api']['api_key'] = array(
+        $form['api']['payment_api_key'] = array(
             '#type' => 'textfield',
-            '#title' => t('API key'),
-            '#default_value' => $this->configuration['api']['api_key'],
-            '#description' => t('This is the Payment Window API key.'),
+            '#title' => t('Payment Window API key'),
+            '#default_value' => $this->configuration['api']['payment_api_key'],
+            '#description' => t('This is a payment window API key.'),
         );  
         
         $form['api']['pre_order_id'] = array(
@@ -215,7 +215,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     }
 
     public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-        $elements = ['merchant_id', 'private_key', 'agreement_id', 'api_key', 'pre_order_id'];
+        $elements = ['merchant_id', 'user_api_key', 'agreement_id', 'payment_api_key', 'pre_order_id'];
 
         foreach ($elements as $element_name) {
             $raw_key = $form_state->getValue(['settings', 'api', $element_name]);
@@ -248,7 +248,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         * {@inheritdoc}
     */
     public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-        foreach (['merchant_id', 'private_key', 'agreement_id', 'api_key', 'pre_order_id'] as $item) {
+        foreach (['merchant_id', 'user_api_key', 'agreement_id', 'payment_api_key', 'pre_order_id'] as $item) {
             $this->configuration['api'][$item] = $form_state->getValue(['settings', 'api', $item]);
         }
         $this->configuration['language'] = $form_state->getValue('language');
@@ -493,7 +493,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
             ],
             'basket[]' => $productData,            
         );
-        $payments = $this->client()->request->post('/payments', $paymentform);
+        $payments = $this->payClient()->request->post('/payments', $paymentform);
 
         $payment = $payments->asObject();      
         $status = $payments->httpStatus();
@@ -512,7 +512,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
                 //'acquirer' => 'clearhaus',
             );
 
-            $authorize_obj = $this->client()->request->post("/payments/{$payment->id}/authorize?synchronized", $paymentdata);
+            $authorize_obj = $this->payClient()->request->post("/payments/{$payment->id}/authorize?synchronized", $paymentdata);
             
             $authorize_data = $authorize_obj->asObject();
             
@@ -583,9 +583,20 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       * @return Quickpay
       *   The client.
     */
-    public function client() {
-        $api_key = $this->configuration['api']['api_key'];
-        return new QuickPay(":{$api_key}");
+    public function payClient() {
+        $payment_api_key = $this->configuration['api']['payment_api_key'];
+        return new QuickPay(":{$payment_api_key}");
+    }
+
+    /**
+      * Return Quickpay client.
+      *
+      * @return Quickpay
+      *   The client.
+    */
+    public function captureClient() {
+        $user_api_key = $this->configuration['api']['user_api_key'];
+        return new QuickPay(":{$user_api_key}");
     }
 
     /**
@@ -597,7 +608,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
             'amount' => $amount,
         );
         
-        $capture_res = $this->client()->request->post("/payments/{$payment_id}/capture?synchronized", $capturedata);
+        $capture_res = $this->captureClient()->request->post("/payments/{$payment_id}/capture?synchronized", $capturedata);
  
         $capture_data = $capture_res->asObject();
 
