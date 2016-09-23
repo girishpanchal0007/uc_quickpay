@@ -2,12 +2,9 @@
 
 /**
  * @file
- * Integrates various Paytrek with Ubercart.
+ * Integrates QuickPay with Ubercart.
  *
- * You should turn on Instant Payment Notifications in your Paytrek profile and
- * set the IPN URL to http://{yoursite.com}/uc_Paytrek/ipn. See
- * https://drupal.org/node/1311198 for further information.
- */
+*/
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
@@ -41,7 +38,7 @@ function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface
 //     $order = $form_state->get('uc_order');
 //     $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
 	
-//     if($plugin->getPluginId() == 'quickpay_gateway'){
+//     if($plugin->getPluginId() == 'uc_quickpay'){
 //         unset($form['actions']['submit']);
 //     }
 // }
@@ -114,22 +111,3 @@ function _uc_quickpay_check_api_keys($configuration) {
 		$configuration['api']['api_key'];
 }
 
-/**
- * Implements hook_uc_checkout_complete()
- *
- * Saves QuickPay customer_id into the user->data object
- *
- * @param $order
- * @param $account
- */
-function uc_quickpay_uc_checkout_complete($order, $account) {
-
-	if ($order->payment_method == "credit") {
-		// Pull the QuickPay customer ID from the temp storage.
-		// It got there in uc_QuickPay_checkout_form_customsubmit()
-		// This is only really necessary for uc_recurring
-		$quickpay_client_id = \Drupal::service('user.private_tempstore')->get('uc_quickpay')->get('uc_quickpay_payment_id');
-
-		\Drupal::getContainer('user.data')->set('uc_quickpay', $account->id(), 'uc_quickpay_payment_id', $quickpay_client_id);
-	}
-}

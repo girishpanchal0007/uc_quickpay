@@ -18,7 +18,8 @@ use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
  *
  * @UbercartPaymentMethod(
  *   id = "quickpay_gateway",
- *   name = @Translation("QuickPay"),
+ *   name = @Translation("QuickPay gateway"),
+ *   label = @Translation("QuickPay gateway"),
  * )
  */
 class QuickPayGateway extends CreditCardPaymentMethodBase {

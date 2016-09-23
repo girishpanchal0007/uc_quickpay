@@ -1,7 +1,7 @@
 # Schema for the configuration files of the uc_paytrek module.
-payment_method.settings.quickpay_gateway:
+payment_method.settings.uc_quickpay:
     type: mapping
-    label: 'Test gateway plugin configuration settings'
+    label: 'QuickPay credit card configuration settings'
     mapping:
         testmode:
             type: boolean
@@ -23,6 +23,9 @@ payment_method.settings.quickpay_gateway:
         currency:
             type: string
             label: 'Select Currency'
+        3d_secure:
+            type: string
+            label: 'Select 3d_secure'
         continue_url:
             type: string
             label: 'Continue URL'
