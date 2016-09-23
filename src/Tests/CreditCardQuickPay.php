@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_credit\Tests\CreditCardTest.
+ * Contains \Drupal\uc_quickpay\Tests\CreditCardQuickPay.
  */
 
 namespace Drupal\uc_quickpay\Tests;
@@ -11,7 +11,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
- * Tests credit card payments with the test gateway.
+ * QuickPay credit card payments with the quickpay gateway.
  *
  * This class is intended to be subclassed for use in testing other credit
  * card gateways. Subclasses which test other gateways need to:
@@ -31,7 +31,7 @@ class CreditCardQuickPay extends UbercartTestBase {
     * the card issuer for testing purposes.
     */
     protected static $test_cards = array(
-        '1000 0300 0000 0005',  // American Express
+        '1000 0300 0000 0005', // American Express
         '1000 0300 0000 0013',
         '1000 0300 0000 0021',
         '1000 0300 0000 0021',  
@@ -59,7 +59,7 @@ class CreditCardQuickPay extends UbercartTestBase {
         // Need admin permissions in order to change credit card settings.
         $this->drupalLogin($this->adminUser);
 
-        // Configure and enable Credit card module and Test gateway.
+        // Configure and enable Credit card module and quickpay gateway.
         $this->configureCreditCard();
         $this->configureGateway();
     }
@@ -217,7 +217,7 @@ class CreditCardQuickPay extends UbercartTestBase {
     }
 
     /**
-    * Tests that an order can be placed using the test gateway.
+    * Tests that an order can be placed using the quickpay gateway.
     */
     public function testCheckout() {
         $this->addToCart($this->product);

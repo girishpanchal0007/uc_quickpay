@@ -269,20 +269,11 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
         //cc_exp_month  cc_exp_year cc_cvv data-quickpay="cardnumber"
         $form["cc_number"]['#attributes'] = array('data-quickpay' => 'cardnumber'); 
+        $form["cc_number"]['#attributes'] = array('placeholder' => '**** **** **** ****'); 
+        $form["cc_number"]['#weight'] = 1;
 
         unset($form['cc_exp_month']);
         unset($form['cc_exp_year']);
-
-        //$form['actions'] = array('#type' => 'actions');
-        // $form['quickpay_submit'] = array(
-        //     "#type" => 'hidden',
-        //     "#value" => 'Review order',
-        //     "#attributes" => array(
-        //         'id' => 'edit-continue',
-        //         'autocomplete' => 'off',
-        //     ),
-        //     '#weight' => 15,
-        // );
 
         $form['date_year'] = array(
             '#type' => 'textfield',
@@ -294,11 +285,14 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
                 'id' => 'cc-date-year',
                 'placeholder' => 'MM / YY',
             ),
-            '#required' => TRUE,
+            '#size' => 20,
+            '#maxlength' => 19,
             '#weight' => 2,
         );
                    
-        $form["cc_cvv"]['#attributes'] = array('data-quickpay' => 'cvd'); 
+        $form["cc_cvv"]['#attributes'] = array('data-quickpay' => 'cvd');
+        $form["cc_cvv"]['#attributes'] = array('placeholder' => '***');  
+        $form["cc_cvv"]['#weight'] = 3;
 
         return $form;
     }
@@ -384,7 +378,49 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         }
         $review[] = array('title' => $this->t('Card number'), 'data' => $this->displayCardNumber($order->payment_details['cc_number']));     
         $review[] = array('title' => $this->t('Expiration'), 'data' => $order->payment_details['date_year']);
+        
         return $review;
+    }
+
+    /**
+        * {@inheritdoc}
+    */
+    public function orderView(OrderInterface $order) {
+        $build = array();
+        // Add the hidden span for the CC details if possible.
+        $account = \Drupal::currentUser();
+        if ($account->hasPermission('view cc details')) {
+            $rows = array();
+
+            if (!empty($order->payment_details['cc_type'])) {
+                $rows[] = $this->t('Card type') . ': ' . $order->payment_details['cc_type'];
+            }
+
+            if (!empty($order->payment_details['cc_number'])) {
+                $rows[] = $this->t('Card number') . ': ' . $this->displayCardNumber($order->payment_details['cc_number']);
+            }
+
+            if (!empty($order->payment_details['cc_exp_month']) && !empty($order->payment_details['cc_exp_year'])) {
+                $rows[] = $this->t('Expiration') . ': ' . $order->payment_details['date_year'];
+            }
+
+            $build['cc_info'] = array(
+                '#markup' => implode('<br />', $rows) . '<br />',
+            );
+        }
+        // Add the form to process the card if applicable.
+        if ($account->hasPermission('process credit cards')) {
+            $build['terminal'] = [
+                '#type' => 'link',
+                '#title' => $this->t('Process card'),
+                '#url' => Url::fromRoute('uc_credit.terminal', [
+                    'uc_order' => $order->id(),
+                    'uc_payment_method' => $order->getPaymentMethodId(),
+                ]),
+            ];
+        }
+
+        return $build;
     }
 
     public function processPayment(OrderInterface $order, $amount, $txn_type, $reference = NULL) {

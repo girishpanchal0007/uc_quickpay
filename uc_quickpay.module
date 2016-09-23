@@ -14,14 +14,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\uc_quickpay\Entity\QuickPay;
 use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
 
-/**
- * Implements hook_help().
- */
-// function uc_quickpay_help($route_name, RouteMatchInterface $route_match) {
-//     
-// }
-
-
 
 define('QUICKPAY_VERSION', 'v10');
 
