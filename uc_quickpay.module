@@ -27,22 +27,19 @@ define('QUICKPAY_VERSION', 'v10');
 
 function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
 	$form['#attached']['library'][] = 'uc_quickpay/uc_quickpay';
-	//$form['actions']['submit']['#submit'][]  = 'uc_quickpay_form_submit_handler';
-	// Add submit handler to preserve CC details for the back button.
-	//$form['actions']['back']['#submit'][] = 'uc_credit_cart_review_back_submit';
 
-	//unset($form['actions']['cancel']);
+	$form['actions'] = array('#type' => 'actions');
+	// unset cancel event when submit form from checkout to cart_review.
+	unset($form['actions']['cancel']);
+    
+    $form['actions']['continue'] = array(
+        '#type' => 'submit',
+        '#value' => t('Review order'),
+        '#validate' => array(),
+        '#limit_validation_errors' => array(),
+        '#button_type' => 'primary',
+    );
 }
-// function uc_quickpay_form_uc_cart_checkout_review_form_alter(&$form, FormStateInterface $form_state) {
-//     global $base_url;
-//     $order = $form_state->get('uc_order');
-//     $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
-	
-//     if($plugin->getPluginId() == 'uc_quickpay'){
-//         unset($form['actions']['submit']);
-//     }
-// }
-
 // order view form alter.
 function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInterface $form_state) {    
 	$form['actions'] = array('#type' => 'actions');

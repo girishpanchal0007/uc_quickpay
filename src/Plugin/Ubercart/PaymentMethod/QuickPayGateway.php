@@ -24,11 +24,11 @@ use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
  */
 class QuickPayGateway extends CreditCardPaymentMethodBase {
     /**
-     * Returns the set of card types which are used by this payment method.
-     *
-     * @return array
-     *   An array with keys as needed by the chargeCard() method and values
-     *   that can be displayed to the customer.
+        * Returns the set of card types which are used by this payment method.
+        *
+        * @return array
+        *   An array with keys as needed by the chargeCard() method and values
+        *   that can be displayed to the customer.
     */
     public function getEnabledTypes() {
         return [
@@ -37,6 +37,42 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
             'discover' => $this->t('Discover'),
             'amex' => $this->t('American Express'),
         ];
+    }
+
+    /**
+       * Returns the set of transaction types allowed by this payment method.
+       *
+       * @return array
+       *   An array with values UC_CREDIT_AUTH_ONLY, UC_CREDIT_PRIOR_AUTH_CAPTURE,
+       *   UC_CREDIT_AUTH_CAPTURE, UC_CREDIT_REFERENCE_SET, UC_CREDIT_REFERENCE_TXN,
+       *   UC_CREDIT_REFERENCE_REMOVE, UC_CREDIT_REFERENCE_CREDIT, UC_CREDIT_CREDIT
+       *   and UC_CREDIT_VOID.
+    */
+    public function getTransactionTypes() {
+        return [
+            UC_CREDIT_AUTH_CAPTURE,
+            UC_CREDIT_AUTH_ONLY,
+        ];
+    }
+
+    /**
+        * {@inheritdoc}
+    */
+    public function getDisplayLabel($label) {
+        $form['#attached']['library'][] = 'uc_credit/uc_credit.styles';
+        $form['label'] = array(
+          '#plain_text' => $label,
+        );
+        $cc_types = $this->getEnabledTypes();
+        foreach ($cc_types as $type => $description) {
+          $form['image'][$type] = array(
+            '#theme' => 'image',
+            '#uri' => drupal_get_path('module', 'uc_credit') . '/images/' . $type . '.gif',
+            '#alt' => $description,
+            '#attributes' => array('class' => array('uc-credit-cctype', 'uc-credit-cctype-' . $type)),
+          );
+        }
+        return $form;
     }
 
     /**
@@ -247,6 +283,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         //     ),
         //     '#weight' => 15,
         // );
+
         $form['date_year'] = array(
             '#type' => 'textfield',
             '#title' => $this->t('Expiration date'),
@@ -267,12 +304,61 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     }
     // on submit checkout form process
     public function cartProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
+
+        if (!$form_state->hasValue(['panes', 'payment', 'details', 'cc_number'])) {
+          return;
+        }
+
+         $fields = $this->getEnabledFields();
+
+        // Fetch the CC details from the $_POST directly.
+        $cc_data = $form_state->getValue(['panes', 'payment', 'details']);
+        $cc_data['cc_number'] = str_replace(' ', '', $cc_data['cc_number']);
+
+        // Recover cached CC data in form state, if it exists.
+        if (isset($cc_data['payment_details_data'])) {
+            $cache = uc_credit_cache(base64_decode($cc_data['payment_details_data']));
+            unset($cc_data['payment_details_data']);
+        }
+
+        // Account for partial CC numbers when masked by the system.
+        if (substr($cc_data['cc_number'], 0, strlen(t('(Last4)'))) == $this->t('(Last4)')) {
+            // Recover the number from the encrypted data in the form if truncated.
+            if (isset($cache['cc_number'])) {
+                $cc_data['cc_number'] = $cache['cc_number'];
+            }
+            else {
+                $cc_data['cc_number'] = '';
+            }
+        }
+
+        // Go ahead and put the CC data in the payment details array.
+        $order->payment_details = $cc_data;
+        
+        // Initialize the encryption key and class.
+        $key = uc_credit_encryption_key();
+        $crypt = \Drupal::service('uc_store.encryption');
+
+        // Store the encrypted details in the session for the next pageload.
+        // We are using base64_encode() because the encrypt function works with a
+        // limited set of characters, not supporting the full Unicode character
+        // set or even extended ASCII characters that may be present.
+        // base64_encode() converts everything to a subset of ASCII, ensuring that
+        // the encryption algorithm does not mangle names.
+        $session = \Drupal::service('session');
+        $session->set('sescrd', $crypt->encrypt($key, base64_encode(serialize($order->payment_details))));
+
+        // Log any errors to the watchdog.
+        uc_store_encryption_errors($crypt, 'uc_credit');
+
+
         $quickpay_card_token = $_POST['card_token'];
 
         if (!empty($quickpay_card_token)) {
           \Drupal::service('user.private_tempstore')->get('uc_quickpay')->set('card_token', $quickpay_card_token);
         }
-        return parent::cartProcess($order, $form, $form_state);
+        
+        return TRUE;         
     }
 
     /**

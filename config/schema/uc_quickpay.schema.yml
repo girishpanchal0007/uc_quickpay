@@ -1,5 +1,5 @@
 # Schema for the configuration files of the uc_paytrek module.
-payment_method.settings.uc_quickpay:
+payment_method.settings.quickpay_gateway:
     type: mapping
     label: 'QuickPay credit card configuration settings'
     mapping:
