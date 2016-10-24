@@ -6,6 +6,7 @@
  *
 */
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Database\Query\Update;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\Entity\PaymentReceipt;
@@ -40,7 +41,7 @@ function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInter
 	$order = Order::load($refund_order_id);
 	// get payment detail.
 	$payment_detail = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
-
+	
 	if($payment_detail->getPluginId() == "quickpay_gateway"){
 
 		$form['actions'] = array('#type' => 'actions');
@@ -86,12 +87,27 @@ function uc_quickpay_form_order_refund_process(&$form, FormStateInterface $form_
 
 	$refund_res = $client->request->post("/payments/{$refund_payment_id}/refund?synchronized", $refund_data);
 
-	var_dump($refund_res);
-	exit;
+	$refund_data = $refund_res->asObject();
 	
-	if (!$refund_res->is_success()) {
-	  $this->qp->logError('Error refunding payment.', $refund_res);
-	  throw new QuickpayException('Error refunding payment.');
+
+	if ($refund_res->isSuccess()) {
+
+		$message = t('QuickPay credit card refund was successfully: @amount', ['@amount' => uc_currency_format($amount)]);
+
+        uc_order_comment_save($order->id(), $order->getOwnerId(), $message, 'admin');   
+
+        db_update('uc_orders')
+        ->fields(array(
+        	'order_total' => 0,
+       	))
+        ->condition('order_id', $order->id())
+        ->execute();
+
+	} else{	
+	
+		\Drupal::logger('uc_quickpay')->notice($refund_data->message);
+                
+        uc_order_comment_save($order->id(), $order->getOwnerId(), $refund_data->message, 'admin');
 	}
 
 }
@@ -108,4 +124,3 @@ function _uc_quickpay_check_api_keys($configuration) {
 		$configuration['api']['agreement_id'] &&
 		$configuration['api']['payment_api_key'];
 }
-

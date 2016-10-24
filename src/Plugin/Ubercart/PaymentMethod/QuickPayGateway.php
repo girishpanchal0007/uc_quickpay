@@ -143,39 +143,6 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
             '#description' => t('Prefix for order ids. Order ids must be uniqe when sent to QuickPay, use this to resolve clashes.'),
         ); 
 
-        $form['language'] = array(
-            '#type' => 'select',
-            '#options' => array(
-                    'da' => 'Danish',
-                    'de' => 'German',
-                    'en' => 'English',
-                    'fr' => 'French',
-                    'it' => 'Italian',
-                    'no' => 'Norwegian',
-                    'nl' => 'Dutch',
-                    'pl' => 'Polish',
-                    'se' => 'Swedish',
-                ),
-            '#title' => t('Select Language'),
-            '#default_value' => $this->configuration['language'],
-            '#description' => t('The language for the credit card form.'),
-        );
-
-        $form['currency'] = array(
-            '#type' => 'select',
-            '#options' => array(
-                    'USD' => 'USD',
-                    'DKK' => 'DKK',
-                    'EUR' => 'EUR',
-                    'SEK' => 'SEK',
-                    'NOK' => 'NOK',
-                    'GBP' => 'GBP',
-                ),
-            '#title' => t('Select your currency.'),
-            '#default_value' => $this->configuration['currency'],
-            '#description' => t('Your currency.'),
-        );
-
         $form['3d_secure'] = array(
             '#type' => 'checkbox',
             '#title' => t('3D Secure Creditcard'),
@@ -251,8 +218,6 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         foreach (['merchant_id', 'user_api_key', 'agreement_id', 'payment_api_key', 'pre_order_id'] as $item) {
             $this->configuration['api'][$item] = $form_state->getValue(['settings', 'api', $item]);
         }
-        $this->configuration['language'] = $form_state->getValue('language');
-        $this->configuration['currency'] = $form_state->getValue('currency');
         $this->configuration['3d_secure'] = $form_state->getValue('3d_secure');
         $this->configuration['callbacks']['continue_url'] = $form_state->getValue(['settings', 'callbacks', 'continue_url']);
         $this->configuration['callbacks']['cancel_url'] = $form_state->getValue(['settings', 'callbacks', 'cancel_url']);
@@ -267,9 +232,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         $form['#attached']['drupalSettings']['uc_quickpay']['merchant_id'] = $this->configuration['api']['merchant_id'];
         $form['#attached']['drupalSettings']['uc_quickpay']['agreement_id'] = $this->configuration['api']['agreement_id'];      
 
-        //cc_exp_month  cc_exp_year cc_cvv data-quickpay="cardnumber"
-        $form["cc_number"]['#attributes'] = array('data-quickpay' => 'cardnumber'); 
-        $form["cc_number"]['#attributes'] = array('placeholder' => '**** **** **** ****'); 
+        $form["cc_number"]['#attributes'] = array('data-quickpay' => 'cardnumber', 'placeholder' => '**** **** **** ****'); 
         $form["cc_number"]['#weight'] = 1;
 
         unset($form['cc_exp_month']);
@@ -290,8 +253,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
             '#weight' => 2,
         );
                    
-        $form["cc_cvv"]['#attributes'] = array('data-quickpay' => 'cvd');
-        $form["cc_cvv"]['#attributes'] = array('placeholder' => '***');  
+        $form["cc_cvv"]['#attributes'] = array('data-quickpay' => 'cvd', 'placeholder' => '***');
         $form["cc_cvv"]['#weight'] = 3;
 
         return $form;
@@ -534,7 +496,6 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
                     'payment_status' => $payment_capture->accepted,
                     'payment_mode' => $payment_capture->test_mode,
                     'payment_mode' => $payment_capture->acquirer,
-                    'client' => $this->client(),
                 );
 
                 $serialize_data = serialize($payment_data);
