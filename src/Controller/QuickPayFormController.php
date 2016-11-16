@@ -3,11 +3,11 @@ namespace Drupal\uc_quickpay\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_order\Entity\Order;
 use Drupal\uc_quickpay\Plugin\Ubercart\PaymentMethod\QuickPayPaymentForm;
 
 //Returns responses for QuickPay Form Payment Method.
 class QuickPayFormController extends ControllerBase {
-
     /**
        * Handles a complete QuickPay Payments request.
        *
@@ -35,13 +35,21 @@ class QuickPayFormController extends ControllerBase {
         return $this->redirect('uc_cart.checkout_complete');
     }
 
-    // public function QuickPayFormReview() {
-    //     $session = \Drupal::service('session');
-        
-    //     $session->remove('cart_order');
-    //     drupal_set_message($this->t('An error has occurred in your QuickPay payment. Please review your cart and try again.'));
-    //     return $this->redirect('uc_cart.cart');
-        
-    // }
+    public function quickPayFormCancel(OrderInterface $uc_order) {
+        // checking is that payment method is QuickPay Form.
+        $method = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($uc_order);
+        if (!$method instanceof QuickPayPaymentForm) {
+            return $this->redirect('uc_cart.cart');
+        }
 
+        $session = \Drupal::service('session');
+
+        $message = $this->t('Quick Pay form payment was cancelled occurred some unnecessary action: @OrderID, OrderId', ['@OrderID' => $uc_order->id()]);
+        uc_order_comment_save($uc_order->id(), $uc_order->getOwnerId(), $message, 'admin');  
+
+        $session->remove('cart_order');
+        drupal_set_message($this->t('An error has occurred in your QuickPay payment. Please review your cart and try again.'));
+        return $this->redirect('uc_cart.cart');
+        
+    }
 }

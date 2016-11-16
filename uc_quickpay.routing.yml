@@ -1,25 +1,27 @@
-# Callback route for QuickPay From Payments.
+# Callback route for QuickPay From Payments callback
+uc_quickpay.qpf_callback:
+  path: '/uc_quickpay/callback/{uc_order}'
+  defaults:
+    _controller: '\Drupal\uc_quickpay\Controller\QuickPayCallbackController::quickPayCallback'
+    _title: 'QuickPay Callback'
+  requirements:
+    _permission: 'access content'
+
+# Callback route for QuickPay From Payments complete.
 uc_quickpay.qpf_complete:
-  path: '/cart/echeckout/complete/{uc_order}'
+  path: '/uc_quickpay/complete/{uc_order}'
   defaults:
     _controller: '\Drupal\uc_quickpay\Controller\QuickPayFormController::quickPayFormComplete'
     _title: 'QuickPay payment complete'
   requirements:
     _permission: 'access content'
 
-# uc_quickpay.qpf_review:
-#   path: '/cart/'
-#   defaults:
-#     _controller: '\Drupal\uc_quickpay\Controller\QuickPayFormController::QuickPayFormReview'
-#     _title: 'Review payment'
-#   requirements:
-#     _access: 'TRUE'
+# Callback route for QuickPay From Payments cancel.
+uc_quickpay.qpf_cancel:
+  path: '/uc_quickpay/cart/{uc_order}'
+  defaults:
+    _controller: '\Drupal\uc_quickpay\Controller\QuickPayFormController::quickPayFormCancel'
+    _title: 'Cancel payment'
+  requirements:
+    _permission: 'access content'
 
-
-# uc_quickpay.callback:
-#   path: '/uc_quickpay/callback/{uc_order}'
-#   defaults:
-#     _controller: '\Drupal\uc_quickpay\Controller\QuickPayCallbackController::callbackQuickpay'
-#     _title: 'QuickPay Callback'
-#   requirements:
-#     _access: 'TRUE'

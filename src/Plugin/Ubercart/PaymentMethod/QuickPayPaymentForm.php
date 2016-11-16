@@ -224,10 +224,9 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 
         // Get billing address object.
         $bill_address = $order->getAddress('billing');
-        $country = $bill_address->country;
+        $country = $country = \Drupal::service('country_manager')->getCountry($bill_address->country)->getAlpha3();
         // Formate current with multiply 100.
         $amount_currency = uc_currency_format($order->getTotal(), FALSE, FALSE, FALSE);
-
         $data = array();
 
         // required parameter
@@ -239,8 +238,9 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
         $data['currency'] = $order->getCurrency();
 
         $data['continueurl'] = Url::fromRoute('uc_quickpay.qpf_complete', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
-        $data['cancelurl'] =  Url::fromRoute('uc_cart.checkout_review', [], ['absolute' => TRUE])->toString();
-       	//$data['callbackurl'] = Url::fromRoute('uc_quickpay.callback', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
+        $data['cancelurl'] =  Url::fromRoute('uc_quickpay.qpf_cancel', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
+       	$data['callbackurl'] = Url::fromRoute('uc_quickpay.qpf_callback', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
+        //$data['callbackurl'] = "http://requestb.in/16tud821";
 
         $data['language'] = $this->configuration['language'];
         if($this->configuration['autocapture'] != NULL){
@@ -255,16 +255,8 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
         $data['invoice_address[zip_code]'] = $bill_address->postal_code;
         $data['invoice_address[city]'] = $bill_address->city;
         $data['invoice_address[region]'] = $bill_address->zone;
-        $data['invoice_address[email]'] = $order->getEmail();
-        // $codes = json_decode(file_get_contents('http://country.io/iso3.json'), true);
-        // $iso3_to_iso2 = array();
-        // foreach($codes as $iso2 => $iso3) {
-        //     if(substr($iso3, 0, 2) == $country){
-        //         $iso3_to_iso2 = $iso3;
-        //     }
-        // }
-        //$data['invoice_address[country_code]'] = $iso3_to_iso2;
-        
+        $data['invoice_address[country_code]'] = $country;
+        $data['invoice_address[email]'] = $order->getEmail();        
 
         $data['checksum'] = $this->sign($data, $this->configuration['api']['payment_api_key']);;            
         
@@ -332,5 +324,5 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 
 	    return $result;
 	}
-
+    
 }
