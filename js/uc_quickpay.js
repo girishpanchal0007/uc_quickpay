@@ -1,23 +1,7 @@
 jQuery(document).ready(function($) {
     jQuery('input#edit-panes-payment-details-cc-number').removeAttr('name');
-    // jQuery('select#edit-panes-payment-details-cc-exp-month').removeAttr('name');
-    // jQuery('select#edit-panes-payment-details-cc-exp-year').removeAttr('name');
     jQuery('input#edit-panes-payment-details-cc-cvv').removeAttr('name');
     jQuery('input#cc-date-year').removeAttr('name');
-    //jQuery("input[name='panes[payment][details][quickpay_submit]").attr('name','op')
-    //jQuery('.uc-cart-checkout-form #edit-cancel').attr('disabled', true);
-    // jQuery('#edit-panes-payment-details-cc-exp-year').change(function(event) {
-    //     /* Act on the event */
-    //     var ExMonth = jQuery('#edit-panes-payment-details-cc-exp-month').val();
-    //     var ExYear = jQuery('#edit-panes-payment-details-cc-exp-year').val().slice("-2");
-    //     if(ExMonth < 10){
-    //         jQuery("input[type='hidden']").val('0' + ExMonth + ' / ' + ExYear);
-    //     }
-    //     else{
-    //         jQuery("input[type='hidden']").val(ExMonth + ' / ' + ExYear);  
-    //     }
-    // });
-    // jQuery('#edit-panes-payment-details-cc-exp-year').change(function(event) {
 });
 
 jQuery(document).ready(function($) {
@@ -37,7 +21,6 @@ jQuery(document).ready(function($) {
                     jQuery(this).addClass('valid');
                 }
             });
-        	//jQuery('.uc-cart-checkout-form #edit-continue').html('Please wait...');
         },
         failure: function(form, source, message) {
         	if (source === 'validation') {
@@ -46,8 +29,7 @@ jQuery(document).ready(function($) {
           	    }
         	} else {
           	    alert(source + ': ' + message);
-        	}
-        	//jQuery('.uc-cart-checkout-form #edit-continue').html('Pay');
+        	}        	
         },
         success: function(form, token){
             jQuery('input#edit-panes-payment-details-cc-number').attr('name', 'panes[payment][details][cc_number]');

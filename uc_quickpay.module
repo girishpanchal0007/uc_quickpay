@@ -24,13 +24,13 @@ function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface
 	// unset cancel event when submit form from checkout to cart_review.
 	unset($form['actions']['cancel']);
     
-    $form['actions']['continue'] = array(
-        '#type' => 'submit',
-        '#value' => t('Review order'),
-        '#validate' => array(),
-        '#limit_validation_errors' => array(),
-        '#button_type' => 'primary',
-    );
+  $form['actions']['continue'] = array(
+    '#type' => 'submit',
+    '#value' => t('Review order'),
+    '#validate' => array(),
+    '#limit_validation_errors' => array(),
+    '#button_type' => 'primary',
+  );
 }
 
 // order view form alter.
@@ -44,14 +44,14 @@ function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInter
 	// get value form
 	$order_total = '';
 	$query1 = db_select('uc_orders', 'o')
-	    ->fields('o', array('order_id', 'uid', 'order_total', 'created'))
-	    ->condition('order_id',  $order->id() , '=')
-	    ->orderBy('created', 'DESC')
-	    ->range(0,2)
-	    ->execute();
-	    while($record = $query1->fetchAssoc()) {
-	    	$order_total = $record['order_total'];
-	    }
+    ->fields('o', array('order_id', 'uid', 'order_total', 'created'))
+    ->condition('order_id',  $order->id() , '=')
+    ->orderBy('created', 'DESC')
+    ->range(0,2)
+    ->execute();
+    while($record = $query1->fetchAssoc()) {
+    	$order_total = $record['order_total'];
+    }
 	// get payment detail.
 	$payment_detail = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
 	
@@ -107,20 +107,20 @@ function uc_quickpay_form_order_refund_process(&$form, FormStateInterface $form_
 
 		$message = t('QuickPay credit card refund was successfully: @amount', ['@amount' => uc_currency_format($amount)]);
 
-        uc_order_comment_save($order->id(), $order->getOwnerId(), $message, 'admin');   
+      uc_order_comment_save($order->id(), $order->getOwnerId(), $message, 'admin');   
 
-        db_update('uc_orders')
-        ->fields(array(
-        	'order_total' => 0,
-       	))
-        ->condition('order_id', $order->id())
-        ->execute();
+      db_update('uc_orders')
+      ->fields(array(
+      	'order_total' => 0,
+     	))
+      ->condition('order_id', $order->id())
+      ->execute();
 
 	} else{	
 	
 		\Drupal::logger('uc_quickpay')->notice($refund_data->message);
                 
-        uc_order_comment_save($order->id(), $order->getOwnerId(), $refund_data->message, 'admin');
+    uc_order_comment_save($order->id(), $order->getOwnerId(), $refund_data->message, 'admin');
 	}
 
 }

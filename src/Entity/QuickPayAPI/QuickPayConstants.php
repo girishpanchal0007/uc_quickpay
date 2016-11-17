@@ -16,9 +16,9 @@ namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
  */
 class QuickPayConstants
 {
-    /**
-     * API DEFINITIONS
-     */
-    const API_URL = 'https://api.quickpay.net/';
-    const API_VERSION = '10';
+	/**
+	 * API DEFINITIONS
+	 */
+	const API_URL = 'https://api.quickpay.net/';
+	const API_VERSION = '10';
 }

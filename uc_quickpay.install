@@ -5,37 +5,124 @@ use \Drupal\Core\Url;
  * Implements hook_requirements().
  */
 function uc_quickpay_requirements($phase) {
-    $requirements = array();
+  $requirements = array();
 
-     // Report Drupal version
-    if ($phase == 'runtime') {
-        $requirements['drupal'] = array(
-            'title' => t('Drupal'),
-            'value' => \Drupal::VERSION,
-            'severity' => REQUIREMENT_INFO
-        );
-    }
-
-    // Test PHP version
-    $requirements['php'] = array(
-        'title' => t('PHP'),
-        'value' => ($phase == 'runtime') ? \Drupal::l(phpversion(), new Url('system.php')) : phpversion(),
+  // Report Drupal version
+  if ($phase == 'runtime') {
+    $requirements['drupal'] = array(
+      'title' => t('Drupal'),
+      'value' => \Drupal::VERSION,
+      'severity' => REQUIREMENT_INFO
     );
-    if (version_compare(phpversion(), DRUPAL_MINIMUM_PHP) < 0) {
-        $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version.', array('%version' => DRUPAL_MINIMUM_PHP));
-        $requirements['php']['severity'] = REQUIREMENT_ERROR;
-    }
+  }
 
-    $has_curl = function_exists('curl_init');
+  // Test PHP version
+  $requirements['php'] = array(
+    'title' => t('PHP'),
+    'value' => ($phase == 'runtime') ? \Drupal::l(phpversion(), new Url('system.php')) : phpversion(),
+  );
+  if (version_compare(phpversion(), DRUPAL_MINIMUM_PHP) < 0) {
+    $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version.', array('%version' => DRUPAL_MINIMUM_PHP));
+    $requirements['php']['severity'] = REQUIREMENT_ERROR;
+  }
 
-    $requirements['uc_quickpay_curl'] = array(
-        'title' => t('cURL for Quickpay'),
-        'value' => $has_curl ? t('Enabled') : t('Not found'),
-    );
+  $has_curl = function_exists('curl_init');
 
-    if (!$has_curl) {
-        $requirements['uc_quickpay_curl']['description'] = $t('The PHP <a href="@curl_url">cURL</a> library is required for communicating with Quickpay.');
-        $requirements['uc_quickpay_curl']['severity'] = REQUIREMENT_ERROR;
-    }
-    return $requirements;
+  $requirements['uc_quickpay_curl'] = array(
+    'title' => t('cURL for Quickpay'),
+    'value' => $has_curl ? t('Enabled') : t('Not found'),
+  );
+
+  if (!$has_curl) {
+    $requirements['uc_quickpay_curl']['description'] = $t('The PHP <a href="@curl_url">cURL</a> library is required for communicating with Quickpay.');
+    $requirements['uc_quickpay_curl']['severity'] = REQUIREMENT_ERROR;
+  }
+  return $requirements;
+}
+/**
+ * Implements hook_schema().
+ */
+function uc_quickpay_schema() {
+  $schema = array();
+
+  $schema['uc_payment_quickpay_callback'] = array(
+    'description' => 'Logs For QuickPay Callback Notifications.',
+    'fields' => array(
+      'order_id' => array(
+        'description' => 'Order ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'payment_id' => array(
+        'description' => 'Payment ID from Callback QuickPay.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'merchant_id' => array(
+        'description' => 'Merchant ID from Callback QuickPay.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'payment_type' => array(
+        'description' => 'Payment type from Callback QuickPay.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'payment_brand' => array(
+        'description' => 'Payment Brand from Callback QuickPay.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'payment_amount' => array(
+        'description' => 'Payment Amount from Callback QuickPay.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'payment_status' => array(
+        'description' => 'Payment Stauts from Callback QuickPay.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'customer_email' => array(
+        'description' => 'E-mail address of the customer.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'created_at' => array(
+        'description' => 'QuickPay callback timestamp.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'order_id' => array('order_id'),
+    ),
+    'primary key' => array('order_id'),
+    
+    'foreign keys' => array(
+      'uc_orders' => array(
+        'table' => 'uc_orders',
+        'columns' => array('order_id' => 'order_id'),
+      ),
+    ),
+  );
+  return $schema;
 }
