@@ -123,15 +123,15 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $form['language'] = array(
       '#type' => 'select',
       '#options' => array(
-            'en' => 'English',
-            'da' => 'Danish',
-            'de' => 'German',
-            'fr' => 'French',
-            'it' => 'Italian',
-            'no' => 'Norwegian',
-            'nl' => 'Dutch',
-            'pl' => 'Polish',
-            'se' => 'Swedish',
+            'en' => $this->t('English'),
+            'da' => $this->t('Danish'),
+            'de' => $this->t('German'),
+            'fr' => $this->t('French'),
+            'it' => $this->t('Italian'),
+            'no' => $this->t('Norwegian'),
+            'nl' => $this->t('Dutch'),
+            'pl' => $this->t('Polish'),
+            'se' => $this->t('Swedish'),
           ),
       '#title' => $this->t('Payment Language'),
       '#default_value' => $this->configuration['language'],
@@ -207,7 +207,6 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   * {@inheritdoc}
   */
   public function buildRedirectForm(array $form, FormStateInterface $form_state, OrderInterface $order = NULL) {
-    global $base_url;
 
     // Get billing address object.
     $bill_address = $order->getAddress('billing');

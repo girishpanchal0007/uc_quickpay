@@ -23,6 +23,23 @@ use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
  * )
  */
 class QuickPayGateway extends CreditCardPaymentMethodBase {
+
+  /**
+   * Returns the set of fields which are used by this payment method.
+   *
+   * @return array
+   *   An array with keys 'cvv', 'owner', 'start', 'issue', 'bank' and 'type'.
+   */
+  public function getEnabledFields() {
+    return [
+      'cvv' => TRUE,
+      'owner' => FALSE,
+      'start' => FALSE,
+      'issue' => FALSE,
+      'type' => FALSE,
+    ];
+  }
+
   /**
       * Returns the set of card types which are used by this payment method.
       *
@@ -358,7 +375,6 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       } else {
         $rows[] = $this->t('Payment ID: @payment_id', ['@payment_id' => $payment_id]);
       }
-
       $build['cc_info'] = array(
         '#markup' => implode('<br />', $rows) . '<br />',
       );
@@ -378,6 +394,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
     return $build;
   }
+
   public function processPayment(OrderInterface $order, $amount, $txn_type, $reference = NULL) {
     // Ensure the cached details are loaded.
     // @todo Figure out which parts of this call are strictly necessary.
@@ -398,6 +415,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
     return $result['success'];
   }
+
   // on submit order review form process
   /**
   * {@inheritdoc}
@@ -472,7 +490,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       if ($authorize_obj->isSuccess()) {
 
         // To capture payment using capture class below.
-        $payment_capture = $this->capture($order_detail, $payment->id, $amount_currency);
+        $payment_capture = $this->capture($order, $payment->id, $amount_currency);
         
         $message = $this->t('QuickPay credit card payment was successfully: @amount', ['@amount' => uc_currency_format($amount)]);
 
@@ -501,7 +519,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
           'uid' => $order->getOwnerId(),
         );
         return $result;
-
+        
       } else {
         $result = array(
           'success' => FALSE,

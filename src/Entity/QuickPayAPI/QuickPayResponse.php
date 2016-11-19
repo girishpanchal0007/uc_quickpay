@@ -9,10 +9,8 @@ namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
 
 /**
  * @class      QuickPay_Response
- * @since      0.1.0
  * @package    QuickPay
  * @category   Class
- * @author     Patrick Tolvstein, Perfect Solution ApS
  * @docs       http://tech.quickpay.net/api/
  */
 class QuickPayResponse
@@ -146,7 +144,7 @@ class QuickPayResponse
   /**
    * isSuccess
    *
-   * Checks if the http status code indicates a succesful or an error response.
+   * Checks if the http status code indicates a successful or an error response.
    *
    * @return boolean
    */

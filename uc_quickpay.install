@@ -34,7 +34,7 @@ function uc_quickpay_requirements($phase) {
   );
 
   if (!$has_curl) {
-    $requirements['uc_quickpay_curl']['description'] = $t('The PHP <a href="@curl_url">cURL</a> library is required for communicating with Quickpay.');
+    $requirements['uc_quickpay_curl']['description'] = t('The PHP <a href="@curl_url">cURL</a> library is required for communicating with Quickpay.');
     $requirements['uc_quickpay_curl']['severity'] = REQUIREMENT_ERROR;
   }
   return $requirements;

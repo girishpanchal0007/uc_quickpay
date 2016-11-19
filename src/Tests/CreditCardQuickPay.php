@@ -1,10 +1,8 @@
 <?php
-
 /**
  * @file
  * Contains \Drupal\uc_quickpay\Tests\CreditCardQuickPay.
  */
-
 namespace Drupal\uc_quickpay\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
@@ -24,7 +22,6 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  * @group Ubercart
  */
 class CreditCardQuickPay extends UbercartTestBase {
-
   /**
   * A selection of "test" numbers to use for testing credit card payemnts.
   * These numbers all pass the Luhn algorithm check and are reserved by
@@ -118,10 +115,8 @@ class CreditCardQuickPay extends UbercartTestBase {
   public function testSecuritySettings() {
     // TODO:  Still need tests with existing key file
     // where key file is not readable or doesn't contain a valid key
-
     // Create key directory, make it readable and writeable.
     \Drupal::service('file_system')->mkdir('sites/default/files/testkey', 0755);
-
     // Try to submit settings form without a key file path.
     // Save current variable, reset to its value when first installed.
     $config = \Drupal::configFactory()->getEditable('uc_credit.settings');

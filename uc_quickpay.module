@@ -18,8 +18,9 @@ use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
 define('QUICKPAY_VERSION', 'v10');
 
 function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
-	$form['#attached']['library'][] = 'uc_quickpay/uc_quickpay';
-
+	if( $form['panes']['payment']['payment_method']["#default_value"] == "quickpay" ){
+		$form['#attached']['library'][] = 'uc_quickpay/uc_quickpay';
+	}																									
 	$form['actions'] = array('#type' => 'actions');
 	// unset cancel event when submit form from checkout to cart_review.
 	unset($form['actions']['cancel']);
@@ -105,16 +106,16 @@ function uc_quickpay_form_order_refund_process(&$form, FormStateInterface $form_
 
 	if ($refund_res->isSuccess()) {
 
-		$message = t('QuickPay credit card refund was successfully: @amount', ['@amount' => uc_currency_format($amount)]);
+		$message = t('QuickPay credit card refund was successfully: @amount', ['@amount' => uc_currency_format($amount_currency)]);
 
-      uc_order_comment_save($order->id(), $order->getOwnerId(), $message, 'admin');   
+    uc_order_comment_save($order->id(), $order->getOwnerId(), $message, 'admin');   
 
-      db_update('uc_orders')
-      ->fields(array(
-      	'order_total' => 0,
-     	))
-      ->condition('order_id', $order->id())
-      ->execute();
+    db_update('uc_orders')
+    ->fields(array(
+    	'order_total' => 0,
+   	))
+    ->condition('order_id', $order->id())
+    ->execute();
 
 	} else{	
 	
