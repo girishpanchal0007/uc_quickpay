@@ -4,6 +4,7 @@
  * @file
  * Contains \Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException.
  */
+
 namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
 
 /**
@@ -13,8 +14,8 @@ namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
  * @category    Class
  * @docs        http://tech.quickpay.net/api/
  */
-
-class QuickPayException extends \Exception{ 
+class QuickPayException extends \Exception {  
+  
   /**
    * __Construct function.
    *
@@ -22,8 +23,7 @@ class QuickPayException extends \Exception{
    *
    * @access public
   */
-  public function __construct($message, $code = 0, QuickPayException $previous = null)
-  {
+  public function __construct($message, $code = 0, QuickPayException $previous = null) {
     // Make sure everything is assigned properly
     parent::__construct($message, $code, $previous);
   }

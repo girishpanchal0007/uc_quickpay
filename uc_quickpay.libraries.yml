@@ -10,4 +10,3 @@ uc_quickpay:
   css:
     theme:
       css/uc_quickpay.css: {}
-

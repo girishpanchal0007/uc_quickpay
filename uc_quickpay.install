@@ -1,12 +1,17 @@
 <?php 
 
+/**
+ * @file
+ * Install, module to create database for the uc_quickpay module.
+ */
+
 use \Drupal\Core\Url;
+
 /**
  * Implements hook_requirements().
  */
 function uc_quickpay_requirements($phase) {
   $requirements = array();
-
   // Report Drupal version
   if ($phase == 'runtime') {
     $requirements['drupal'] = array(
@@ -15,7 +20,6 @@ function uc_quickpay_requirements($phase) {
       'severity' => REQUIREMENT_INFO
     );
   }
-
   // Test PHP version
   $requirements['php'] = array(
     'title' => t('PHP'),
@@ -25,26 +29,23 @@ function uc_quickpay_requirements($phase) {
     $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version.', array('%version' => DRUPAL_MINIMUM_PHP));
     $requirements['php']['severity'] = REQUIREMENT_ERROR;
   }
-
   $has_curl = function_exists('curl_init');
-
   $requirements['uc_quickpay_curl'] = array(
     'title' => t('cURL for Quickpay'),
     'value' => $has_curl ? t('Enabled') : t('Not found'),
   );
-
   if (!$has_curl) {
     $requirements['uc_quickpay_curl']['description'] = t('The PHP <a href="@curl_url">cURL</a> library is required for communicating with Quickpay.');
     $requirements['uc_quickpay_curl']['severity'] = REQUIREMENT_ERROR;
   }
   return $requirements;
 }
+
 /**
  * Implements hook_schema().
  */
 function uc_quickpay_schema() {
   $schema = array();
-
   $schema['uc_payment_quickpay_callback'] = array(
     'description' => 'Logs For QuickPay Callback Notifications.',
     'fields' => array(
@@ -116,7 +117,6 @@ function uc_quickpay_schema() {
       'order_id' => array('order_id'),
     ),
     'primary key' => array('order_id'),
-    
     'foreign keys' => array(
       'uc_orders' => array(
         'table' => 'uc_orders',

@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @file
  * Contains \Drupal\uc_quickpay\Tests\CreditCardQuickPay.
  */
+
 namespace Drupal\uc_quickpay\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
@@ -22,6 +24,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  * @group Ubercart
  */
 class CreditCardQuickPay extends UbercartTestBase {
+  
   /**
   * A selection of "test" numbers to use for testing credit card payemnts.
   * These numbers all pass the Luhn algorithm check and are reserved by
@@ -55,7 +58,6 @@ class CreditCardQuickPay extends UbercartTestBase {
     
     // Need admin permissions in order to change credit card settings.
     $this->drupalLogin($this->adminUser);
-
     // Configure and enable Credit card module and quickpay gateway.
     $this->configureCreditCard();
     $this->configureGateway();
@@ -70,7 +72,6 @@ class CreditCardQuickPay extends UbercartTestBase {
     // able to create the directory - this is NOT where you'd put the key file
     // on a live site.  On a live site, it should be outside the web root.
     \Drupal::service('file_system')->mkdir('sites/default/files/simpletest.keys', 0755);
-
     $this->drupalPostForm(
       'admin/store/config/payment/credit',
       array(
@@ -78,13 +79,11 @@ class CreditCardQuickPay extends UbercartTestBase {
       ),
       t('Save configuration')
     );
-
     $this->assertFieldByName(
       'uc_credit_encryption_path',
       'sites/default/files/simpletest.keys',
       'Key file path has been set.'
     );
-
     $this->assertTrue(
       file_exists('sites/default/files/simpletest.keys/' . UC_CREDIT_KEYFILE_NAME),
       'Key has been generated and stored.'
@@ -205,7 +204,6 @@ class CreditCardQuickPay extends UbercartTestBase {
       preg_match("([0-9a-fA-F]{32})", uc_credit_encryption_key()),
       'Valid key detected in key file.'
     );
-
     // Cleanup keys directory after test.
     \Drupal::service('file_system')->unlink('sites/default/files/testkey/' . UC_CREDIT_KEYFILE_NAME);
     \Drupal::service('file_system')->rmdir('sites/default/files/testkey');
@@ -230,7 +228,6 @@ class CreditCardQuickPay extends UbercartTestBase {
   */
   public function testExpiryDate() {
     $order = $this->createOrder(array('payment_method' => $this->paymentMethod['id']));
-
     $year = date('Y');
     $month = date('n');
     for ($y = $year; $y <= $year + 2; $y++) {

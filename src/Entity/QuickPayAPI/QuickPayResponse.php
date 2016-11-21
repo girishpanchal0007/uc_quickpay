@@ -13,8 +13,8 @@ namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
  * @category   Class
  * @docs       http://tech.quickpay.net/api/
  */
-class QuickPayResponse
-{
+class QuickPayResponse {
+  
   /**
    * HTTP status code of request.
    *
@@ -53,8 +53,7 @@ class QuickPayResponse
    * @param string $received_headers the headers received
    * @param string $response_data    the http response body
    */
-  public function __construct($status_code, $sent_headers, $received_headers, $response_data)
-  {
+  public function __construct($status_code, $sent_headers, $received_headers, $response_data) {
     $this->status_code = $status_code;
     $this->sent_headers = $sent_headers;
     $this->received_headers = $received_headers;
@@ -71,8 +70,7 @@ class QuickPayResponse
    *                                          Authorization: header is masked. True keeps the sent value.
    * @return array  [integer, string[], string]
    */
-  public function asRaw($keep_authorization_value = false)
-  {
+  public function asRaw($keep_authorization_value = false) {
     // To avoid unintentional logging of credentials the default is to mask the value of the Authorization: header
     if ($keep_authorization_value) {
       $sent_headers = $this->sent_headers;
@@ -86,7 +84,6 @@ class QuickPayResponse
       }
       $sent_headers = implode("\n", $lines);
     }
-
     return array(
       $this->status_code,
       array(
@@ -104,12 +101,10 @@ class QuickPayResponse
    *
    * @return array
    */
-  public function asArray()
-  {
+  public function asArray() {
     if ($response = json_decode($this->response_data, true)) {
       return $response;
     }
-
     return array();
   }
 
@@ -120,12 +115,10 @@ class QuickPayResponse
    *
    * @return \stdClass
    */
-  public function asObject()
-  {
+  public function asObject() {
     if ($response = json_decode($this->response_data)) {
       return $response;
     }
-
     return new \stdClass;
   }
 
@@ -136,8 +129,7 @@ class QuickPayResponse
    *
    * @return int
    */
-  public function httpStatus()
-  {
+  public function httpStatus() {
     return $this->status_code;
   }
 
@@ -148,12 +140,10 @@ class QuickPayResponse
    *
    * @return boolean
    */
-  public function isSuccess()
-  {
+  public function isSuccess() {
     if ($this->status_code > 299) {
       return false;
     }
-
     return true;
   }
 }

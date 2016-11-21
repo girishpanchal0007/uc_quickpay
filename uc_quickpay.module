@@ -1,30 +1,34 @@
 <?php 
+
 /**
  * @file
  * Integrates QuickPay with Ubercart.
  *
 */
+
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Database\Query\Update;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\Entity\PaymentReceipt;
 use Drupal\Core\Entity\EntityInterface;
-
 use Drupal\uc_quickpay\Entity\QuickPay;
 use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
 
-
 define('QUICKPAY_VERSION', 'v10');
 
+/**
+ * Implements hook_form_alter().
+ * Cart checkout form alter.
+ */
 function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
-	if( $form['panes']['payment']['payment_method']["#default_value"] == "quickpay" ){
+	// checking payment method for including library files.
+	if ($form['panes']['payment']['payment_method']["#default_value"] == "quickpay") {
 		$form['#attached']['library'][] = 'uc_quickpay/uc_quickpay';
 	}																									
 	$form['actions'] = array('#type' => 'actions');
-	// unset cancel event when submit form from checkout to cart_review.
+	// unset cancel event when submit from checkout to cart_review.
 	unset($form['actions']['cancel']);
-    
   $form['actions']['continue'] = array(
     '#type' => 'submit',
     '#value' => t('Review order'),
@@ -34,15 +38,18 @@ function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface
   );
 }
 
-// order view form alter.
+/**
+ * Implements hook_form_alter().
+ * Order view form alter.
+ */
 function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInterface $form_state) { 
+	// attached library files.
 	$form['#attached']['library'][] = 'uc_quickpay/uc_quickpay';   
-	// get order id which customer want to refund.
+	// get order id which customer wants to refund.
 	$refund_order_id = $form['order_id']["#value"];
 	// load order using order id.
 	$order = Order::load($refund_order_id);
-
-	// get value form
+	// get value forms
 	$order_total = '';
 	$query1 = db_select('uc_orders', 'o')
     ->fields('o', array('order_id', 'uid', 'order_total', 'created'))
@@ -50,14 +57,12 @@ function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInter
     ->orderBy('created', 'DESC')
     ->range(0,2)
     ->execute();
-    while($record = $query1->fetchAssoc()) {
-    	$order_total = $record['order_total'];
-    }
+  while ($record = $query1->fetchAssoc()) {
+  	$order_total = $record['order_total'];
+  }
 	// get payment detail.
 	$payment_detail = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
-	
-	if($payment_detail->getPluginId() == "quickpay_gateway" && $order_total != 0){
-
+	if ($payment_detail->getPluginId() == "quickpay_gateway" && $order_total != 0) {
 		$form['actions'] = array('#type' => 'actions');
 		$form['actions']['order_refund'] = array(
 			"#type" => 'submit',
@@ -68,63 +73,61 @@ function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInter
 			),
 			'#weight' => 15,
 		);
+		// Calling function on order views refund button.
 		$form['actions']['order_refund']['#submit'][]  = 'uc_quickpay_form_order_refund_process';
 	}
 }
-// to create quickpay refund process using "Refund" button on order panel
+
+/**
+ * QuickPay refund process using "Refund" button on order panel.
+ */
 function uc_quickpay_form_order_refund_process(&$form, FormStateInterface $form_state){
-	// get order id which customer want to refund.
+	// get order id which customer wants to refund.
 	$refund_order_id = $form['order_id']["#value"];
 	// load order using order id.
 	$order = Order::load($refund_order_id);
-
+	// get current order payment method.
 	$plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
 	$configuration = $plugin->getConfiguration();
-
+	// Order total.
 	$order_amount = $order->getTotal();
 	$amount_currency = uc_currency_format($order_amount, FALSE, FALSE, FALSE);
-
 	$payment_load = uc_payment_load_payments($refund_order_id);
-
+	// global varibale.
 	$receipt_data_arr = '';
-	foreach($payment_load as $payment_receipt){
+	foreach ($payment_load as $payment_receipt) {
 		$receipt_data_arr = $payment_receipt->get('data')->getValue();
 	}
 	$receipt_data =  unserialize($receipt_data_arr[0]);
 	$refund_payment_id = $receipt_data['response_payment_id'];
-
+	// Create QuickPay client for refund process.
 	$client = new QuickPay(":{$configuration['api']['user_api_key']}");
 
 	$refund_data = array(
 		'amount' => $amount_currency,
 	);
-
+	// Request for refund process.
 	$refund_res = $client->request->post("/payments/{$refund_payment_id}/refund?synchronized", $refund_data);
-
+	// Return refund order.
 	$refund_data = $refund_res->asObject();
-	
-
+	// Checking refund is success or not.
 	if ($refund_res->isSuccess()) {
-
 		$message = t('QuickPay credit card refund was successfully: @amount', ['@amount' => uc_currency_format($amount_currency)]);
-
+		// Order comment.
     uc_order_comment_save($order->id(), $order->getOwnerId(), $message, 'admin');   
-
     db_update('uc_orders')
     ->fields(array(
     	'order_total' => 0,
    	))
     ->condition('order_id', $order->id())
     ->execute();
-
-	} else{	
-	
-		\Drupal::logger('uc_quickpay')->notice($refund_data->message);
-                
+	} else {	
+		\Drupal::logger('uc_quickpay')->notice($refund_data->message);      
     uc_order_comment_save($order->id(), $order->getOwnerId(), $refund_data->message, 'admin');
 	}
 
 }
+
 /**
  * Check that all API keys are configured.
  *

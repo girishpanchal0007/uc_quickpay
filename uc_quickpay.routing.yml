@@ -1,4 +1,4 @@
-# Callback route for QuickPay From Payments callback
+# Callback route for QuickPay form ayments.
 uc_quickpay.qpf_callback:
   path: '/uc_quickpay/callback/{uc_order}'
   defaults:
@@ -7,7 +7,7 @@ uc_quickpay.qpf_callback:
   requirements:
     _permission: 'access content'
 
-# Callback route for QuickPay From Payments complete.
+# Callback route for QuickPay from payments complete.
 uc_quickpay.qpf_complete:
   path: '/uc_quickpay/complete/{uc_order}'
   defaults:
@@ -16,7 +16,7 @@ uc_quickpay.qpf_complete:
   requirements:
     _permission: 'access content'
 
-# Callback route for QuickPay From Payments cancel.
+# Callback route for QuickPay from payments cancel.
 uc_quickpay.qpf_cancel:
   path: '/uc_quickpay/cart/{uc_order}'
   defaults:
@@ -24,4 +24,3 @@ uc_quickpay.qpf_cancel:
     _title: 'Cancel payment'
   requirements:
     _permission: 'access content'
-

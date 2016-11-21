@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains \Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayRequest.
@@ -35,8 +36,7 @@ class QuickPayRequest {
    *
    * @access public
    */
-  public function __construct($client)
-  {
+  public function __construct($client) {
     $this->client = $client;
   }
 
@@ -50,8 +50,7 @@ class QuickPayRequest {
    * @param  array  $query
    * @return Response
    */
-  public function get($path, $query = array())
-  {
+  public function get($path, $query = array()) {
     // Add query parameters to $path?
     if (!empty($query)) {
       if (strpos($path, '?') === false) {
@@ -60,10 +59,8 @@ class QuickPayRequest {
         $path .= ini_get('arg_separator.output') . http_build_query($query, '', '&');
       }
     }
-
     // Set the request params
     $this->setUrl($path);
-
     // Start the request and return the response
     return $this->execute('GET');
   }
@@ -76,11 +73,9 @@ class QuickPayRequest {
    * @access public
    * @return Response
    */
-  public function post($path, $form = array())
-  {
+  public function post($path, $form = array()) {
     // Set the request params
     $this->setUrl($path);
-
     // Start the request and return the response
     return $this->execute('POST', $form);
   }
@@ -93,11 +88,9 @@ class QuickPayRequest {
    * @access public
    * @return Response
    */
-  public function put($path, $form = array())
-  {
+  public function put($path, $form = array()) {
     // Set the request params
     $this->setUrl($path);
-
     // Start the request and return the response
     return $this->execute('PUT', $form);
   }
@@ -110,11 +103,9 @@ class QuickPayRequest {
    * @access public
    * @return Response
    */
-  public function patch($path, $form = array())
-  {
+  public function patch($path, $form = array()) {
     // Set the request params
     $this->setUrl($path);
-
     // Start the request and return the response
     return $this->execute('PATCH', $form);
   }
@@ -127,11 +118,9 @@ class QuickPayRequest {
    * @access public
    * @return Response
    */
-  public function delete($path, $form = array())
-  {
+  public function delete($path, $form = array()) {
     // Set the request params
     $this->setUrl($path);
-
     // Start the request and return the response
     return $this->execute('DELETE', $form);
   }
@@ -144,8 +133,7 @@ class QuickPayRequest {
    * @access protected
    * @return void
    */
-  protected function setUrl($params)
-  {
+  protected function setUrl($params) {
     curl_setopt($this->client->ch, CURLOPT_URL, QuickPayConstants::API_URL . trim($params, '/'));
   }
 
@@ -159,41 +147,32 @@ class QuickPayRequest {
    * @param  array  $form
    * @return Response
    */
-  protected function execute($request_type, $form = array())
-  {
+  protected function execute($request_type, $form = array()) {
     // Set the HTTP request type
     curl_setopt($this->client->ch, CURLOPT_CUSTOMREQUEST, $request_type);
-
     // If additional data is delivered, we will send it along with the API request
     if (is_array($form) && ! empty($form)) {
       curl_setopt($this->client->ch, CURLOPT_POSTFIELDS, http_build_query($form, '', '&'));
     }
-
     // Store received headers in temporary memory file, remember sent headers
     $fh_header = fopen('php://temp', 'w+');
     curl_setopt($this->client->ch, CURLOPT_WRITEHEADER, $fh_header);
     curl_setopt($this->client->ch, CURLINFO_HEADER_OUT, true);
-
     // Execute the request
     $response_data = curl_exec($this->client->ch);
-
     if (curl_errno($this->client->ch) !== 0) {
       // An error occurred
       fclose($fh_header);
       throw new QuickPayException(curl_error($this->client->ch), curl_errno($this->client->ch));
     }
-
     // Grab the headers
     $sent_headers = curl_getinfo($this->client->ch, CURLINFO_HEADER_OUT);
     rewind($fh_header);
     $received_headers = stream_get_contents($fh_header);
     fclose($fh_header);
-
     // Retrieve the HTTP response code
     $response_code = (int) curl_getinfo($this->client->ch, CURLINFO_HTTP_CODE);
-
     // Return the response object.
     return new QuickPayResponse($response_code, $sent_headers, $received_headers, $response_data);
   }
-
 }
