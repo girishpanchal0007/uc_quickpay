@@ -22,7 +22,7 @@ class QuickPayFormController extends ControllerBase {
       drupal_set_message($this->t('Thank you for your order! QuickPay will notify you once your payment has been processed.'));
       return $this->redirect('uc_cart.cart');
     }
-    // checking is that payment method is QuickPay Form.
+    // Checking is that payment method is QuickPay Form.
     $method = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($uc_order);
     if (!$method instanceof QuickPayPaymentForm) {
       return $this->redirect('uc_cart.cart');
@@ -40,7 +40,7 @@ class QuickPayFormController extends ControllerBase {
    * Handles a cancel QuickPay Payments request.
   */
   public function quickPayFormCancel(OrderInterface $uc_order) {
-    // checking is that payment method is QuickPay Form.
+    // Checking is that payment method is QuickPay Form.
     $method = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($uc_order);
     if (!$method instanceof QuickPayPaymentForm) {
         return $this->redirect('uc_cart.cart');
@@ -55,4 +55,5 @@ class QuickPayFormController extends ControllerBase {
     drupal_set_message($this->t('An error has occurred in your QuickPay payment. Please review your cart and try again.'));
     return $this->redirect('uc_cart.cart');
   }
+  
 }

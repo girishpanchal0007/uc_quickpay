@@ -162,7 +162,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   }
 
   /**
-   * checking vaildation keys of payment gateway
+   * Checking vaildation keys of payment gateway.
   */
 	protected function trimKey($key) {
     $key = trim($key);
@@ -171,7 +171,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   }
 
   /**
-   * Validate QuickPay key
+   * Validate QuickPay key.
    *
    * @param $key
    * @return boolean
@@ -216,7 +216,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     // Formate current with multiply 100.
     $amount_currency = uc_currency_format($order->getTotal(), FALSE, FALSE, FALSE);
     $data = array();
-    // required parameter
+    // Required parameter.
     $data['version'] = QUICKPAY_VERSION;
     $data['merchant_id'] = $this->configuration['api']['merchant_id'];
     $data['agreement_id'] = $this->configuration['api']['agreement_id'];
@@ -241,7 +241,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $data['invoice_address[region]'] = $bill_address->zone;
     $data['invoice_address[country_code]'] = $country;
     $data['invoice_address[email]'] = $order->getEmail();        
-    // checksum.
+    // Checksum.
     $data['checksum'] = $this->checksumCal($data, $this->configuration['api']['payment_api_key']);;            
     
     // Add hidden field with new form

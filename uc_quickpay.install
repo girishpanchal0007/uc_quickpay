@@ -12,15 +12,15 @@ use \Drupal\Core\Url;
  */
 function uc_quickpay_requirements($phase) {
   $requirements = array();
-  // Report Drupal version
+  // Report Drupal version.
   if ($phase == 'runtime') {
     $requirements['drupal'] = array(
       'title' => t('Drupal'),
       'value' => \Drupal::VERSION,
-      'severity' => REQUIREMENT_INFO
+      'severity' => REQUIREMENT_INFO,
     );
   }
-  // Test PHP version
+  // Test PHP version.
   $requirements['php'] = array(
     'title' => t('PHP'),
     'value' => ($phase == 'runtime') ? \Drupal::l(phpversion(), new Url('system.php')) : phpversion(),

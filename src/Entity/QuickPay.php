@@ -37,4 +37,5 @@ class QuickPay {
     $client = new QuickPayClients($auth_string);
     $this->request = new QuickPayRequest($client);
   }
+  
 }

@@ -149,7 +149,7 @@ class CreditCardQuickPay extends UbercartTestBase {
     );
     $this->assertText('Key path must be specified in security settings tab.');
 
-    // Specify non-existent directory
+    // Specify non-existent directory.
     $this->drupalPostForm(
       'admin/store/config/payment/credit',
       array('uc_credit_encryption_path' => 'sites/default/ljkh/asdfasfaaaaa'),
@@ -187,7 +187,7 @@ class CreditCardQuickPay extends UbercartTestBase {
     // Remove key file.
     \Drupal::service('file_system')->unlink('sites/default/files/testkey/' . UC_CREDIT_KEYFILE_NAME);
 
-    // Finally, specify good directory
+    // Finally, specify good directory.
     $this->drupalPostForm(
       'admin/store/config/payment/credit',
       array('uc_credit_encryption_path' => 'sites/default/files/testkey'),

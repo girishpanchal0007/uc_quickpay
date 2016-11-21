@@ -19,16 +19,16 @@ class QuickPayCallbackController extends ControllerBase {
    * Handle Callback from QUickPay payment gateway.
   */
   public function quickPayCallback(OrderInterface $uc_order) {
-    // get private key configuration
+    // Get private key configuration.
     $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($uc_order);
     $Adminconfiguration = $plugin->getConfiguration();
     $Adminconfiguration['api']['private_key'];
-    // get request body
+    // Get request body.
     $request_body = file_get_contents("php://input");
-    // checking checksum
+    // Checking checksum.
     $checksum = $this->callbackChecksum($request_body, $Adminconfiguration['api']['private_key']);
     if ($checksum == $_SERVER["HTTP_QUICKPAY_CHECKSUM_SHA256"]) {
-      // store callback data
+      // Store callback data.
       $data = json_decode($request_body, true);
       if (!isset($data['id'])) {
           \Drupal::logger('uc_quickpay')->error('QuickPay callback payment_id is not found.');
@@ -77,4 +77,5 @@ class QuickPayCallbackController extends ControllerBase {
   protected function callbackChecksum($base, $private_key) {
       return hash_hmac("sha256", $base, $private_key);
   }
+  
 }
