@@ -240,7 +240,17 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $data['invoice_address[city]'] = $bill_address->city;
     $data['invoice_address[region]'] = $bill_address->zone;
     $data['invoice_address[country_code]'] = $country;
-    $data['invoice_address[email]'] = $order->getEmail();        
+    $data['invoice_address[email]'] = $order->getEmail();    
+    // static variable for loop.
+    $i = 0;
+    foreach ($order->products as $item) {
+      $data['basket['.$i.'][qty]'] = $item->qty->value;
+      $data['basket['.$i.'][item_no]'] = $item->model->value;
+      $data['basket['.$i.'][item_name]'] = $item->title->value;
+      $data['basket['.$i.'][item_price]'] = uc_currency_format($item->price->value, FALSE, FALSE, '.');
+      $data['basket['.$i.'][vat_rate]'] = 0.25;
+      $i++;                                                               
+    }       
     // Checksum.
     $data['checksum'] = $this->checksumCal($data, $this->configuration['api']['payment_api_key']);;            
     

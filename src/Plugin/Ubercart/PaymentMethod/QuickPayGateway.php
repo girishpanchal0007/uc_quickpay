@@ -424,14 +424,14 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     foreach ($order->products as $item) {
       $productData = array(
         'qty' => $item->qty->value,
-        'item_no' => '',
+        'item_no' => $item->model->value,
         'item_name' => $item->title->value,
         'item_price' => uc_currency_format($item->price->value, FALSE, FALSE, '.'),
-        'vat_rate' => true,
+        'vat_rate' => 1,
       );
     }
     $amount_currency = uc_currency_format($amount, FALSE, FALSE, FALSE);
-
+    $country = $country = \Drupal::service('country_manager')->getCountry($order->getAddress('billing')->country)->getAlpha3();
     $card_token = \Drupal::service('user.private_tempstore')->get('uc_quickpay')->get('card_token');
     // Create payment to get payment_id.
     $paymentform = array(
@@ -444,7 +444,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         'city'     => $order->getAddress('billing')->city,
         'zip_code' => $order->getAddress('billing')->postal_code,
         'region'   => $order->getAddress('billing')->zone,
-        //'country_code'  => $this->configuration['currency'],
+        'country_code'  => $country,
         'phone_number'  => $order->getAddress('billing')->phone,
       ],
       'basket[]' => $productData,            
