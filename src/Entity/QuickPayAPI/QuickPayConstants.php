@@ -1,17 +1,9 @@
 <?php 
 
-/**
- * @file
- * Definition of Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayContants.
- */
-
 namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
 
 /**
- * @class       QuickPay_Constants
- * @package     QuickPay
- * @category    Class
- * @docs        http://tech.quickpay.net/api/
+ * QuickPay API v10 constants class.
  */
 class QuickPayConstants {
 	

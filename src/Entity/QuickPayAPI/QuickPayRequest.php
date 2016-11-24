@@ -1,21 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayRequest.
- */
-
 namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
 
 use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayResponse;
 use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayConstants;
-
-/**
- * @class      QuickPay_Request
- * @package    QuickPay
- * @category   Class
- * @docs       http://tech.quickpay.net/api/
- */
 
 /**
  * Provides the Mollie profile add/edit form.
@@ -25,15 +13,14 @@ class QuickPayRequest {
   /**
    * Contains QuickPay_Client instance.
    *
-   * @access protected
+   * @var \Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayRequest.
    */
   protected $client;
 
   /**
-   * __construct function.
-   * Instantiates the object.
+   * Construct function.
    *
-   * @access public
+   * Instantiates the object.
    */
   public function __construct($client) {
     $this->client = $client;
@@ -41,10 +28,13 @@ class QuickPayRequest {
 
   /**
    * GET function.
+   *
    * Performs an API GET request.
-   * @access public
+   *
    * @param  string $path
+   * 
    * @param  array  $query
+   *
    * @return Response
    */
   public function get($path, $query = array()) {
@@ -67,7 +57,6 @@ class QuickPayRequest {
    *
    * Performs an API POST request.
    *
-   * @access public
    * @return Response
    */
   public function post($path, $form = array()) {
@@ -79,8 +68,9 @@ class QuickPayRequest {
 
   /**
    * PUT function.
+   *
    * Performs an API PUT request.
-   * @access public
+   *
    * @return Response
    */
   public function put($path, $form = array()) {
@@ -92,8 +82,9 @@ class QuickPayRequest {
 
   /**
    * PATCH function.
+   *
    * Performs an API PATCH request.
-   * @access public
+   *
    * @return Response
    */
   public function patch($path, $form = array()) {
@@ -105,8 +96,9 @@ class QuickPayRequest {
 
   /**
    * DELETE function.
+   *
    * Performs an API DELETE request.
-   * @access public
+   *
    * @return Response
    */
   public function delete($path, $form = array()) {
@@ -118,8 +110,9 @@ class QuickPayRequest {
 
   /**
    * setUrl function.
+   *
    * Takes an API request string and appends it to the API url.
-   * @access protected
+   *
    * @return void
    */
   protected function setUrl($params) {
@@ -128,10 +121,13 @@ class QuickPayRequest {
 
   /**
    * EXECUTE function.
+   *
    * Performs the prepared API request.
-   * @access protected
+   *
    * @param  string $request_type
+   *
    * @param  array  $form
+   *
    * @return Response
    */
   protected function execute($request_type, $form = array()) {
@@ -144,7 +140,7 @@ class QuickPayRequest {
     // Store received headers in temporary memory file, remember sent headers.
     $fh_header = fopen('php://temp', 'w+');
     curl_setopt($this->client->ch, CURLOPT_WRITEHEADER, $fh_header);
-    curl_setopt($this->client->ch, CURLINFO_HEADER_OUT, true);
+    curl_setopt($this->client->ch, CURLINFO_HEADER_OUT, TRUE);
     // Execute the request.
     $response_data = curl_exec($this->client->ch);
     if (curl_errno($this->client->ch) !== 0) {
@@ -162,5 +158,4 @@ class QuickPayRequest {
     // Return the response object.
     return new QuickPayResponse($response_code, $sent_headers, $received_headers, $response_data);
   }
-  
 }

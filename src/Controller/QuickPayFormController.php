@@ -31,7 +31,7 @@ class QuickPayFormController extends ControllerBase {
     $session = \Drupal::service('session');
     $message = $this->t('QuickPay Form payment was successfully of : @amount @currency.', ['@amount' => uc_currency_format($uc_order->getTotal(), FALSE, FALSE, FALSE), '@currency' => $uc_order->getCurrency()]);
     // Comment order.
-    uc_order_comment_save($uc_order->id(), $uc_order->getOwnerId(), $message, 'admin'); 
+    uc_order_comment_save($uc_order->id(), $uc_order->getOwnerId(), $message, 'admin');
     $session->set('uc_checkout_complete_' . $uc_order->id(), TRUE);
     return $this->redirect('uc_cart.checkout_complete');
   }
@@ -43,13 +43,13 @@ class QuickPayFormController extends ControllerBase {
     // Checking is that payment method is QuickPay Form.
     $method = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($uc_order);
     if (!$method instanceof QuickPayPaymentForm) {
-        return $this->redirect('uc_cart.cart');
+      return $this->redirect('uc_cart.cart');
     }
     // Checking current session current order.
     $session = \Drupal::service('session');
     $message = $this->t('Quick Pay Form payment was cancelled occurred some unnecessary action: @amount @currency.', ['@amount' => uc_currency_format($uc_order->getTotal(), FALSE, FALSE, FALSE), '@currency' => $uc_order->getCurrency()]);
     // Comment order.
-    uc_order_comment_save($uc_order->id(), $uc_order->getOwnerId(), $message, 'admin');  
+    uc_order_comment_save($uc_order->id(), $uc_order->getOwnerId(), $message, 'admin');
     // Remove session for the current order.
     $session->remove('cart_order');
     drupal_set_message($this->t('An error has occurred in your QuickPay payment. Please review your cart and try again.'));

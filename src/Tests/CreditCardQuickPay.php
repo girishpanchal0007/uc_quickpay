@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quickpay\Tests\CreditCardQuickPay.
- */
-
 namespace Drupal\uc_quickpay\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
@@ -27,6 +22,7 @@ class CreditCardQuickPay extends UbercartTestBase {
   
   /**
   * A selection of "test" numbers to use for testing credit card payemnts.
+  *
   * These numbers all pass the Luhn algorithm check and are reserved by
   * the card issuer for testing purposes.
   */
@@ -46,7 +42,6 @@ class CreditCardQuickPay extends UbercartTestBase {
   );
 
   protected $paymentMethod;
-
   public static $modules = array('uc_payment', 'uc_credit');
   public static $adminPermissions = array('administer credit cards', 'process credit cards');
 
@@ -55,7 +50,6 @@ class CreditCardQuickPay extends UbercartTestBase {
   */
   protected function setUp() {
     parent::setUp();
-    
     // Need admin permissions in order to change credit card settings.
     $this->drupalLogin($this->adminUser);
     // Configure and enable Credit card module and quickpay gateway.
@@ -121,13 +115,10 @@ class CreditCardQuickPay extends UbercartTestBase {
     $config = \Drupal::configFactory()->getEditable('uc_credit.settings');
     $temp_variable = $config->get('encryption_path');
     $config->set('encryption_path', '')->save();
-
     $this->drupalGet('admin/store');
     $this->assertText('You must review your credit card security settings and enable encryption before you can accept credit card payments.');
-
     $this->drupalGet('admin/store/config/payment/credit');
     $this->assertText(t('Credit card security settings must be configured in the security settings tab.'));
-
     $this->drupalPostForm(
       'admin/store/config/payment/credit',
       array(),
@@ -140,7 +131,6 @@ class CreditCardQuickPay extends UbercartTestBase {
     );
     // Restore variable setting.
     $config->set('encryption_path', $temp_variable)->save();
-
     // Try to submit settings form with an empty key file path.
     $this->drupalPostForm(
       'admin/store/config/payment/credit',
@@ -148,7 +138,6 @@ class CreditCardQuickPay extends UbercartTestBase {
       t('Save configuration')
     );
     $this->assertText('Key path must be specified in security settings tab.');
-
     // Specify non-existent directory.
     $this->drupalPostForm(
       'admin/store/config/payment/credit',
@@ -156,7 +145,6 @@ class CreditCardQuickPay extends UbercartTestBase {
       t('Save configuration')
     );
     $this->assertText('You have specified a non-existent directory.');
-
     // Next, specify existing directory that's write protected.
     // Use /dev, as that should never be accessible.
     $this->drupalPostForm(
@@ -165,7 +153,6 @@ class CreditCardQuickPay extends UbercartTestBase {
       t('Save configuration')
     );
     $this->assertText('Cannot write to directory, please verify the directory permissions.');
-
     // Next, specify writeable directory, but with excess whitespace
     // and trailing /
     $this->drupalPostForm(
@@ -181,7 +168,6 @@ class CreditCardQuickPay extends UbercartTestBase {
       'Key file path has been set.'
     );
     $this->assertText('Credit card encryption key file generated.');
-
     // Check that warning about needing key file goes away.
     $this->assertNoText(t('Credit card security settings must be configured in the security settings tab.'));
     // Remove key file.
@@ -240,7 +226,6 @@ class CreditCardQuickPay extends UbercartTestBase {
           'cc_data[cc_exp_year]' => $y,
         );
         $this->drupalPostForm('admin/store/orders/' . $order->id() . '/credit/' . $this->paymentMethod['id'], $edit, 'Charge amount');
-
         if ($y > $year || $m >= $month) {
           $this->assertText('The credit card was processed successfully.', SafeMarkup::format('Card with expiry date @month/@year passed validation.', ['@month' => $m, '@year' => $y]));
         }
@@ -250,4 +235,5 @@ class CreditCardQuickPay extends UbercartTestBase {
       }
     }
   }
+
 }

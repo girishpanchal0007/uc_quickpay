@@ -16,9 +16,3 @@ c) Configure the gateway with your manage quickpay API keys from  https://manage
 d) Every site dealing with credit cards in any way should be using https. It's
 your responsibility to make this happen. (Actually, almost every site should
 be https everywhere at this time in the web's history.)
-
-
-Limitations
-===========
-
-At this writing, the uc_quickpay refund process in under construction. This is a dev version

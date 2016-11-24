@@ -1,36 +1,24 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayClients.
- */
-
 namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
 
 /**
- * @class       QuickPay_Client
- * @package     QuickPay
- * @category    Class
- * @docs        http://tech.quickpay.net/api/
+ * QuickPay API v10 call client.
  */
 class QuickPayClients {
   
   /**
    * Contains cURL instance.
-   * @access public
    */
   public $ch;
 
   /**
    * Contains the authentication string.
-   * @access protected
    */
   protected $auth_string;
 
   /**
-   * __construct function.
    * Instantiate object.
-   * @access public
    */
   public function __construct($auth_string = '') {
     // Check if lib cURL is enabled.
@@ -45,8 +33,8 @@ class QuickPayClients {
 
   /**
    * Shutdown function.
+   *
    * Closes the current cURL connection.
-   * @access public
    */
   public function shutdown() {
     if (!empty($this->ch)) {
@@ -56,8 +44,8 @@ class QuickPayClients {
 
   /**
    * Authenticate function.
+   *
    * Create a cURL instance with authentication headers.
-   * @access public
    */
   protected function authenticate() {
     $this->ch = curl_init();
@@ -75,6 +63,5 @@ class QuickPayClients {
       CURLOPT_HTTPHEADER => $headers
     );
     curl_setopt_array($this->ch, $options);
-  }
-  
+  } 
 }

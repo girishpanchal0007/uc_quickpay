@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Drupal\uc_quickpay\Plugin\Ubercart\PaymentMethod;
 
@@ -8,12 +8,9 @@ use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 use Drupal\uc_payment\OffsitePaymentMethodPluginInterface;
-use Drupal\uc_quickpay\Entity\QuickPay;
-use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
 
 /**
  * QuickPay Ubercart gateway payment method.
- *
  *
  * @UbercartPaymentMethod(
  *   id = "quickpay_form_gateway",
@@ -69,10 +66,10 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 	public function defaultConfiguration() {
     return [
       'api' => [
-          'merchant_id'     => '',
-          'private_key'     => '',
-          'agreement_id'    => '',
-          'payment_api_key' => '',
+        'merchant_id'     => '',
+        'private_key'     => '',
+        'agreement_id'    => '',
+        'payment_api_key' => '',
       ],
       'language'            => '',
       'autocapture'         => '',
@@ -112,13 +109,13 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       '#title' => $this->t('Payment Window API key'),
       '#default_value' => $this->configuration['api']['payment_api_key'],
       '#description' => $this->t('This is a payment window API key.'),
-    );  
+    );
     $form['api']['pre_order_id'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Order id prefix'),
       '#default_value' => $this->configuration['api']['pre_order_id'],
       '#description' => $this->t('Prefix for order ids. Order ids must be uniqe when sent to QuickPay, use this to resolve clashes.'),
-    ); 
+    );
     $form['language'] = array(
       '#type' => 'select',
       '#options' => array(
@@ -141,7 +138,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       '#title' => $this->t('Autocapture'),
       '#default_value' => $this->configuration['autocapture'],
       '#description' => $this->t('If set to 1, the payment will be captured automatically.'),
-    );    
+    );
 	  return $form;
 	}
 
@@ -155,7 +152,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       $sanitized_key = $this->trimKey($raw_key);
       $form_state->setValue(['settings', $element_name], $sanitized_key);
       if (!$this->validateKey($form_state->getValue(['settings', $element_name]))) {
-          $form_state->setError($form[$element_name], $this->t('@name does not appear to be a valid QuickPay key', array('@name' => $element_name)));
+        $form_state->setError($form[$element_name], $this->t('@name does not appear to be a valid QuickPay key', array('@name' => $element_name)));
       }
     }
     parent::validateConfigurationForm($form, $form_state);
@@ -190,7 +187,6 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     }
     $this->configuration['language'] = $form_state->getValue('language');
     $this->configuration['autocapture'] = $form_state->getValue('autocapture');
-
     return parent::submitConfigurationForm($form, $form_state);
   }
 
@@ -223,14 +219,12 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $data['order_id'] = $this->configuration['api']['pre_order_id'] . $order->id();
     $data['amount'] = $amount_currency;
     $data['currency'] = $order->getCurrency();
-
     $data['continueurl'] = Url::fromRoute('uc_quickpay.qpf_complete', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
     $data['cancelurl'] =  Url::fromRoute('uc_quickpay.qpf_cancel', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
    	$data['callbackurl'] = Url::fromRoute('uc_quickpay.qpf_callback', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
-
     $data['language'] = $this->configuration['language'];
     if ($this->configuration['autocapture'] != NULL) {
-        $data['autocapture'] = $this->configuration['autocapture'] ? '1' : '0';
+      $data['autocapture'] = $this->configuration['autocapture'] ? '1' : '0';
     }
     $data['customer_email'] = $order->getEmail();
     $data['invoice_address[name]'] = $bill_address->first_name . " " . $bill_address->last_name;
@@ -240,7 +234,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $data['invoice_address[city]'] = $bill_address->city;
     $data['invoice_address[region]'] = $bill_address->zone;
     $data['invoice_address[country_code]'] = $country;
-    $data['invoice_address[email]'] = $order->getEmail();    
+    $data['invoice_address[email]'] = $order->getEmail();
     // static variable for loop.
     $i = 0;
     foreach ($order->products as $item) {
@@ -249,11 +243,10 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       $data['basket['.$i.'][item_name]'] = $item->title->value;
       $data['basket['.$i.'][item_price]'] = uc_currency_format($item->price->value, FALSE, FALSE, '.');
       $data['basket['.$i.'][vat_rate]'] = 0.25;
-      $i++;                                                               
+      $i++;
     }       
     // Checksum.
-    $data['checksum'] = $this->checksumCal($data, $this->configuration['api']['payment_api_key']);;            
-    
+    $data['checksum'] = $this->checksumCal($data, $this->configuration['api']['payment_api_key']);
     // Add hidden field with new form
     foreach ($data as $name => $value) {
       if (!empty($value)) {
@@ -298,7 +291,6 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $flattened_params = $this->flatten_params($params);
     ksort($flattened_params);
     $base = implode(" ", $flattened_params);
-
     return hash_hmac("sha256", $base, $api_key);
 	}
 
@@ -308,12 +300,12 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   protected function flatten_params($obj, $result = array(), $path = array()) {
     if (is_array($obj)) {
       foreach ($obj as $k => $v) {
-          $result = array_merge($result, $this->flatten_params($v, $result, array_merge($path, array($k))));
+        $result = array_merge($result, $this->flatten_params($v, $result, array_merge($path, array($k))));
       }
     } else {
       $result[implode("", array_map(function($p) { return "[{$p}]"; }, $path))] = $obj;
     }
-
     return $result;
 	}
+
 }
