@@ -21,7 +21,7 @@ use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
  * )
  */
 class QuickPayGateway extends CreditCardPaymentMethodBase {
-
+  
   /**
    * Returns the set of fields which are used by this payment method.
    *
@@ -81,14 +81,14 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       '#plain_text' => $label,
     );
     $cc_types = $this->getEnabledTypes();
-    foreach ($cc_types as $type => $description) {
-      $form['image'][$type] = array(
-        '#theme' => 'image',
-        '#uri' => drupal_get_path('module', 'uc_quickpay') . '/images/' . $type . '.gif',
-        '#alt' => $description,
-        '#attributes' => array('class' => array('uc-quickpay-cctype', 'uc-quickpay-cctype-' . $type)),
-      );
-    }
+      foreach ($cc_types as $type => $description) {
+        $form['image'][$type] = array(
+          '#theme' => 'image',
+          '#uri' => drupal_get_path('module', 'uc_quickpay') . '/images/' . $type . '.gif',
+          '#alt' => $description,
+          '#attributes' => array('class' => array('uc-quickpay-cctype', 'uc-quickpay-cctype-' . $type)),
+        );
+      }
     return $form;
   }
 
@@ -190,7 +190,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       $sanitized_key = $this->trimKey($raw_key);
       $form_state->setValue(['settings', $element_name], $sanitized_key);
       if (!$this->validateKey($form_state->getValue(['settings', $element_name]))) {
-          $form_state->setError($form[$element_name], $this->t('@name does not appear to be a valid QuickPay key', array('@name' => $element_name)));
+        $form_state->setError($form[$element_name], $this->t('@name does not appear to be a valid QuickPay key', array('@name' => $element_name)));
       }
     }
     parent::validateConfigurationForm($form, $form_state);
@@ -318,7 +318,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
   public function cartReviewTitle() {
     return $this->t('QuickPay Credit Card');
   }
-  
+
   /**
    * {@inheritdoc}
    */
@@ -365,14 +365,14 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     }
     // Add the form to process the card if applicable.
     // if ($account->hasPermission('process credit cards')) {
-    //     $build['terminal'] = [
-    //         '#type' => 'link',
-    //         '#title' => $this->t('Process card'),
-    //         '#url' => Url::fromRoute('uc_credit.terminal', [
-    //             'uc_order' => $order->id(),
-    //             'uc_payment_method' => $order->getPaymentMethodId(),
-    //         ]),
-    //     ];
+    //   $build['terminal'] = [
+    //     '#type' => 'link',
+    //     '#title' => $this->t('Process card'),
+    //     '#url' => Url::fromRoute('uc_credit.terminal', [
+    //       'uc_order' => $order->id(),
+    //       'uc_payment_method' => $order->getPaymentMethodId(),
+    //     ]),
+    //   ];
     // }
     return $build;
   }
@@ -457,8 +457,8 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
           'status' => isset($this->configuration['3d_secure'])? "true" : "false",
         ],
         // 'auto_capture' => false,
-        //'test_mode' => isset($this->configuration['testmode'])? 1 : 0,
-        //'acquirer' => 'clearhaus',
+        // 'test_mode' => isset($this->configuration['testmode'])? 1 : 0,
+        // 'acquirer' => 'clearhaus',
       );
       $authorize_obj = $this->payClient()->request->post("/payments/{$payment->id}/authorize?synchronized", $paymentdata);
       $authorize_data = $authorize_obj->asObject();
@@ -472,17 +472,17 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         // Update callback in database.
         db_insert('uc_payment_quickpay_callback')
           ->fields(array(
-          'order_id'       => $OrderID,
-          'payment_id'     => $payment_capture->id,
-          'merchant_id'    => $payment_capture->merchant_id,
-          'payment_type'   => $payment_capture->metadata->type,
-          'payment_brand'  => $payment_capture->metadata->brand,
-          'payment_amount' => $payment_capture->operations[0]->amount,
-          'payment_status' => $payment_capture->operations[0]->qp_status_msg,
-          'customer_email' => $payment_capture->invoice_address->email,
-          'created_at'     => REQUEST_TIME,
-        ))
-        ->execute();
+            'order_id' => $OrderID,
+            'payment_id' => $payment_capture->id,
+            'merchant_id' => $payment_capture->merchant_id,
+            'payment_type' => $payment_capture->metadata->type,
+            'payment_brand' => $payment_capture->metadata->brand,
+            'payment_amount' => $payment_capture->operations[0]->amount,
+            'payment_status' => $payment_capture->operations[0]->qp_status_msg,
+            'customer_email' => $payment_capture->invoice_address->email,
+             'created_at' => REQUEST_TIME,
+          ))
+          ->execute();
         // Store result.
         $result = array(
           'success' => TRUE,

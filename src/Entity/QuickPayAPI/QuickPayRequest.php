@@ -17,7 +17,7 @@ class QuickPayRequest {
    * @var \Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayRequest
    */
   protected $client;
-
+  
   /**
    * Construct function.
    *
@@ -26,7 +26,7 @@ class QuickPayRequest {
   public function __construct($client) {
     $this->client = $client;
   }
-
+  
   /**
    * GET function.
    *

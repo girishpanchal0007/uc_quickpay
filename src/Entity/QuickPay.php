@@ -10,12 +10,12 @@ use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayRequest;
  */
 class QuickPay {
 
-	/**
+  /**
    * Contains the QuickPay_Request object.
    *
    */
   public $request;
-
+  
   /**
    * Construct function.
    *
@@ -26,5 +26,5 @@ class QuickPay {
   public function __construct($auth_string = '') {
     $client = new QuickPayClients($auth_string);
     $this->request = new QuickPayRequest($client);
-  } 
+  }
 }

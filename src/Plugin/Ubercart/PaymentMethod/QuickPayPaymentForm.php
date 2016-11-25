@@ -19,51 +19,51 @@ use Drupal\uc_payment\OffsitePaymentMethodPluginInterface;
  * )
  */
 class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaymentMethodPluginInterface {
-	
+  	
   /**
-	 * Returns the set of card types which are used by this payment method.
-	 *
-	 * @return array
-	 * An array with keys as needed by the chargeCard() method and values
-	 * that can be displayed to the customer.
-	 */
-	protected function getEnabledTypes() {
-  	return [
+   * Returns the set of card types which are used by this payment method.
+   *
+   * @return array
+   * An array with keys as needed by the chargeCard() method and values
+   * that can be displayed to the customer.
+  */
+  protected function getEnabledTypes() {
+    return [
       'maestro'    => $this->t('Maestro'),
-  		'visa'       => $this->t('Visa'),
-  		'mastercard' => $this->t('MasterCard'),
-  		'amex'       => $this->t('American Express'),
+      'visa'       => $this->t('Visa'),
+      'mastercard' => $this->t('MasterCard'),
+      'amex'       => $this->t('American Express'),
       'dankort'    => $this->t('Dankort'),
       'diners'     => $this->t('Diners'),
       'mobilepay'  => $this->t('MobilePay Online'),
       'sofort'     => $this->t('Sofort'),
-  	];
-	}
+    ];
+  }
 
-	/**
- 	 * {@inheritdoc}
- 	 */
-	public function getDisplayLabel($label) {
-  	$build['label'] = array(
-  	  '#prefix' => ' ',
-  	  '#plain_text' => $label,
-  	);
-  	$cc_types = $this->getEnabledTypes();
-  	foreach ($cc_types as $type => $description) {
-  	  $build['image'][$type] = array(
-  	    '#theme' => 'image',
-  	    '#uri' => drupal_get_path('module', 'uc_quickpay') . '/images/' . $type . '.gif',
-  	    '#alt' => $description,
-  	    '#attributes' => array('class' => array('uc-quickpay-cctype', 'uc-quickpay-cctype-' . $type)),
-  	  );
-	  }
-	  return $build;
-	}
+  /**
+   * {@inheritdoc}
+   */
+  public function getDisplayLabel($label) {
+    $build['label'] = array(
+      '#prefix' => ' ',
+      '#plain_text' => $label,
+    );
+    $cc_types = $this->getEnabledTypes();
+    foreach ($cc_types as $type => $description) {
+      $build['image'][$type] = array(
+        '#theme' => 'image',
+        '#uri' => drupal_get_path('module', 'uc_quickpay') . '/images/' . $type . '.gif',
+        '#alt' => $description,
+        '#attributes' => array('class' => array('uc-quickpay-cctype', 'uc-quickpay-cctype-' . $type)),
+      );
+    }
+    return $build;
+  }
 
-	/**
- 	 * {@inheritdoc}
- 	 */
-	public function defaultConfiguration() {
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
     return [
       'api' => [
         'merchant_id'     => '',
@@ -73,13 +73,13 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       ],
       'language'            => '',
       'autocapture'         => '',
-  	];
-	}
+    ];
+  }
 
-	/**
- 	 * {@inheritdoc}
- 	 */
-	public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+/**
+  * {@inheritdoc}
+  */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['api'] = array(
       '#type' => 'details',
       '#title' => $this->t('API credentials'),
@@ -119,16 +119,16 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $form['language'] = array(
       '#type' => 'select',
       '#options' => array(
-            'en' => $this->t('English'),
-            'da' => $this->t('Danish'),
-            'de' => $this->t('German'),
-            'fr' => $this->t('French'),
-            'it' => $this->t('Italian'),
-            'no' => $this->t('Norwegian'),
-            'nl' => $this->t('Dutch'),
-            'pl' => $this->t('Polish'),
-            'se' => $this->t('Swedish'),
-          ),
+        'en' => $this->t('English'),
+        'da' => $this->t('Danish'),
+        'de' => $this->t('German'),
+        'fr' => $this->t('French'),
+        'it' => $this->t('Italian'),
+        'no' => $this->t('Norwegian'),
+        'nl' => $this->t('Dutch'),
+        'pl' => $this->t('Polish'),
+        'se' => $this->t('Swedish'),
+      ),
       '#title' => $this->t('Payment Language'),
       '#default_value' => $this->configuration['language'],
       '#description' => $this->t('Set the language of the user interface. Defaults to English..'),
@@ -139,13 +139,13 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       '#default_value' => $this->configuration['autocapture'],
       '#description' => $this->t('If set to 1, the payment will be captured automatically.'),
     );
-	  return $form;
-	}
+    return $form;
+  }
 
   /**
    * {@inheritdoc}
    */
-	public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $elements = ['merchant_id', 'private_key', 'agreement_id', 'payment_api_key'];
     foreach ($elements as $element_name) {
       $raw_key = $form_state->getValue(['settings', 'api', $element_name]);
@@ -161,7 +161,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   /**
    * Checking vaildation keys of payment gateway.
    */
-	protected function trimKey($key) {
+  protected function trimKey($key) {
     $key = trim($key);
     $key = \Drupal\Component\Utility\Html::escape($key);
     return $key;
@@ -192,7 +192,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 
   /**
    * {@inheritdoc}
-   */
+   */ 
   public function orderView(OrderInterface $order) {
     $payment_id = db_query("SELECT payment_id FROM {uc_payment_quickpay_callback} WHERE order_id = :id ORDER BY created_at ASC", [':id' => $order->id()])->fetchField();
     if (empty($payment_id)) {
@@ -221,7 +221,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $data['currency'] = $order->getCurrency();
     $data['continueurl'] = Url::fromRoute('uc_quickpay.qpf_complete', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
     $data['cancelurl'] =  Url::fromRoute('uc_quickpay.qpf_cancel', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
-   	$data['callbackurl'] = Url::fromRoute('uc_quickpay.qpf_callback', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
+    $data['callbackurl'] = Url::fromRoute('uc_quickpay.qpf_callback', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
     $data['language'] = $this->configuration['language'];
     if ($this->configuration['autocapture'] != NULL) {
       $data['autocapture'] = $this->configuration['autocapture'] ? '1' : '0';
@@ -250,16 +250,16 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     // Add hidden field with new form
     foreach ($data as $name => $value) {
       if (!empty($value)) {
-          $form[$name] = array('#type' => 'hidden', '#value' => $value);
+        $form[$name] = array('#type' => 'hidden', '#value' => $value);
       }
     }
     $form['#action'] = 'https://payment.quickpay.net';
-   	$form['actions'] = array('#type' => 'actions');
+    $form['actions'] = array('#type' => 'actions');
     // Text alter.
     $form['actions']['submit'] = array(
-    	'#type' => 'submit',
-    	'#value' => $this->t('QuickPay Payment'),
-    	'#id' => 'quickpay-submit',
+      '#type' => 'submit',
+      '#value' => $this->t('QuickPay Payment'),
+      '#id' => 'quickpay-submit',
     );
     return $form;
   }
@@ -292,7 +292,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     ksort($flattened_params);
     $base = implode(" ", $flattened_params);
     return hash_hmac("sha256", $base, $api_key);
-	}
+  }
 
   /**
    * Flatten request parameter array.
@@ -306,5 +306,5 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       $result[implode("", array_map(function($p) { return "[{$p}]"; }, $path))] = $obj;
     }
     return $result;
-	}
+  } 
 }

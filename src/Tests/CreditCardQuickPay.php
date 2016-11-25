@@ -69,7 +69,7 @@ class CreditCardQuickPay extends UbercartTestBase {
     $this->drupalPostForm(
       'admin/store/config/payment/credit',
       array(
-          'uc_credit_encryption_path' => 'sites/default/files/simpletest.keys',
+        'uc_credit_encryption_path' => 'sites/default/files/simpletest.keys',
       ),
       t('Save configuration')
     );
@@ -79,7 +79,7 @@ class CreditCardQuickPay extends UbercartTestBase {
       'Key file path has been set.'
     );
     $this->assertTrue(
-      file_exists('sites/default/files/simpletest.keys/' . UC_CREDIT_KEYFILE_NAME),
+    file_exists('sites/default/files/simpletest.keys/' . UC_CREDIT_KEYFILE_NAME),
       'Key has been generated and stored.'
     );
     $this->pass('Key = ' . uc_credit_encryption_key());
@@ -172,7 +172,6 @@ class CreditCardQuickPay extends UbercartTestBase {
     $this->assertNoText(t('Credit card security settings must be configured in the security settings tab.'));
     // Remove key file.
     \Drupal::service('file_system')->unlink('sites/default/files/testkey/' . UC_CREDIT_KEYFILE_NAME);
-
     // Finally, specify good directory.
     $this->drupalPostForm(
       'admin/store/config/payment/credit',
@@ -180,14 +179,13 @@ class CreditCardQuickPay extends UbercartTestBase {
       t('Save configuration')
     );
     $this->assertText('Credit card encryption key file generated.');
-
     // Test contents - must contain 32-character hexadecimal string.
     $this->assertTrue(
-      file_exists('sites/default/files/simpletest.keys/' . UC_CREDIT_KEYFILE_NAME),
+    file_exists('sites/default/files/simpletest.keys/' . UC_CREDIT_KEYFILE_NAME),
       'Key has been generated and stored.'
     );
     $this->assertTrue(
-      preg_match("([0-9a-fA-F]{32})", uc_credit_encryption_key()),
+    preg_match("([0-9a-fA-F]{32})", uc_credit_encryption_key()),
       'Valid key detected in key file.'
     );
     // Cleanup keys directory after test.

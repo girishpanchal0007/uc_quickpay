@@ -55,8 +55,8 @@ class QuickPayFormController extends ControllerBase {
       [
         '@amount' => uc_currency_format($uc_order->getTotal(), FALSE, FALSE, FALSE), 
         '@currency' => $uc_order->getCurrency()
-        ]
-      );
+      ]
+    );
     // Comment order.
     uc_order_comment_save($uc_order->id(), $uc_order->getOwnerId(), $message, 'admin');
     // Remove session for the current order.

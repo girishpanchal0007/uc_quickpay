@@ -14,7 +14,7 @@ class QuickPayResponse {
    * @var integer
    */
   protected $status_code;
-
+  
   /**
    * The headers sent during the request.
    *
@@ -67,7 +67,7 @@ class QuickPayResponse {
    * Authorization: header is masked. True keeps the sent value.
    *
    * @return array  [integer, string[], string]
-   */
+  */
   public function asRaw($keep_authorization_value = false) {
     // To avoid unintentional logging of credentials the default is to mask the value of the Authorization: header.
     if ($keep_authorization_value) {
@@ -99,7 +99,7 @@ class QuickPayResponse {
    */
   public function asArray() {
     if ($response = json_decode($this->response_data, true)) {
-      return $response;
+     return $response;
     }
     return array();
   }
