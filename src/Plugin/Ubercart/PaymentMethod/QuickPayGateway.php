@@ -372,7 +372,8 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       }
       if (empty($payment_id)) {
         $rows[] = $this->t('Payment ID: @payment_id', ['@payment_id' => 'Unknown']);
-      } else {
+      }
+      else {
         $rows[] = $this->t('Payment ID: @payment_id', ['@payment_id' => $payment_id]);
       }
       $build['cc_info'] = array(
@@ -400,7 +401,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     // Ensure the cached details are loaded.
     // @todo Figure out which parts of this call are strictly necessary.
     $this->orderLoad($order);
-    // calling chargeCard.
+    // Calling chargeCard.
     $result = $this->chargeCard($order, $amount, $txn_type, $reference);
     // If the payment processed successfully.
     if ($result['success'] === TRUE) {
@@ -412,14 +413,14 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
           empty($result['comment']) ? '' : $result['comment']
         );
       }
-    } 
+    }
     else {
       // Otherwise display the failure message in the logs.
       \Drupal::logger('uc_payment')->warning('Payment failed for order @order_id: @message',
         [
           '@order_id' => $order->id(),
           '@message' => $result['message'],
-          'link' => $order->toLink($this->t('view order'))->toString()
+          'link' => $order->toLink($this->t('view order'))->toString(),
         ]
       );
     }
@@ -460,7 +461,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       'order_id' => $this->configuration['api']['pre_order_id'] . $order->id(),
       'invoice_address' => [
         'email'    => $order->getEmail(),
-        'name'     => $order->getAddress('billing')->first_name .' '. $order->getAddress('billing')->last_name,
+        'name'     => $order->getAddress('billing')->first_name . ' ' . $order->getAddress('billing')->last_name,
         'street'   => $order->getAddress('billing')->street1,
         'city'     => $order->getAddress('billing')->city,
         'zip_code' => $order->getAddress('billing')->postal_code,
@@ -481,7 +482,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         'amount' => $amount_currency,
         'card'   => [
           'token' => $card_token,
-          'status' => isset($this->configuration['3d_secure'])? "true" : "false",
+          'status' => isset($this->configuration['3d_secure']) ? "true" : "false",
         ],
         // 'auto_capture' => false,
         // 'test_mode' => isset($this->configuration['testmode']) ? 1 : 0,
@@ -489,7 +490,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       );
       $authorize_obj = $this->payClient()->request->post("/payments/{$payment->id}/authorize?synchronized", $paymentdata);
       $authorize_data = $authorize_obj->asObject();
-      // checking success response.
+      // Checking success response.
       if ($authorize_obj->isSuccess()) {
         // To capture payment using capture class below.
         $payment_capture = $this->capture($order, $payment->id, $amount_currency);
@@ -507,9 +508,9 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
             'payment_amount' => $payment_capture->operations[0]->amount,
             'payment_status' => $payment_capture->operations[0]->qp_status_msg,
             'customer_email' => $payment_capture->invoice_address->email,
-             'created_at' => REQUEST_TIME,
-            ))
-            ->execute();
+            'created_at' => REQUEST_TIME,
+          ))
+          ->execute();
         // Store result.
         $result = array(
           'success' => TRUE,
@@ -519,7 +520,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         );
         // Return result.
         return $result;
-      } 
+      }
       else {
         // Store result.
         $result = array(
@@ -533,8 +534,8 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         uc_order_comment_save($order->id(), $order->getOwnerId(), $authorize_data->message, 'admin');
         // Return result.
         return $result;
-      }          
-    } 
+      }
+    }
     else {
       drupal_set_message($this->t('QuickPay credit card payment creating.' . $payment->message), 'error', FALSE);
       \Drupal::logger('uc_quickpay')->notice($payment->message);

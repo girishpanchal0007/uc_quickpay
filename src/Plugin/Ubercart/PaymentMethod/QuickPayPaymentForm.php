@@ -207,7 +207,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 
   /**
    * {@inheritdoc}
-   */ 
+   */
   public function orderView(OrderInterface $order) {
     $payment_id = db_query("SELECT payment_id FROM {uc_payment_quickpay_callback} WHERE order_id = :id ORDER BY created_at ASC", [':id' => $order->id()])->fetchField();
     if (empty($payment_id)) {
@@ -253,10 +253,10 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     // Static variable for loop.
     $i = 0;
     foreach ($order->products as $item) {
-      $data['basket[' .$i . '][qty]'] = $item->qty->value;
-      $data['basket[' .$i . '][item_no]'] = $item->model->value;
-      $data['basket[' .$i . '][item_name]'] = $item->title->value;
-      $data['basket[' .$i . '][item_price]'] = uc_currency_format($item->price->value, FALSE, FALSE, '.');
+      $data['basket[' . $i . '][qty]'] = $item->qty->value;
+      $data['basket[' . $i . '][item_no]'] = $item->model->value;
+      $data['basket[' . $i . '][item_name]'] = $item->title->value;
+      $data['basket[' . $i . '][item_price]'] = uc_currency_format($item->price->value, FALSE, FALSE, '.');
       $data['basket[' . $i . '][vat_rate]'] = 0.25;
       $i++;
     }
@@ -286,7 +286,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
    *   Checking prepareApi is set or not.
    */
   public function prepareApi() {
-    // Not clear that this is useful since payment config form forces at least some config
+    // Not clear that this is useful since payment config form forces at least some config.
     if (!_uc_quickpay_check_api_keys($this->getConfiguration())) {
       \Drupal::logger('uc_quickpay')->error('QuickPay API keys are not configured. Payments cannot be made without them.', array());
       return FALSE;

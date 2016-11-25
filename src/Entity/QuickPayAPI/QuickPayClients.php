@@ -10,16 +10,16 @@ class QuickPayClients {
   /**
    * Contains cURL instance.
    *
-   * @var $ch 
-   * public character variable.
+   * @var ch
+   *   public character variable.
    */
   public $ch;
 
   /**
    * Contains the authentication string.
    *
-   * @var $authrstring 
-   * protected string variable
+   * @var authrstring
+   *   protected string variable
    */
   protected $authrstring;
 

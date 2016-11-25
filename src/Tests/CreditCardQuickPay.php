@@ -26,17 +26,17 @@ class CreditCardQuickPay extends UbercartTestBase {
    * These numbers all pass the Luhn algorithm check and are reserved by
    * the card issuer for testing purposes.
    *
-   * @var $test_cards
+   * @var testcards
    *   Some of the card number add in array.
    */
-  protected static $test_cards = array(
-    '1000 0300 0000 0005', 
+  protected static $testcards = array(
+    '1000 0300 0000 0005',
     '1000 0300 0000 0013',
     '1000 0300 0000 0021',
-    '1000 0300 0000 0021',  
-    '1000 0200 0000 0006', 
+    '1000 0300 0000 0021',
+    '1000 0200 0000 0006',
     '1000 0200 0000 0014',
-    '1000 0100 0000 0007', 
+    '1000 0100 0000 0007',
     '1000 0100 0000 0015',
     '1000 0000 0000 0008',
     '1000 0000 0000 0016',
@@ -44,6 +44,7 @@ class CreditCardQuickPay extends UbercartTestBase {
     '1000 0000 0000 0040',
   );
   /**
+   * @var paymentMethod
    * Payment method protected variable.
    */
   protected $paymentMethod;
@@ -204,7 +205,7 @@ class CreditCardQuickPay extends UbercartTestBase {
   public function testCheckout() {
     $this->addToCart($this->product);
     $this->checkout(array(
-      'panes[payment][details][cc_number]' => array_rand(array_flip(self::$test_cards)),
+      'panes[payment][details][cc_number]' => array_rand(array_flip(self::$testcards)),
       'panes[payment][details][cc_cvv]' => mt_rand(100, 999),
       'panes[payment][details][cc_exp_month]' => mt_rand(1, 12),
       'panes[payment][details][cc_exp_year]' => mt_rand(date('Y') + 1, 2022),

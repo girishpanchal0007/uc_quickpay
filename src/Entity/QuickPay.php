@@ -12,12 +12,15 @@ class QuickPay {
 
   /**
    * Contains the QuickPay_Request object.
+   *
+   * @var string request.
+   * QuickPay request variable.
    */
   public $request;
-  
+
   /**
-   * Construct function.
-   * Instantiates the main class.
+   * Construct function,
+   * Instantiates the main class,
    * Creates a client which is passed to the request construct.
    */
   public function __construct($auth_string = '') {

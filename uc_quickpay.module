@@ -46,7 +46,7 @@ function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInter
   $order_total = '';
   $order_query = db_select('uc_orders', 'o')
     ->fields('o', array('order_id', 'uid', 'order_total', 'created'))
-    ->condition('order_id',  $order->id(), '=')
+    ->condition('order_id', $order->id(), '=')
     ->orderBy('created', 'DESC')
     ->range(0, 2)
     ->execute();
@@ -67,7 +67,7 @@ function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInter
       '#weight' => 15,
     );
     // Calling function on order views refund button.
-    $form['actions']['order_refund']['#submit'][]  = 'uc_quickpay_form_order_refund_process';
+    $form['actions']['order_refund']['#submit'][] = 'uc_quickpay_form_order_refund_process';
   }
 }
 
@@ -114,7 +114,7 @@ function uc_quickpay_form_order_refund_process(&$form, FormStateInterface $form_
       ))
       ->condition('order_id', $order->id())
       ->execute();
-  } 
+  }
   else {
     \Drupal::logger('uc_quickpay')->notice($refund_data->message);
     uc_order_comment_save($order->id(), $order->getOwnerId(), $refund_data->message, 'admin');

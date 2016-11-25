@@ -32,7 +32,7 @@ class QuickPayRequest {
    *
    * Performs an API GET request.
    *
-   * @param $path $query
+   * @var $path $query
    *   Resonse $path for string and $query for array.
    *
    * @return Response
@@ -43,7 +43,7 @@ class QuickPayRequest {
     if (!empty($query)) {
       if (strpos($path, '?') === FALSE) {
         $path .= '?' . http_build_query($query, '', '&');
-      } 
+      }
       else {
         $path .= ini_get('arg_separator.output') . http_build_query($query, '', '&');
       }
@@ -115,12 +115,9 @@ class QuickPayRequest {
   }
 
   /**
-   * setUrl function.
+   * SetUrl function.
    *
    * Takes an API request string and appends it to the API url.
-   *
-   * @return void
-   *   Seturl request when function is calling.
    */
   protected function setUrl($params) {
     curl_setopt($this->client->ch, CURLOPT_URL, QuickPayConstants::API_URL . trim($params, '/'));
@@ -131,7 +128,7 @@ class QuickPayRequest {
    *
    * Performs the prepared API request.
    *
-   * @param  $request_type $form
+   * @var $request_type
    *   String for request and array for the form.
    *
    * @return Response
@@ -140,7 +137,7 @@ class QuickPayRequest {
   protected function execute($request_type, $form = array()) {
     // Set the HTTP request type.
     curl_setopt($this->client->ch, CURLOPT_CUSTOMREQUEST, $request_type);
-    // If additional data is delivered, we will send it along with the API request.
+    // Additional data is delivered,we will send it along with the API request.
     if (is_array($form) && !empty($form)) {
       curl_setopt($this->client->ch, CURLOPT_POSTFIELDS, http_build_query($form, '', '&'));
     }
