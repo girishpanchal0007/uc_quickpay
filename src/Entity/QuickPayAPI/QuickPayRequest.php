@@ -4,6 +4,7 @@ namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
 
 use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayResponse;
 use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayConstants;
+use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
 
 /**
  * Provides the Mollie profile add/edit form.
@@ -13,7 +14,7 @@ class QuickPayRequest {
   /**
    * Contains QuickPay_Client instance.
    *
-   * @var \Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayRequest.
+   * @var \Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayRequest
    */
   protected $client;
 
@@ -31,16 +32,15 @@ class QuickPayRequest {
    *
    * Performs an API GET request.
    *
-   * @param  string $path
-   * 
-   * @param  array  $query
-   *
+   * @param $path $query
+   *  $path for string and $query for array.
    * @return Response
+   * Get request when function is calling.
    */
   public function get($path, $query = array()) {
     // Add query parameters to $path?.
     if (!empty($query)) {
-      if (strpos($path, '?') === false) {
+      if (strpos($path, '?') === FALSE) {
         $path .= '?' . http_build_query($query, '', '&');
       } else {
         $path .= ini_get('arg_separator.output') . http_build_query($query, '', '&');
@@ -58,6 +58,7 @@ class QuickPayRequest {
    * Performs an API POST request.
    *
    * @return Response
+   * Post request when function is calling.
    */
   public function post($path, $form = array()) {
     // Set the request params.
@@ -72,6 +73,7 @@ class QuickPayRequest {
    * Performs an API PUT request.
    *
    * @return Response
+   * Put request when function is calling.
    */
   public function put($path, $form = array()) {
     // Set the request params.
@@ -86,6 +88,7 @@ class QuickPayRequest {
    * Performs an API PATCH request.
    *
    * @return Response
+   * Patch request when function is calling.
    */
   public function patch($path, $form = array()) {
     // Set the request params.
@@ -100,6 +103,7 @@ class QuickPayRequest {
    * Performs an API DELETE request.
    *
    * @return Response
+   * Delete request when function is calling.
    */
   public function delete($path, $form = array()) {
     // Set the request params.
@@ -114,6 +118,7 @@ class QuickPayRequest {
    * Takes an API request string and appends it to the API url.
    *
    * @return void
+   * Seturl request when function is calling.
    */
   protected function setUrl($params) {
     curl_setopt($this->client->ch, CURLOPT_URL, QuickPayConstants::API_URL . trim($params, '/'));
@@ -124,11 +129,11 @@ class QuickPayRequest {
    *
    * Performs the prepared API request.
    *
-   * @param  string $request_type
-   *
-   * @param  array  $form
+   * @param  $request_type $form
+   * String for request and array for the form.
    *
    * @return Response
+   * Execute request when function is calling.
    */
   protected function execute($request_type, $form = array()) {
     // Set the HTTP request type.

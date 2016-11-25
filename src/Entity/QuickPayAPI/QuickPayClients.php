@@ -6,14 +6,18 @@ namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
  * QuickPay API v10 call client.
  */
 class QuickPayClients {
-  
+
   /**
    * Contains cURL instance.
+   *
+   * @var $ch character
    */
   public $ch;
 
   /**
    * Contains the authentication string.
+   *
+   * @var $auth_string string
    */
   protected $auth_string;
 
@@ -57,10 +61,10 @@ class QuickPayClients {
       $headers[] = 'Authorization: Basic ' . base64_encode($this->auth_string);
     }
     $options = array(
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_SSL_VERIFYPEER => true,
+      CURLOPT_RETURNTRANSFER => TRUE,
+      CURLOPT_SSL_VERIFYPEER => TRUE,
       CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-      CURLOPT_HTTPHEADER => $headers
+      CURLOPT_HTTPHEADER => $headers,
     );
     curl_setopt_array($this->ch, $options);
   } 

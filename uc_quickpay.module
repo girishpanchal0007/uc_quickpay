@@ -1,19 +1,20 @@
 <?php
 
+/**
+ * @file
+ * Integrates QuickPay with Ubercart.
+ *
+*/
+
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Database\Query\Update;
 use Drupal\uc_order\Entity\Order;
-use Drupal\uc_order\OrderInterface;
-use Drupal\uc_payment\Entity\PaymentReceipt;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\uc_quickpay\Entity\QuickPay;
 use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
 
-define('QUICKPAY_VERSION', 'v10');
+define('UC_QUICKPAY_QUICKPAY_VERSION', 'v10');
 
 /**
- * Implements hook_form_FORM_ID_alter().
- * Cart checkout form alter.
+ * Implements hook_form_FORM_ID_alter() for cart checkout form alter.
  */
 function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
 	// Checking payment method for including library files.
@@ -33,8 +34,7 @@ function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
- * Order view form alter.
+ * Implements hook_form_FORM_ID_alter() for order view form alter.
  */
 function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInterface $form_state) {
 	// Attached library files.
@@ -43,7 +43,7 @@ function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInter
 	$refund_order_id = $form['order_id']["#value"];
 	// Load order using order id.
 	$order = Order::load($refund_order_id);
-	// Get value forms
+	// Get value forms.
 	$order_total = '';
 	$query1 = db_select('uc_orders', 'o')
     ->fields('o', array('order_id', 'uid', 'order_total', 'created'))
