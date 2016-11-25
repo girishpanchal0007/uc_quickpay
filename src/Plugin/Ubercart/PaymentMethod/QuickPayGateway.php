@@ -44,7 +44,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
    * @return array
    * An array with keys as needed by the chargeCard() method and values
    * that can be displayed to the customer.
-  */
+   */
   public function getEnabledTypes() {
     return [
       'maestro'    => $this->t('Maestro'),
@@ -64,7 +64,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
    * UC_CREDIT_AUTH_CAPTURE, UC_CREDIT_REFERENCE_SET, UC_CREDIT_REFERENCE_TXN,
    * UC_CREDIT_REFERENCE_REMOVE, UC_CREDIT_REFERENCE_CREDIT, UC_CREDIT_CREDIT
    * and UC_CREDIT_VOID.
-  */
+   */
   public function getTransactionTypes() {
     return [
       UC_CREDIT_AUTH_CAPTURE,
@@ -74,7 +74,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
   /**
    * {@inheritdoc}
-  */
+   */
   public function getDisplayLabel($label) {
     $form['label'] = array(
       '#prefix' => ' ',
@@ -94,7 +94,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
   /**
    * {@inheritdoc}
-  */
+   */
   public function defaultConfiguration() {
     return parent::defaultConfiguration() + [
       'api' => [
@@ -114,7 +114,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
   /**
    * {@inheritdoc}
-  */
+   */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
     $form['api'] = array(
@@ -146,7 +146,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       '#title' => $this->t('Payment Window API key'),
       '#default_value' => $this->configuration['api']['payment_api_key'],
       '#description' => $this->t('This is a payment window API key.'),
-    );  
+    );
     $form['api']['pre_order_id'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Order id prefix'),
@@ -158,7 +158,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       '#title' => $this->t('3D Secure Creditcard'),
       '#description' => $this->t('Checked 3D Secure Creditcard if you wish to make payment under 3D secure.'),
       '#default_value' => $this->configuration['3d_secure'],
-    );        
+    );
     $form['callbacks'] = array(
       '#type' => 'details',
       '#title' => $this->t('CALLBACKS'),
@@ -182,7 +182,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
   /**
    * {@inheritdoc}
-  */
+   */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $elements = ['merchant_id', 'user_api_key', 'agreement_id', 'payment_api_key', 'pre_order_id'];
     foreach ($elements as $element_name) {
@@ -198,7 +198,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
   /**
    * Checking vaildation keys of payment gateway.
-  */
+   */
   protected function trimKey($key) {
     $key = trim($key);
     $key = \Drupal\Component\Utility\Html::escape($key);
@@ -210,7 +210,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
    *
    * @param $key
    * @return boolean
-  */
+   */
   static public function validateKey($key) {
     $valid = preg_match('/^[a-zA-Z0-9_]+$/', $key);
     return $valid;
@@ -218,7 +218,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
   /**
    * {@inheritdoc}
-  */
+   */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     foreach (['merchant_id', 'user_api_key', 'agreement_id', 'payment_api_key', 'pre_order_id'] as $item) {
       $this->configuration['api'][$item] = $form_state->getValue(['settings', 'api', $item]);
@@ -231,7 +231,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
   /**
    * {@inheritdoc}
-  */
+   */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $form = parent::cartDetails($order, $form, $form_state);
     // Send merchant and agreement ids to JS.
@@ -256,7 +256,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       '#size' => 20,
       '#maxlength' => 19,
       '#weight' => 2,
-    );           
+    );
     // Placeholder.
     $form["cc_cvv"]['#attributes'] = array('data-quickpay' => 'cvd', 'placeholder' => '***');
     $form["cc_cvv"]['#weight'] = 3;
@@ -265,7 +265,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
   /**
    * {@inheritdoc}
-  */
+   */
   public function cartProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
     if (!$form_state->hasValue(['panes', 'payment', 'details', 'cc_number'])) {
       return;
@@ -314,14 +314,14 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
   /**
    * {@inheritdoc}
-  */
+   */
   public function cartReviewTitle() {
     return $this->t('QuickPay Credit Card');
   }
   
   /**
    * {@inheritdoc}
-  */
+   */
   public function cartReview(OrderInterface $order) {
     $fields = $this->getEnabledFields();
     if (!empty($fields['type'])) {
@@ -337,7 +337,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
   /**
    * {@inheritdoc}
-  */
+   */
   public function orderView(OrderInterface $order) {
     $build = array();
     // Add the hidden span for the CC details if possible.
@@ -379,7 +379,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
 
   /**
    * {@inheritdoc}
-  */
+   */
   public function processPayment(OrderInterface $order, $amount, $txn_type, $reference = NULL) {
     // Ensure the cached details are loaded.
     // @todo Figure out which parts of this call are strictly necessary.
@@ -400,8 +400,8 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
   }
 
   /**
-  * {@inheritdoc}
-  */
+   * {@inheritdoc}
+   */
   protected function chargeCard(OrderInterface $order, $amount, $txn_type, $reference = NULL) {
     if (!$this->prepareApi()) {
       $result = array(
@@ -517,30 +517,30 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
   }
 
   /**
-    * Return Quickpay client.
-    *
-    * @return Quickpay
-    *   The client.
-  */
+   * Return Quickpay client.
+   *
+   * @return Quickpay
+   * The client.
+   */
   public function payClient() {
     $payment_api_key = $this->configuration['api']['payment_api_key'];
     return new QuickPay(":{$payment_api_key}");
   }
 
   /**
-    * Return Quickpay client.
-    *
-    * @return Quickpay
-    *   The client.
-  */
+   * Return Quickpay client.
+   *
+   * @return Quickpay
+   * The client.
+   */
   public function captureClient() {
     $user_api_key = $this->configuration['api']['user_api_key'];
     return new QuickPay(":{$user_api_key}");
   }
 
   /**
-    * Capture on an authorised payment.
-  */
+   * Capture on an authorised payment.
+   */
   public function capture($order, $payment_id, $amount) {
     // Capture payment.
     $capturedata = array(
@@ -559,8 +559,8 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         'success' => FALSE,
         'comment' => $this->t("Payment capture is failed"),
         'message' => $this->t("QuickPay credit card payment is not capture for order !order: !message", array(
-          '!order' => $order->id(), 
-          '!message' => $capture_data->message
+          '!order' => $order->id(),
+          '!message' => $capture_data->message,
         )),
         'uid' => $order->getOwnerId(),
       );
@@ -571,10 +571,10 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
   }
 
   /**
-    * Utility function: Load QuickPay API
-    *
-    * @return bool
-  */
+   * Utility function: Load QuickPay API
+   *
+   * @return bool
+   */
   public function prepareApi() {
     // Not clear that this is useful since payment config form forces at least some config.
     if (!_uc_quickpay_check_api_keys($this->getConfiguration())) {

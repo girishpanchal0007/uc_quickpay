@@ -12,28 +12,28 @@ class QuickPayResponse {
    * HTTP status code of request.
    *
    * @var integer
-  */
+   */
   protected $status_code;
 
   /**
    * The headers sent during the request.
    *
    * @var string
-  */
+   */
   protected $sent_headers;
 
   /**
    * The headers received during the request.
    *
    * @var string
-  */
+   */
   protected $received_headers;
 
   /**
    * Response body of last request.
    *
    * @var string
-  */
+   */
   protected $response_data;
 
   /**
@@ -50,7 +50,7 @@ class QuickPayResponse {
    *
    * @param string $response_data    
    * The http response body.
-  */
+   */
   public function __construct($status_code, $sent_headers, $received_headers, $response_data) {
     $this->status_code = $status_code;
     $this->sent_headers = $sent_headers;

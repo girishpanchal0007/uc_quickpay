@@ -1,14 +1,14 @@
-.uc-order-view-update-form{
+.uc-order-view-update-form {
 	position: relative;
 }
-.uc-order-view-update-form #edit-actions--2{
+.uc-order-view-update-form #edit-actions--2 {
 	position: absolute;
 	bottom: 0px;
 	left: 120px;
 	margin: 0px;
 }
 @media (max-width: 600px){
-	.uc-order-view-update-form #edit-actions--2{
+	.uc-order-view-update-form #edit-actions--2 {
 		position: relative;
 		left: 0px;
 	}

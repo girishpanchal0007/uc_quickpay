@@ -119,7 +119,6 @@ function uc_quickpay_form_order_refund_process(&$form, FormStateInterface $form_
 		\Drupal::logger('uc_quickpay')->notice($refund_data->message);
     uc_order_comment_save($order->id(), $order->getOwnerId(), $refund_data->message, 'admin');
 	}
-
 }
 
 /**

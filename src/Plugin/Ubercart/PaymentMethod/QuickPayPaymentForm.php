@@ -21,12 +21,12 @@ use Drupal\uc_payment\OffsitePaymentMethodPluginInterface;
 class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaymentMethodPluginInterface {
 	
   /**
-	* Returns the set of card types which are used by this payment method.
-	*
-	* @return array
-	*   An array with keys as needed by the chargeCard() method and values
-	*   that can be displayed to the customer.
-	*/
+	 * Returns the set of card types which are used by this payment method.
+	 *
+	 * @return array
+	 * An array with keys as needed by the chargeCard() method and values
+	 * that can be displayed to the customer.
+	 */
 	protected function getEnabledTypes() {
   	return [
       'maestro'    => $this->t('Maestro'),
@@ -41,13 +41,13 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 	}
 
 	/**
- 	* {@inheritdoc}
- 	*/
+ 	 * {@inheritdoc}
+ 	 */
 	public function getDisplayLabel($label) {
   	$build['label'] = array(
   	  '#prefix' => ' ',
   	  '#plain_text' => $label,
-  	);		
+  	);
   	$cc_types = $this->getEnabledTypes();
   	foreach ($cc_types as $type => $description) {
   	  $build['image'][$type] = array(
@@ -61,8 +61,8 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 	}
 
 	/**
- 	* {@inheritdoc}
- 	*/
+ 	 * {@inheritdoc}
+ 	 */
 	public function defaultConfiguration() {
     return [
       'api' => [
@@ -77,8 +77,8 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 	}
 
 	/**
- 	* {@inheritdoc}
- 	*/
+ 	 * {@inheritdoc}
+ 	 */
 	public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['api'] = array(
       '#type' => 'details',
@@ -144,7 +144,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 
   /**
    * {@inheritdoc}
-  */
+   */
 	public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $elements = ['merchant_id', 'private_key', 'agreement_id', 'payment_api_key'];
     foreach ($elements as $element_name) {
@@ -160,7 +160,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 
   /**
    * Checking vaildation keys of payment gateway.
-  */
+   */
 	protected function trimKey($key) {
     $key = trim($key);
     $key = \Drupal\Component\Utility\Html::escape($key);
@@ -172,7 +172,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
    *
    * @param $key
    * @return boolean
-  */
+   */
   static public function validateKey($key) {
     $valid = preg_match('/^[a-zA-Z0-9_]+$/', $key);
     return $valid;
@@ -180,7 +180,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 
   /**
    * {@inheritdoc}
-  */
+   */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     foreach (['merchant_id', 'private_key', 'agreement_id', 'payment_api_key'] as $item) {
       $this->configuration['api'][$item] = $form_state->getValue(['settings', 'api', $item]);
@@ -192,7 +192,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 
   /**
    * {@inheritdoc}
-  */
+   */
   public function orderView(OrderInterface $order) {
     $payment_id = db_query("SELECT payment_id FROM {uc_payment_quickpay_callback} WHERE order_id = :id ORDER BY created_at ASC", [':id' => $order->id()])->fetchField();
     if (empty($payment_id)) {
@@ -204,7 +204,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 
   /**
    * {@inheritdoc}
-  */
+   */
   public function buildRedirectForm(array $form, FormStateInterface $form_state, OrderInterface $order = NULL) {
     // Get billing address object.
     $bill_address = $order->getAddress('billing');
@@ -244,7 +244,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       $data['basket['.$i.'][item_price]'] = uc_currency_format($item->price->value, FALSE, FALSE, '.');
       $data['basket['.$i.'][vat_rate]'] = 0.25;
       $i++;
-    }       
+    }
     // Checksum.
     $data['checksum'] = $this->checksumCal($data, $this->configuration['api']['payment_api_key']);
     // Add hidden field with new form
@@ -265,10 +265,10 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   }
 
   /**
-    * Utility function: Load QuickPay API
-    *
-    * @return bool
-  */
+   * Utility function: Load QuickPay API
+   *
+   * @return bool
+   */
   public function prepareApi() {
     // Not clear that this is useful since payment config form forces at least some config
     if (!_uc_quickpay_check_api_keys($this->getConfiguration())) {
@@ -279,14 +279,14 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   }
 
   /**
-    * Calculate the hash for the request.
-    *
-    * @param array $params
-    *   The data to POST to Quickpay.
-    *
-    * @return string
-    *   The checksum.
-  */
+   * Calculate the hash for the request.
+   *
+   * @param array $params
+   * The data to POST to Quickpay.
+   *
+   * @return string
+   *   The checksum.
+   */
   protected function checksumCal($params, $api_key) {
     $flattened_params = $this->flatten_params($params);
     ksort($flattened_params);
@@ -295,8 +295,8 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
 	}
 
   /**
-    * Flatten request parameter array.
-  */
+   * Flatten request parameter array.
+   */
   protected function flatten_params($obj, $result = array(), $path = array()) {
     if (is_array($obj)) {
       foreach ($obj as $k => $v) {
@@ -307,5 +307,4 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     }
     return $result;
 	}
-
 }

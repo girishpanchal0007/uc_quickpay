@@ -21,11 +21,11 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 class CreditCardQuickPay extends UbercartTestBase {
   
   /**
-  * A selection of "test" numbers to use for testing credit card payemnts.
-  *
-  * These numbers all pass the Luhn algorithm check and are reserved by
-  * the card issuer for testing purposes.
-  */
+   * A selection of "test" numbers to use for testing credit card payemnts.
+   *
+   * These numbers all pass the Luhn algorithm check and are reserved by
+   * the card issuer for testing purposes.
+   */
   protected static $test_cards = array(
     '1000 0300 0000 0005', // American Express
     '1000 0300 0000 0013',
@@ -46,8 +46,8 @@ class CreditCardQuickPay extends UbercartTestBase {
   public static $adminPermissions = array('administer credit cards', 'process credit cards');
 
   /**
-  * {@inheritdoc}
-  */
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     // Need admin permissions in order to change credit card settings.
@@ -58,8 +58,8 @@ class CreditCardQuickPay extends UbercartTestBase {
   }
 
   /**
-  * Helper function to configure Credit Card payment method settings.
-  */
+   * Helper function to configure Credit Card payment method settings.
+   */
   protected function configureCreditCard() {
     // Create key directory, make it readable and writeable.
     // Putting this under sites/default/files because SimpleTest needs to be
@@ -86,15 +86,15 @@ class CreditCardQuickPay extends UbercartTestBase {
   }
 
   /**
-  * Helper function to configure Credit Card gateway.
-  */
+   * Helper function to configure Credit Card gateway.
+   */
   protected function configureGateway() {
     $this->paymentMethod = $this->createPaymentMethod('quickpay_gateway');
   }
 
   /**
-  * {@inheritdoc}
-  */
+   * {@inheritdoc}
+   */
   protected function tearDown() {
     // Cleanup keys directory after test.
     \Drupal::service('file_system')->unlink('sites/default/files/simpletest.keys/' . UC_CREDIT_KEYFILE_NAME);
@@ -103,8 +103,8 @@ class CreditCardQuickPay extends UbercartTestBase {
   }
 
   /**
-  * Tests security settings configuration.
-  */
+   * Tests security settings configuration.
+   */
   public function testSecuritySettings() {
     // TODO:  Still need tests with existing key file
     // where key file is not readable or doesn't contain a valid key
@@ -196,8 +196,8 @@ class CreditCardQuickPay extends UbercartTestBase {
   }
 
   /**
-  * Tests that an order can be placed using the quickpay gateway.
-  */
+   * Tests that an order can be placed using the quickpay gateway.
+   */
   public function testCheckout() {
     $this->addToCart($this->product);
     $this->checkout(array(
@@ -210,8 +210,8 @@ class CreditCardQuickPay extends UbercartTestBase {
   }
 
   /**
-  * Tests that expiry date validation functions correctly.
-  */
+   * Tests that expiry date validation functions correctly.
+   */
   public function testExpiryDate() {
     $order = $this->createOrder(array('payment_method' => $this->paymentMethod['id']));
     $year = date('Y');
@@ -235,5 +235,4 @@ class CreditCardQuickPay extends UbercartTestBase {
       }
     }
   }
-
 }

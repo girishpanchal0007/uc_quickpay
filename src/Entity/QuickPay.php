@@ -13,19 +13,18 @@ class QuickPay {
 	/**
    * Contains the QuickPay_Request object.
    *
-  **/
+   */
   public $request;
 
   /**
-  * Construct function.
-  *
-  * Instantiates the main class.
-  *
-  * Creates a client which is passed to the request construct.
-  */
+   * Construct function.
+   *
+   * Instantiates the main class.
+   *
+   * Creates a client which is passed to the request construct.
+   */
   public function __construct($auth_string = '') {
     $client = new QuickPayClients($auth_string);
     $this->request = new QuickPayRequest($client);
-  }
-  
+  } 
 }
