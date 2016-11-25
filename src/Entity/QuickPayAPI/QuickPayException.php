@@ -15,5 +15,6 @@ class QuickPayException extends \Exception {
   public function __construct($message, $code = 0, QuickPayException $previous = NULL) {
     // Make sure everything is assigned properly.
     parent::__construct($message, $code, $previous);
-  } 
+  }
+
 }

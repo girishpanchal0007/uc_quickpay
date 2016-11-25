@@ -19,28 +19,33 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  * @group Ubercart
  */
 class CreditCardQuickPay extends UbercartTestBase {
-  
+
   /**
    * A selection of "test" numbers to use for testing credit card payemnts.
    *
    * These numbers all pass the Luhn algorithm check and are reserved by
    * the card issuer for testing purposes.
+   *
+   * @var $test_cards
+   *   Some of the card number add in array.
    */
   protected static $test_cards = array(
-    '1000 0300 0000 0005', // American Express
+    '1000 0300 0000 0005', 
     '1000 0300 0000 0013',
     '1000 0300 0000 0021',
     '1000 0300 0000 0021',  
-    '1000 0200 0000 0006', // Dankort
+    '1000 0200 0000 0006', 
     '1000 0200 0000 0014',
-    '1000 0100 0000 0007', // MasterCard
+    '1000 0100 0000 0007', 
     '1000 0100 0000 0015',
-    '1000 0000 0000 0008', // Visa
+    '1000 0000 0000 0008',
     '1000 0000 0000 0016',
     '1000 0000 0000 0024',
     '1000 0000 0000 0040',
   );
-
+  /**
+   * Payment method protected variable.
+   */
   protected $paymentMethod;
   public static $modules = array('uc_payment', 'uc_credit');
   public static $adminPermissions = array('administer credit cards', 'process credit cards');
@@ -154,14 +159,14 @@ class CreditCardQuickPay extends UbercartTestBase {
     );
     $this->assertText('Cannot write to directory, please verify the directory permissions.');
     // Next, specify writeable directory, but with excess whitespace
-    // and trailing /
+    // and trailing.
     $this->drupalPostForm(
       'admin/store/config/payment/credit',
-      array('uc_credit_encryption_path' => '  sites/default/files/testkey/ '),
+      array('uc_credit_encryption_path' => 'sites/default/files/testkey/'),
       t('Save configuration')
     );
     // See that the directory has been properly re-written to remove
-    // whitespace and trailing /
+    // whitespace and trailing.
     $this->assertFieldByName(
       'uc_credit_encryption_path',
       'sites/default/files/testkey',
@@ -233,4 +238,5 @@ class CreditCardQuickPay extends UbercartTestBase {
       }
     }
   }
+
 }

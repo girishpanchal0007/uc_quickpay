@@ -31,7 +31,7 @@ class QuickPayFormController extends ControllerBase {
     $message = $this->t('QuickPay Form payment was successfully of : @amount @currency.',
       [
         '@amount' => uc_currency_format($uc_order->getTotal(), FALSE, FALSE, FALSE),
-        '@currency' => $uc_order->getCurrency()
+        '@currency' => $uc_order->getCurrency(),
       ]
     );
     // Comment order.
@@ -51,10 +51,10 @@ class QuickPayFormController extends ControllerBase {
     }
     // Checking current session current order.
     $session = \Drupal::service('session');
-    $message = $this->t('Quick Pay Form payment was cancelled occurred some unnecessary action: @amount @currency.', 
+    $message = $this->t('Quick Pay Form payment was cancelled occurred some unnecessary action: @amount @currency.',
       [
-        '@amount' => uc_currency_format($uc_order->getTotal(), FALSE, FALSE, FALSE), 
-        '@currency' => $uc_order->getCurrency()
+        '@amount' => uc_currency_format($uc_order->getTotal(), FALSE, FALSE, FALSE),
+        '@currency' => $uc_order->getCurrency(),
       ]
     );
     // Comment order.
@@ -64,4 +64,5 @@ class QuickPayFormController extends ControllerBase {
     drupal_set_message($this->t('An error has occurred in your QuickPay payment. Please review your cart and try again.'));
     return $this->redirect('uc_cart.cart');
   }
+
 }

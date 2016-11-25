@@ -7,14 +7,14 @@ namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
  *
  */
 class QuickPayResponse {
-  
+
   /**
    * HTTP status code of request.
    *
    * @var integer
    */
   protected $status_code;
-  
+
   /**
    * The headers sent during the request.
    *
@@ -39,17 +39,17 @@ class QuickPayResponse {
   /**
    * Instantiates a new response object.
    *
-   * @param int $status_code 
-   * The HTTP status code.
+   * @param int $status_code
+   *   The HTTP status code.
    *
    * @param string $sent_headers
-   * The headers sent.
+   *   The headers sent.
    *
-   * @param string $received_headers 
-   * The headers received.
+   * @param string $received_headers
+   *   The headers received.
    *
-   * @param string $response_data    
-   * The http response body.
+   * @param string $response_data
+   *   The http response body.
    */
   public function __construct($status_code, $sent_headers, $received_headers, $response_data) {
     $this->status_code = $status_code;
@@ -64,16 +64,17 @@ class QuickPayResponse {
    * Usage: list($status_code, $headers, $response_body) = $response->as_raw().
    *
    * @param  boolan $keep_authorization_value Normally the value of the,
-   * Authorization: header is masked. True keeps the sent value.
+   *   Authorization: header is masked. True keeps the sent value.
    *
    * @return array  [integer, string[], string]
   */
-  public function asRaw($keep_authorization_value = false) {
+  public function asRaw($keep_authorization_value = FALSE) {
     // To avoid unintentional logging of credentials the default is to mask the value of the Authorization: header.
     if ($keep_authorization_value) {
       $sent_headers = $this->sent_headers;
-    } else {
-      // Avoid dependency on mbstring/
+    } 
+    else {
+      // Avoid dependency on mbstring.
       $lines = explode("\n", $this->sent_headers);
       foreach ($lines as &$line) {
         if (strpos($line, 'Authorization: ') === 0) {
@@ -96,10 +97,11 @@ class QuickPayResponse {
    * Returns the response body as an array.
    *
    * @return array
+   *   Get response asArray.
    */
   public function asArray() {
-    if ($response = json_decode($this->response_data, true)) {
-     return $response;
+    if ($response = json_decode($this->response_data, TRUE)) {
+      return $response;
     }
     return array();
   }
@@ -108,6 +110,7 @@ class QuickPayResponse {
    * Returns the response body as an array.
    *
    * @return \stdClass
+   *   Return response as object form json.
    */
   public function asObject() {
     if ($response = json_decode($this->response_data)) {
@@ -120,21 +123,23 @@ class QuickPayResponse {
    * Returns the http_status code.
    *
    * @return int
+   *   HttpStatus code.
    */
   public function httpStatus() {
     return $this->status_code;
   }
 
   /**
-   *
    * Checks if the http status code indicates a successful or an error response.
    *
-   * @return boolean
+   * @return bool
+   *   IsSuccess response code.
    */
   public function isSuccess() {
     if ($this->status_code > 299) {
-      return false;
+      return FALSE;
     }
-    return true;
+    return TRUE;
   }
+
 }

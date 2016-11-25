@@ -12,7 +12,7 @@ class QuickPayCallbackController extends ControllerBase {
 
   /**
    * Handle Callback from QUickPay payment gateway.
-  */
+   */
   public function quickPayCallback(OrderInterface $uc_order) {
     // Get private key configuration.
     $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($uc_order);
@@ -31,7 +31,7 @@ class QuickPayCallbackController extends ControllerBase {
       $orderID = strstr($data['order_id'], $uc_order->id());
       if ($orderID != $uc_order->id()) {
         \Drupal::logger('uc_quickpay')->error('QuickPay callback order_id is not matched.');
-       return;
+        return;
       }
       if ($data['operations'][0]['aq_status_msg'] == "Approved") {
         $payment_id = $data['id'];
@@ -56,7 +56,7 @@ class QuickPayCallbackController extends ControllerBase {
             'created_at' => REQUEST_TIME,
           ))
           ->execute();
-      } 
+      }
       else {
         uc_order_comment_save($uc_order->id(), 0, $this->t("QuickPay payment is not approved by QuickPay. You need to contact with site admin"), 'admin');
       }
@@ -64,8 +64,8 @@ class QuickPayCallbackController extends ControllerBase {
     else {
       uc_order_comment_save($uc_order->id(), 0, $this->t('QuickPay payment is not match with callback response. You need to contact with site admin.',
         [
-          '@amount' => uc_currency_format($payment_amount, FALSE), 
-          '@currency' => $data['currency']
+          '@amount' => uc_currency_format($payment_amount, FALSE),
+          '@currency' => $data['currency'],
         ]
       ));
     }
@@ -77,4 +77,5 @@ class QuickPayCallbackController extends ControllerBase {
   protected function callbackChecksum($base, $private_key) {
     return hash_hmac("sha256", $base, $private_key);
   }
+
 }
