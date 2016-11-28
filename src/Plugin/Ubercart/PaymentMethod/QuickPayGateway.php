@@ -207,7 +207,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
    */
   protected function trimKey($key) {
     $key = trim($key);
-    $key = \Drupal\Component\Utility\Html::escape($key);
+    $key = Html::escape($key);
     return $key;
   }
 
@@ -237,11 +237,23 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       'pre_order_id',
     ];
     foreach ($elements as $item) {
-      $this->configuration['api'][$item] = $form_state->getValue(['settings', 'api', $item]);
+      $this->configuration['api'][$item] = $form_state->getValue([
+        'settings',
+        'api',
+        $item,
+      ]);
     }
     $this->configuration['3d_secure'] = $form_state->getValue('3d_secure');
-    $this->configuration['callbacks']['continue_url'] = $form_state->getValue(['settings', 'callbacks', 'continue_url']);
-    $this->configuration['callbacks']['cancel_url'] = $form_state->getValue(['settings', 'callbacks', 'cancel_url']);
+    $this->configuration['callbacks']['continue_url'] = $form_state->getValue([
+      'settings',
+      'callbacks',
+      'continue_url',
+    ]);
+    $this->configuration['callbacks']['cancel_url'] = $form_state->getValue([
+      'settings',
+      'callbacks',
+      'cancel_url',
+    ]);
     return parent::submitConfigurationForm($form, $form_state);
   }
 
@@ -381,16 +393,16 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       );
     }
     // Add the form to process the card if applicable.
-    // if ($account->hasPermission('process credit cards')) {
-    //   $build['terminal'] = [
-    //     '#type' => 'link',
-    //     '#title' => $this->t('Process card'),
-    //     '#url' => Url::fromRoute('uc_credit.terminal', [
-    //       'uc_order' => $order->id(),
-    //       'uc_payment_method' => $order->getPaymentMethodId(),
-    //     ]),
-    //   ];
-    // }
+    /*if ($account->hasPermission('process credit cards')) {
+      $build['terminal'] = [
+        '#type' => 'link',
+        '#title' => $this->t('Process card'),
+        '#url' => Url::fromRoute('uc_credit.terminal', [
+          'uc_order' => $order->id(),
+          'uc_payment_method' => $order->getPaymentMethodId(),
+        ]),
+      ];
+    }*/
     return $build;
   }
 
@@ -484,9 +496,9 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
           'token' => $card_token,
           'status' => isset($this->configuration['3d_secure']) ? "true" : "false",
         ],
-        // 'auto_capture' => false,
-        // 'test_mode' => isset($this->configuration['testmode']) ? 1 : 0,
-        // 'acquirer' => 'clearhaus',
+        //'auto_capture' => false,
+        //'test_mode' => isset($this->configuration['testmode']) ? 1 : 0,
+        //'acquirer' => 'clearhaus',
       );
       $authorize_obj = $this->payClient()->request->post("/payments/{$payment->id}/authorize?synchronized", $paymentdata);
       $authorize_data = $authorize_obj->asObject();
@@ -537,7 +549,8 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       }
     }
     else {
-      drupal_set_message($this->t('QuickPay credit card payment creating.' . $payment->message), 'error', FALSE);
+      // Error for payment->message.
+      drupal_set_message($this->t('QuickPay credit card payment creating.'), 'error', FALSE);
       \Drupal::logger('uc_quickpay')->notice($payment->message);
       // Order comment.
       uc_order_comment_save($order->id(), $order->getOwnerId(), $payment->message, 'admin');

@@ -53,10 +53,10 @@ class QuickPayResponse {
    *
    * Usage: list($statuscode, $headers, $response_body) = $response->as_raw().
    *
-   * @var  boolan $keep_authorization_value Normally the value of the,
+   * @var boolan $keep_authorization_value Normally the value of the,
    *   Authorization: header is masked. True keeps the sent value.
    *
-   * @return array  [integer, string[], string]
+   * @return array[integer, string[], string]
    *   Return value asRaw.
    */
   public function asRaw($keep_authorization_value = FALSE) {
@@ -107,7 +107,7 @@ class QuickPayResponse {
     if ($response = json_decode($this->responsedata)) {
       return $response;
     }
-    return new \stdClass;
+    return new \stdClass();
   }
 
   /**

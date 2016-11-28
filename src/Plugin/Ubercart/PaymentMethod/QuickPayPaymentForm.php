@@ -168,7 +168,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
    */
   protected function trimKey($key) {
     $key = trim($key);
-    $key = \Drupal\Component\Utility\Html::escape($key);
+    $key = Html::escape($key);
     return $key;
   }
 
@@ -198,7 +198,11 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       'pre_order_id',
     ];
     foreach ($elements as $item) {
-      $this->configuration['api'][$item] = $form_state->getValue(['settings', 'api', $item]);
+      $this->configuration['api'][$item] = $form_state->getValue([
+        'settings',
+        'api',
+        $item,
+      ]);
     }
     $this->configuration['language'] = $form_state->getValue('language');
     $this->configuration['autocapture'] = $form_state->getValue('autocapture');
@@ -320,7 +324,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       }
     }
     else {
-      $result[implode("", array_map(function($p) { return "[{$p}]"; }, $path))] = $obj;
+      $result[implode("", array_map(function($p){return "[{$p}]";}, $path))] = $obj;
     }
     return $result;
   }

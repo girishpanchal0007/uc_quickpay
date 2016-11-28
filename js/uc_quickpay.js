@@ -20,24 +20,18 @@
     },
     beforeCreateToken: function (form) {
       $('input.error').removeClass('error');
-      $.each($("input[type='hidden']"), function (index, val) {
-        if ($(this).data('quickpay') == 'expiration') {
-          $(this).removeClass('error');
-          $(this).addClass('valid');
-        }
-      });
     },
     failure: function (form, source, message) {
       if (source === 'validation') {
         for (var i = 0; i < message.length; i++) {
           $('input[data-quickpay=' + message[i] + ']').addClass('error');
         }
-      } 
+      }
       else {
         alert(source + ': ' + message);
       }
     },
-    success: function (form, token){
+    success: function (form, token) {
       $('input#edit-panes-payment-details-cc-number').attr('name', 'panes[payment][details][cc_number]');
       $('input#cc-date-year').attr('name', 'panes[payment][details][date_year]');
       $('.uc-cart-checkout-form #edit-continue').attr('name', 'op');
