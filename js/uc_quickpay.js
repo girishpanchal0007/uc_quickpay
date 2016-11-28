@@ -16,7 +16,7 @@
     merchant_id: merchantId,
     agreement_id: agreementId,
     brandChanged: function (brand) {
-      //$('.form-item-panes-payment-details-cc-number').html(brand);
+      // $('.form-item-panes-payment-details-cc-number').html(brand);
     },
     beforeCreateToken: function (form) {
       $('input.error').removeClass('error');

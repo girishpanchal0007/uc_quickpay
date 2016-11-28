@@ -56,7 +56,7 @@ class QuickPayResponse {
    * @var boolan $keep_authorization_value Normally the value of the,
    *   Authorization: header is masked. True keeps the sent value.
    *
-   * @return array.
+   * @return array
    *   Return value asRaw.
    */
   public function asRaw($keep_authorization_value = FALSE) {
