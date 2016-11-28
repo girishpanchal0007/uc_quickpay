@@ -374,13 +374,13 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     if ($account->hasPermission('view cc details')) {
       $rows = array();
       if (!empty($order->payment_details['cc_type'])) {
-        $rows[] = $this->t('Card type') . ': ' . $order->payment_details['cc_type'];
+        $rows[] = $this->t('Card type') . ':' . $order->payment_details['cc_type'];
       }
       if (!empty($order->payment_details['cc_number'])) {
-        $rows[] = $this->t('Card number') . ': ' . $this->displayCardNumber($order->payment_details['cc_number']);
+        $rows[] = $this->t('Card number') . ':' . $this->displayCardNumber($order->payment_details['cc_number']);
       }
       if (!empty($order->payment_details['cc_exp_month']) && !empty($order->payment_details['cc_exp_year'])) {
-        $rows[] = $this->t('Expiration') . ': ' . $order->payment_details['date_year'];
+        $rows[] = $this->t('Expiration') . ':' . $order->payment_details['date_year'];
       }
       if (empty($payment_id)) {
         $rows[] = $this->t('Payment ID: @payment_id', ['@payment_id' => 'Unknown']);
@@ -392,17 +392,6 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         '#markup' => implode('<br />', $rows) . '<br />',
       );
     }
-    // Add the form to process the card if applicable.
-    /*if ($account->hasPermission('process credit cards')) {
-      $build['terminal'] = [
-        '#type' => 'link',
-        '#title' => $this->t('Process card'),
-        '#url' => Url::fromRoute('uc_credit.terminal', [
-          'uc_order' => $order->id(),
-          'uc_payment_method' => $order->getPaymentMethodId(),
-        ]),
-      ];
-    }*/
     return $build;
   }
 
@@ -496,9 +485,9 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
           'token' => $card_token,
           'status' => isset($this->configuration['3d_secure']) ? "true" : "false",
         ],
-        //'auto_capture' => false,
-        //'test_mode' => isset($this->configuration['testmode']) ? 1 : 0,
-        //'acquirer' => 'clearhaus',
+        // 'auto_capture' => false.
+        // 'test_mode' => isset($this->configuration['testmode']) ? 1 : 0.
+        // 'acquirer' => 'clearhaus'.
       );
       $authorize_obj = $this->payClient()->request->post("/payments/{$payment->id}/authorize?synchronized", $paymentdata);
       $authorize_data = $authorize_obj->asObject();

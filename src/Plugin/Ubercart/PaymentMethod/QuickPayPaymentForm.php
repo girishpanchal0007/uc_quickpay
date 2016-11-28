@@ -308,7 +308,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
    *   The checksum.
    */
   protected function checksumCal($params, $api_key) {
-    $flattened_params = $this->flatten_params($params);
+    $flattened_params = $this->flattenParams($params);
     ksort($flattened_params);
     $base = implode(" ", $flattened_params);
     return hash_hmac("sha256", $base, $api_key);
@@ -317,10 +317,10 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   /**
    * Flatten request parameter array.
    */
-  protected function flatten_params($obj, $result = array(), $path = array()) {
+  protected function flattenParams($obj, $result = array(), $path = array()) {
     if (is_array($obj)) {
       foreach ($obj as $k => $v) {
-        $result = array_merge($result, $this->flatten_params($v, $result, array_merge($path, array($k))));
+        $result = array_merge($result, $this->flattenParams($v, $result, array_merge($path, array($k))));
       }
     }
     else {

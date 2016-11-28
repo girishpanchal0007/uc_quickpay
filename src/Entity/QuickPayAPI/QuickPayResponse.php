@@ -56,11 +56,12 @@ class QuickPayResponse {
    * @var boolan $keep_authorization_value Normally the value of the,
    *   Authorization: header is masked. True keeps the sent value.
    *
-   * @return array[integer, string[], string]
+   * @return array[integer,string[],string]
    *   Return value asRaw.
    */
   public function asRaw($keep_authorization_value = FALSE) {
-    // To avoid unintentional logging of credentials the default is to mask the value of the Authorization: header.
+    // To avoid unintentional logging of credentials.
+    // the default is to mask the value of the Authorization: header.
     if ($keep_authorization_value) {
       $sentheaders = $this->sentheaders;
     }

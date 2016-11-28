@@ -13,7 +13,7 @@ class QuickPay {
   /**
    * Contains the QuickPay_Request object.
    *
-   * @var stringrequest.
+   * @var stringrequest
    * QuickPay request variable.
    */
   public $request;

@@ -45,7 +45,7 @@ class CreditCardQuickPay extends UbercartTestBase {
   );
   /**
    * Protected variable payment method.
-   * 
+   *
    * @var paymentMethod
    * Payment method protected variable.
    */
