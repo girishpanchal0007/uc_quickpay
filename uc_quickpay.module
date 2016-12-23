@@ -105,7 +105,7 @@ function uc_quickpay_form_order_refund_process(&$form, FormStateInterface $form_
   $refund_data = $refund_res->asObject();
   // Checking refund is success or not.
   if ($refund_res->isSuccess()) {
-    $message = t('QuickPay credit card refund was successfully: @amount', ['@amount' => uc_currency_format($amount_currency)]);
+    $message = t('QuickPay credit card refund was successfully: @amount', ['@amount' => uc_currency_format($order_amount)]);
     // Order comment.
     uc_order_comment_save($order->id(), $order->getOwnerId(), $message, 'admin');
     db_update('uc_orders')

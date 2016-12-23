@@ -497,7 +497,9 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         $payment_capture = $this->capture($order, $payment->id, $amount_currency);
         $message = $this->t('QuickPay credit card payment was successfully: @amount', ['@amount' => uc_currency_format($amount)]);
         uc_order_comment_save($order->id(), $order->getOwnerId(), $message, 'admin');
-        $orderID = strstr($payment_capture->order_id, $order->id());
+        // Get string length.
+        $order_length = strlen((string) $order->id());
+        $orderID = substr($payment_capture->order_id, -$order_length);
         // Update callback in database.
         db_insert('uc_payment_quickpay_callback')
           ->fields(array(

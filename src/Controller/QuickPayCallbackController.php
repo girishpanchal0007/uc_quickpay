@@ -28,7 +28,9 @@ class QuickPayCallbackController extends ControllerBase {
         \Drupal::logger('uc_quickpay')->error('QuickPay callback payment_id is not found.');
         return;
       }
-      $orderID = strstr($data['order_id'], $uc_order->id());
+      // Get string length.
+      $order_length = strlen((string) $uc_order->id());
+      $orderID = substr($data['order_id'], -$order_length);
       if ($orderID != $uc_order->id()) {
         \Drupal::logger('uc_quickpay')->error('QuickPay callback order_id is not matched.');
         return;
