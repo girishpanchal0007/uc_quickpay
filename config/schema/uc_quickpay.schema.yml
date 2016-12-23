@@ -2,40 +2,36 @@
 payment_method.settings.quickpay_gateway:
   type: mapping
   label: 'QuickPay credit card configuration settings'
-    mapping:
-      testmode:
-        type: boolean
-      merchant_id:
-        type: string
-        label: 'Merchant ID'
-      user_api_key:
-        type: string
-        label: 'API user key'
-      agreement_id:
-        type: string
-        label: 'Agreement ID'
-      payment_api_key:
-        type: string
-        label: 'Payment Window API key'
-      pre_order_id:
-        type: string
-        label: 'Order id prefix'
-      3d_secure:
-        type: string
-        label: 'Select 3d_secure'
-      continue_url:
-        type: string
-        label: 'Continue URL'
-      cancel_url:
-        type: string
-        label: 'Cancel URL'
+  mapping:
+    merchant_id:
+      type: string
+      label: 'Merchant ID'
+    user_api_key:
+      type: string
+      label: 'API user key'
+    agreement_id:
+      type: string
+      label: 'Agreement ID'
+    payment_api_key:
+      type: string
+      label: 'Payment Window API key'
+    pre_order_id:
+      type: string
+      label: 'Order id prefix'
+    3d_secure:
+      type: string
+      label: 'Select 3d_secure'
+    continue_url:
+      type: string
+      label: 'Continue URL'
+    cancel_url:
+      type: string
+      label: 'Cancel URL'
 
 payment_method.settings.quickpay_form_gateway:
   type: mapping
   label: 'QuickPay form configuration settings'
   mapping:
-    testmode:
-      type: boolean
     merchant_id:
       type: string
       label: 'Merchant ID'

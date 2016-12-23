@@ -17,9 +17,7 @@ define('UC_QUICKPAY_QUICKPAY_VERSION', 'v10');
  */
 function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
   // Checking payment method for including library files.
-  if ($form['panes']['payment']['payment_method']["#default_value"] == "quickpay") {
-    $form['#attached']['library'][] = 'uc_quickpay/uc_quickpay';
-  }
+  $form['#attached']['library'][] = 'uc_quickpay/uc_quickpay';
   $form['actions'] = array('#type' => 'actions');
   // Unset cancel event when submit from checkout to cart_review.
   unset($form['actions']['cancel']);
@@ -85,14 +83,16 @@ function uc_quickpay_form_order_refund_process(&$form, FormStateInterface $form_
   // Order total.
   $order_amount = $order->getTotal();
   $amount_currency = uc_currency_format($order_amount, FALSE, FALSE, FALSE);
-  $payment_load = uc_payment_load_payments($refund_order_id);
-  // Global varibale.
-  $receipt_data_arr = '';
-  foreach ($payment_load as $payment_receipt) {
-    $receipt_data_arr = $payment_receipt->get('data')->getValue();
+  // Get payment_id.
+  $refund_payment_id = '';
+  $payment_query = db_select('uc_payment_quickpay_callback', 'u')
+    ->fields('u', array('payment_id'))
+    ->condition('order_id', $refund_order_id, '=')
+    ->range(0, 1)
+    ->execute();
+  while ($p_record = $payment_query->fetchAssoc()) {
+    $refund_payment_id = $p_record['payment_id'];
   }
-  $receipt_data = unserialize($receipt_data_arr[0]);
-  $refund_payment_id = $receipt_data['response_payment_id'];
   // Create QuickPay client for refund process.
   $client = new QuickPay(":{$configuration['api']['user_api_key']}");
   // Refund variables.

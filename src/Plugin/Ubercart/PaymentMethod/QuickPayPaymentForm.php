@@ -324,7 +324,10 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       }
     }
     else {
-      $result[implode("", array_map(function ($p) {return "[{$p}]";}, $path))] = $obj;
+      $result[implode("", array_map(function ($p) {
+        return "[{$p}]";
+      }
+      , $path))] = $obj;
     }
     return $result;
   }

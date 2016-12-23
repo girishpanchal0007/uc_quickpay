@@ -30,7 +30,7 @@ class QuickPayFormController extends ControllerBase {
     $session = \Drupal::service('session');
     $message = $this->t('QuickPay Form payment was successfully of : @amount @currency.',
       [
-        '@amount' => uc_currency_format($uc_order->getTotal(), FALSE, FALSE, FALSE),
+        '@amount' => uc_currency_format($uc_order->getTotal()),
         '@currency' => $uc_order->getCurrency(),
       ]
     );
