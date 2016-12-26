@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use \Drupal\Component\Utility\Html;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 use Drupal\uc_payment\OffsitePaymentMethodPluginInterface;
 
@@ -232,7 +233,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $amount_currency = uc_currency_format($order->getTotal(), FALSE, FALSE, FALSE);
     $data = array();
     // Required parameter.
-    $data['version'] = QUICKPAY_VERSION;
+    $data['version'] = UC_QUICKPAY_QUICKPAY_VERSION;
     $data['merchant_id'] = $this->configuration['api']['merchant_id'];
     $data['agreement_id'] = $this->configuration['api']['agreement_id'];
     $data['order_id'] = $this->configuration['api']['pre_order_id'] . $order->id();
