@@ -1,4 +1,4 @@
-This is an Ubercart payment gateway module for QuickPay.
+This is an QuickPay payment gateway module for Ubercart.
 
 Installation and Setup
 ======================
