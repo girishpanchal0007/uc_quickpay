@@ -37,7 +37,6 @@ class QuickPayCallbackController extends ControllerBase {
       }
       if ($data['operations'][0]['aq_status_msg'] == "Approved") {
         $payment_id = $data['id'];
-        $order_id = $data['order_id'];
         $merchant_id = $data['merchant_id'];
         $payment_type = $data['metadata']['type'];
         $payment_brand = $data['metadata']['brand'];

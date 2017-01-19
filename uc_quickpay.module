@@ -8,12 +8,10 @@
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_quickpay\Entity\QuickPay;
-use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
-
-define('UC_QUICKPAY_QUICKPAY_VERSION', 'v10');
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter() for cart checkout form alter.
+ * Implements hook_form_FORMID_alter() for including library.
+ * Update submit button ofr continue.
  */
 function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
   // Checking payment method for including library files.
@@ -31,7 +29,8 @@ function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter() for order view form alter.
+ * Implements hook_form_FORMID_alter() for for including library.
+ * Update order when refund is success
  */
 function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInterface $form_state) {
   // Attached library files.

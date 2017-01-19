@@ -233,7 +233,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $amount_currency = uc_currency_format($order->getTotal(), FALSE, FALSE, FALSE);
     $data = array();
     // Required parameter.
-    $data['version'] = UC_QUICKPAY_QUICKPAY_VERSION;
+    $data['version'] = 'v10';
     $data['merchant_id'] = $this->configuration['api']['merchant_id'];
     $data['agreement_id'] = $this->configuration['api']['agreement_id'];
     $data['order_id'] = $this->configuration['api']['pre_order_id'] . $order->id();
@@ -291,7 +291,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
    *   Checking prepareApi is set or not.
    */
   public function prepareApi() {
-    // Not clear that this is useful since payment config form forces at least some config.
+    // Checking API keys configuration.
     if (!_uc_quickpay_check_api_keys($this->getConfiguration())) {
       \Drupal::logger('uc_quickpay')->error('QuickPay API keys are not configured. Payments cannot be made without them.', array());
       return FALSE;

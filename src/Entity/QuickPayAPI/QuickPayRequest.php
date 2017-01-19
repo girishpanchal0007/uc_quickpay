@@ -2,10 +2,6 @@
 
 namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
 
-use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayResponse;
-use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayConstants;
-use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
-
 /**
  * Provides the Mollie profile add/edit form.
  */

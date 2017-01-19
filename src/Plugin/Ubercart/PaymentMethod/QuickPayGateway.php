@@ -9,7 +9,6 @@ use Drupal\uc_credit\CreditCardPaymentMethodBase;
 use Drupal\uc_order\OrderInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\uc_quickpay\Entity\QuickPay;
-use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayException;
 
 /**
  * QuickPay Ubercart gateway payment method.
@@ -307,7 +306,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       unset($cc_data['payment_details_data']);
     }
     // Account for partial CC numbers when masked by the system.
-    if (substr($cc_data['cc_number'], 0, strlen($this->t(('(Last4)')))) == $this->t('(Last4)')) {
+    if (substr($cc_data['cc_number'], 0, strlen($this->t('(Last4)'))) == $this->t('(Last4)')) {
       // Recover the number from the encrypted data in the form if truncated.
       if (isset($cache['cc_number'])) {
         $cc_data['cc_number'] = $cache['cc_number'];
@@ -374,13 +373,13 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     if ($account->hasPermission('view cc details')) {
       $rows = array();
       if (!empty($order->payment_details['cc_type'])) {
-        $rows[] = $this->t('Card type') . ':' . $order->payment_details['cc_type'];
+        $rows[] = $this->t('Card type:') . $order->payment_details['cc_type'];
       }
       if (!empty($order->payment_details['cc_number'])) {
-        $rows[] = $this->t('Card number') . ':' . $this->displayCardNumber($order->payment_details['cc_number']);
+        $rows[] = $this->t('Card number:') . $this->displayCardNumber($order->payment_details['cc_number']);
       }
       if (!empty($order->payment_details['cc_exp_month']) && !empty($order->payment_details['cc_exp_year'])) {
-        $rows[] = $this->t('Expiration') . ':' . $order->payment_details['date_year'];
+        $rows[] = $this->t('Expiration:') . $order->payment_details['date_year'];
       }
       if (empty($payment_id)) {
         $rows[] = $this->t('Payment ID: @payment_id', ['@payment_id' => 'Unknown']);
@@ -611,7 +610,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
    *   Checking PrepareApi is set or not.
    */
   public function prepareApi() {
-    // Not clear that this is useful since payment config form forces at least some config.
+    // Checking API keys configuration.
     if (!_uc_quickpay_check_api_keys($this->getConfiguration())) {
       \Drupal::logger('uc_quickpay')->error('QuickPay API keys are not configured. Payments cannot be made without them.', array());
       return FALSE;
