@@ -10,8 +10,7 @@ use Drupal\uc_order\Entity\Order;
 use Drupal\uc_quickpay\Entity\QuickPay;
 
 /**
- * Implements hook_form_FORMID_alter() for including library.
- * Update submit button ofr continue.
+ * Implements hook_form_FORM_ID_alter() for uc_cart_checkout_form_alter().
  */
 function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
   // Checking payment method for including library files.
@@ -29,8 +28,7 @@ function uc_quickpay_form_uc_cart_checkout_form_alter(&$form, FormStateInterface
 }
 
 /**
- * Implements hook_form_FORMID_alter() for for including library.
- * Update order when refund is success
+ * Implements hook_form_FORM_ID_alter() for uc_order_view_update_form_alter().
  */
 function uc_quickpay_form_uc_order_view_update_form_alter(&$form, FormStateInterface $form_state) {
   // Attached library files.
