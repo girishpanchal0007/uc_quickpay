@@ -13,27 +13,29 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Returns response for QuickPay Form Payment Method.
  */
 class QuickPayFormController extends ControllerBase {
-  
+
   /**
    * The payment method manager.
    *
    * @var \Drupal\uc_payment\Plugin\PaymentMethodManager
-  */
+   */
   protected $paymentMethodManager;
 
   /**
    * The session.
    *
    * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
-  */
+   */
   protected $session;
 
   /**
    * Constructs a QuickPayFormController.
    *
    * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-   *   The session.
-  */
+   *  The session.
+   * @param \Drupal\uc_payment\Plugin\PaymentMethodManager; $payment_method_manager
+   *  The payment method.
+   */
   public function __construct(PaymentMethodManager $payment_method_manager, SessionInterface $session) {
     $this->paymentMethodManager = $payment_method_manager;
     $this->session = $session;
@@ -48,6 +50,7 @@ class QuickPayFormController extends ControllerBase {
       $container->get('session')
     );
   }
+
   /**
    * Handles a complete QuickPay Payments request.
    */

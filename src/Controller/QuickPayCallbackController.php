@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
  * Returns response for QuickPay Form Payment Method.
  */
 class QuickPayCallbackController extends ControllerBase {
-  
+
   /**
    * The payment method manager.
    *
@@ -25,7 +25,7 @@ class QuickPayCallbackController extends ControllerBase {
    * The session.
    *
    * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
-  */
+   */
   protected $session;
 
   /**
@@ -38,8 +38,12 @@ class QuickPayCallbackController extends ControllerBase {
   /**
    * Constructs a QuickPayFormController.
    *
-   * @param  \Psr\Log\LoggerInterface $logger
-   *   The logger.
+   * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+   *  The session.
+   * @param \Drupal\uc_payment\Plugin\PaymentMethodManager; $payment_method_manager
+   *  The payment method.
+   * @param \Drupal\uc_payment\Plugin\PaymentMethodManager; $logger
+   *  The logger.
    */
   public function __construct(PaymentMethodManager $payment_method_manager, SessionInterface $session, LoggerInterface $logger) {
     $this->paymentMethodManager = $payment_method_manager;
