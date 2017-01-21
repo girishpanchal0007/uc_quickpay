@@ -37,7 +37,8 @@ class QuickPayRequest {
   public function get($path, $query = array()) {
     // Add query parameters to $path?.
     if (!empty($query)) {
-      if (strpos($path, '?') === FALSE) {
+      $strpos = strpos($path, '?');
+      if ($strpos === FALSE) {
         $path .= '?' . http_build_query($query, '', '&');
       }
       else {

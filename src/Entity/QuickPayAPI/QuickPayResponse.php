@@ -38,8 +38,14 @@ class QuickPayResponse {
   /**
    * Instantiates a new response object.
    *
-   * @var int statuscode, string sentheader, string receivedheader, string responsedata.
-   *   The HTTP status code.
+   * @param $statuscode
+   *   The status code.
+   * @param $sentheaders
+   *   The send header.
+   * @param $receivedheaders
+   *   The received header.
+   * @param $responsedata
+   *   The response data.
    */
   public function __construct($statuscode, $sentheaders, $receivedheaders, $responsedata) {
     $this->statuscode = $statuscode;
