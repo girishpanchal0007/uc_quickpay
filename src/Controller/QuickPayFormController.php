@@ -31,10 +31,10 @@ class QuickPayFormController extends ControllerBase {
   /**
    * Constructs a QuickPayFormController.
    *
+   * @param \Drupal\uc_payment\Plugin\PaymentMethodManager $payment_method_manager
+   *   The payment method.
    * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-   *  The session.
-   * @param \Drupal\uc_payment\Plugin\PaymentMethodManager; $payment_method_manager
-   *  The payment method.
+   *   The session.
    */
   public function __construct(PaymentMethodManager $payment_method_manager, SessionInterface $session) {
     $this->paymentMethodManager = $payment_method_manager;
