@@ -42,7 +42,7 @@ class QuickPayCallbackController extends ControllerBase {
    *   The payment method.
    * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
    *   The session.
-   * @param \Drupal\uc_payment\Plugin\PaymentMethodManager $logger
+   * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
    */
   public function __construct(PaymentMethodManager $payment_method_manager, SessionInterface $session, LoggerInterface $logger) {
