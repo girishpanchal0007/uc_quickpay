@@ -25,9 +25,6 @@ class QuickPayClients {
 
   /**
    * Instantiate object.
-   *
-   * @param $authrstring
-   *   The authorize string.
    */
   public function __construct($authrstring = '') {
     // Set auth string property.
