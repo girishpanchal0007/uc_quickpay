@@ -5,8 +5,6 @@
  * Install, module to create database for the uc_quickpay module.
  */
 
-use Drupal\Core\Url;
-
 /**
  * Implements hook_schema().
  */
