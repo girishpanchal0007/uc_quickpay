@@ -6,7 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
-use \Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Html;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 use Drupal\uc_payment\OffsitePaymentMethodPluginInterface;
 

@@ -1,8 +1,7 @@
 name: Ubercart QuickPay
 description: Ubercart QuickPay payment gateway.
-package: KrishaWeb Technologies
+package: Ubercart - payment
 core: 8.x
 type: module
 dependencies:
-  - uc_payment
-  - uc_credit
+  - uc_quickpay:uc_credit
