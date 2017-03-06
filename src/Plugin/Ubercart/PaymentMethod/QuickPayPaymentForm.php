@@ -182,7 +182,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
    * @return bool
    *   Return that is key is vaild or not.
    */
-  static public function validateKey($key) {
+  public function validateKey($key) {
     $valid = preg_match('/^[a-zA-Z0-9_]+$/', $key);
     return $valid;
   }
