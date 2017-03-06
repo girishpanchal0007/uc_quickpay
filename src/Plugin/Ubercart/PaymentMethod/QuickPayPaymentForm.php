@@ -84,26 +84,26 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $form['api'] = array(
       '#type' => 'details',
       '#title' => $this->t('API credentials'),
-      '#description' => $this->t('@link for information on obtaining credentials. You need to acquire an API Signature. If you have already requested API credentials, you can review your settings under the API Access section of your QuickPayGateway profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('http://tech.quickpay.net/api/'))->toString()]),
+      '#description' => $this->t('@link for information on obtaining credentials. You need to acquire an API Signature. If you have already requested API credentials, you can review your settings under the Integration section of your QuickPayGateway profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('http://tech.quickpay.net/api/'))->toString()]),
       '#open' => TRUE,
     );
     $form['api']['merchant_id'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Merchant ID'),
       '#default_value' => $this->configuration['api']['merchant_id'],
-      '#description' => $this->t('The Merchant ID as shown in the QuickPay admin.'),
+      '#description' => $this->t('This is your Merchant Account id.'),
     );
     $form['api']['private_key'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Private Key'),
       '#default_value' => $this->configuration['api']['private_key'],
-      '#description' => $this->t('This is merchant private key.'),
+      '#description' => $this->t('This is Merchant Private Key.'),
     );
     $form['api']['agreement_id'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Agreement ID'),
       '#default_value' => $this->configuration['api']['agreement_id'],
-      '#description' => $this->t('This is a payment window agreement ID.'),
+      '#description' => $this->t('This is the User Agreement id. The checksum must be signed with the API-key belonging to this Agreement.'),
     );
     $form['api']['payment_api_key'] = array(
       '#type' => 'textfield',
@@ -158,7 +158,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       $sanitized_key = $this->trimKey($raw_key);
       $form_state->setValue(['settings', $element_name], $sanitized_key);
       if (!$this->validateKey($form_state->getValue(['settings', $element_name]))) {
-        $form_state->setError($form[$element_name], $this->t('@name does not appear to be a valid QuickPay key', array('@name' => $element_name)));
+        $form_state->setError($elements, $this->t('@name does not appear to be a valid QuickPay key', array('@name' => $element_name)));
       }
     }
     parent::validateConfigurationForm($form, $form_state);

@@ -2,6 +2,8 @@
 
 namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
 
+use Drupal\Component\Serialization\Json;
+
 /**
  * QuickPay Response class.
  */
@@ -92,7 +94,7 @@ class QuickPayResponse {
    *   Get response asArray.
    */
   public function asArray() {
-    if ($response = json_decode($this->responsedata, TRUE)) {
+    if ($response = Json::decode($this->responsedata)) {
       return $response;
     }
     return array();
@@ -105,7 +107,7 @@ class QuickPayResponse {
    *   Return response as object form json.
    */
   public function asObject() {
-    if ($response = json_decode($this->responsedata)) {
+    if ($response = Json::decode($this->responsedata)) {
       return $response;
     }
     return new \stdClass();

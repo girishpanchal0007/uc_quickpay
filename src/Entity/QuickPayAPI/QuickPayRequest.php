@@ -2,6 +2,9 @@
 
 namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
 
+use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayResponse;
+use Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayConstants;
+
 /**
  * Provides the Mollie profile add/edit form.
  */
@@ -117,7 +120,7 @@ class QuickPayRequest {
    * Takes an API request string and appends it to the API url.
    */
   protected function setUrl($params) {
-    curl_setopt($this->client->ch, CURLOPT_URL, QuickPayConstants::API_URL . trim($params, '/'));
+    curl_setopt($this->client->curl, CURLOPT_URL, QuickPayConstants::API_URL . trim($params, '/'));
   }
 
   /**
@@ -133,29 +136,29 @@ class QuickPayRequest {
    */
   protected function execute($request_type, $form = array()) {
     // Set the HTTP request type.
-    curl_setopt($this->client->ch, CURLOPT_CUSTOMREQUEST, $request_type);
+    curl_setopt($this->client->curl, CURLOPT_CUSTOMREQUEST, $request_type);
     // Additional data is delivered,we will send it along with the API request.
     if (is_array($form) && !empty($form)) {
-      curl_setopt($this->client->ch, CURLOPT_POSTFIELDS, http_build_query($form, '', '&'));
+      curl_setopt($this->client->curl, CURLOPT_POSTFIELDS, http_build_query($form, '', '&'));
     }
     // Store received headers in temporary memory file, remember sent headers.
     $fh_header = fopen('php://temp', 'w+');
-    curl_setopt($this->client->ch, CURLOPT_WRITEHEADER, $fh_header);
-    curl_setopt($this->client->ch, CURLINFO_HEADER_OUT, TRUE);
+    curl_setopt($this->client->curl, CURLOPT_WRITEHEADER, $fh_header);
+    curl_setopt($this->client->curl, CURLINFO_HEADER_OUT, TRUE);
     // Execute the request.
-    $response_data = curl_exec($this->client->ch);
-    if (curl_errno($this->client->ch) !== 0) {
+    $response_data = curl_exec($this->client->curl);
+    if (curl_errno($this->client->curl) !== 0) {
       // An error occurred.
       fclose($fh_header);
-      throw new QuickPayException(curl_error($this->client->ch), curl_errno($this->client->ch));
+      throw new QuickPayException(curl_error($this->client->curl), curl_errno($this->client->curl));
     }
     // Grab the headers.
-    $sent_headers = curl_getinfo($this->client->ch, CURLINFO_HEADER_OUT);
+    $sent_headers = curl_getinfo($this->client->curl, CURLINFO_HEADER_OUT);
     rewind($fh_header);
     $received_headers = stream_get_contents($fh_header);
     fclose($fh_header);
     // Retrieve the HTTP response code.
-    $response_code = (int) curl_getinfo($this->client->ch, CURLINFO_HTTP_CODE);
+    $response_code = (int) curl_getinfo($this->client->curl, CURLINFO_HTTP_CODE);
     // Return the response object.
     return new QuickPayResponse($response_code, $sent_headers, $received_headers, $response_data);
   }

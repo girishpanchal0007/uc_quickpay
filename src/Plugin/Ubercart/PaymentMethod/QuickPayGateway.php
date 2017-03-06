@@ -119,14 +119,14 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     $form['api'] = array(
       '#type' => 'details',
       '#title' => $this->t('API credentials'),
-      '#description' => $this->t('@link for information on obtaining credentials. You need to acquire an API Signature. If you have already requested API credentials, you can review your settings under the API Access section of your QuickPayGateway profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('http://tech.quickpay.net/api/'))->toString()]),
+      '#description' => $this->t('@link for information on obtaining credentials. You need to acquire an API Signature. If you have already requested API credentials, you can review your settings under the Integration section of your QuickPayGateway profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('http://tech.quickpay.net/api/'))->toString()]),
       '#open' => TRUE,
     );
     $form['api']['merchant_id'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Merchant ID'),
       '#default_value' => $this->configuration['api']['merchant_id'],
-      '#description' => $this->t('The Merchant ID as shown in the QuickPay admin.'),
+      '#description' => $this->t('This is your Merchant Account id.'),
     );
     $form['api']['user_api_key'] = array(
       '#type' => 'textfield',
@@ -138,7 +138,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       '#type' => 'textfield',
       '#title' => $this->t('Agreement ID'),
       '#default_value' => $this->configuration['api']['agreement_id'],
-      '#description' => $this->t('This is a payment window agreement ID.'),
+      '#description' => $this->t('This is the User Agreement id. The checksum must be signed with the API-key belonging to this Agreement.'),
     );
     $form['api']['payment_api_key'] = array(
       '#type' => 'textfield',
@@ -168,13 +168,13 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       '#type' => 'textfield',
       '#title' => $this->t('Continue URL'),
       '#default_value' => $this->configuration['callbacks']['continue_url'],
-      '#description' => $this->t('After a successful transaction.'),
+      '#description' => $this->t('The customer will be redirected to this URL upon a succesful payment. No data will be send to this URL..'),
     );
     $form['callbacks']['cancel_url'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Cancel URL'),
       '#default_value' => $this->configuration['callbacks']['cancel_url'],
-      '#description' => $this->t('If the user cancels the QuickPay transaction.'),
+      '#description' => $this->t('The customer will be redirected to this URL if the customer cancels the payment. No data will be send to this URL..'),
     );
     return $form;
   }
@@ -195,7 +195,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       $sanitized_key = $this->trimKey($raw_key);
       $form_state->setValue(['settings', $element_name], $sanitized_key);
       if (!$this->validateKey($form_state->getValue(['settings', $element_name]))) {
-        $form_state->setError($form[$element_name], $this->t('@name does not appear to be a valid QuickPay key', array('@name' => $element_name)));
+        $form_state->setError($elements, $this->t('@name does not appear to be a valid.', array('@name' => $element_name)));
       }
     }
     parent::validateConfigurationForm($form, $form_state);
