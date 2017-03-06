@@ -132,7 +132,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       ),
       '#title' => $this->t('Payment Language'),
       '#default_value' => $this->configuration['language'],
-      '#description' => $this->t('Set the language of the user interface. Defaults to English..'),
+      '#description' => $this->t('Set the language of the user interface. Defaults to English.'),
     );
     $form['autocapture'] = array(
       '#type' => 'checkbox',

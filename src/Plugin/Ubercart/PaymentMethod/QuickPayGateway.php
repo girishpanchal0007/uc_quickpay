@@ -168,13 +168,13 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       '#type' => 'textfield',
       '#title' => $this->t('Continue URL'),
       '#default_value' => $this->configuration['callbacks']['continue_url'],
-      '#description' => $this->t('The customer will be redirected to this URL upon a succesful payment. No data will be send to this URL..'),
+      '#description' => $this->t('The customer will be redirected to this URL upon a successful payment. No data will be send to this URL.'),
     );
     $form['callbacks']['cancel_url'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Cancel URL'),
       '#default_value' => $this->configuration['callbacks']['cancel_url'],
-      '#description' => $this->t('The customer will be redirected to this URL if the customer cancels the payment. No data will be send to this URL..'),
+      '#description' => $this->t('The customer will be redirected to this URL if the customer cancels the payment. No data will be send to this URL.'),
     );
     return $form;
   }
