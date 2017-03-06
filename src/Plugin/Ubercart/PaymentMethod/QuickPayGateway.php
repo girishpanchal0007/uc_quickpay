@@ -540,7 +540,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     }
     else {
       // Error for payment->message.
-      drupal_set_message($this->t('QuickPay credit card payment creating.'), 'error', FALSE);
+      drupal_set_message($payment->message, 'error', FALSE);
       \Drupal::logger('uc_quickpay')->notice($payment->message);
       // Order comment.
       uc_order_comment_save($order->id(), $order->getOwnerId(), $payment->message, 'admin');
