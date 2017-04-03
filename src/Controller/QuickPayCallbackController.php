@@ -63,6 +63,8 @@ class QuickPayCallbackController extends ControllerBase {
   }
 
   /**
+   * Quickpay callback request.
+   *
    * @todo Handle Callback from QUickPay payment gateway.
    */
   public function quickPayCallback() {
@@ -129,6 +131,8 @@ class QuickPayCallbackController extends ControllerBase {
   }
 
   /**
+   * Checksum function.
+   *
    * @todo Create checksum to compare with response checksum.
    */
   protected function callbackChecksum($base, $private_key) {

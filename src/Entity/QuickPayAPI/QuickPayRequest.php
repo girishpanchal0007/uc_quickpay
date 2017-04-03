@@ -8,7 +8,7 @@ namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
 class QuickPayRequest {
 
   /**
-   * @todo Contains QuickPay_Client instance.
+   * Contains QuickPay_Client instance.
    *
    * @var \Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayRequest
    */

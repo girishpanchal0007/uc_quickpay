@@ -86,7 +86,7 @@ class QuickPayResponse {
   }
 
   /**
-   * @todo Returns the response body as an array.
+   * Returns the response body as an array.
    *
    * @return array
    *   Get response asArray.
@@ -99,7 +99,7 @@ class QuickPayResponse {
   }
 
   /**
-   * @todo Returns the response body as an array.
+   * Returns the response body as an array.
    *
    * @return \stdClass
    *   Return response as object form json.
@@ -112,7 +112,7 @@ class QuickPayResponse {
   }
 
   /**
-   * @todo Returns the http_status code.
+   * Returns the http_status code.
    *
    * @return int
    *   HttpStatus code.
@@ -122,7 +122,7 @@ class QuickPayResponse {
   }
 
   /**
-   * @todo Checks if the http status code indicates a successful or an error response.
+   * Checks if the http status code indicates a successful or an error response.
    *
    * @return bool
    *   IsSuccess response code.

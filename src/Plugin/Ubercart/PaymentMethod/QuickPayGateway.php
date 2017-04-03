@@ -264,7 +264,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     // Send merchant and agreement ids to JS.
     $form['#attached']['drupalSettings']['uc_quickpay']['merchant_id'] = $this->configuration['api']['merchant_id'];
     $form['#attached']['drupalSettings']['uc_quickpay']['agreement_id'] = $this->configuration['api']['agreement_id'];
-    $form["cc_number"]['#attributes'] = array('data-quickpay' => 'cardnumber', 'placeholder' => '**** **** **** ****');
+    $form["cc_number"]['#attributes'] = ['data-quickpay' => 'cardnumber', 'placeholder' => '**** **** **** ****'];
     $form["cc_number"]['#weight'] = 1;
     // Unset month and year.
     unset($form['cc_exp_month']);

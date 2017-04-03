@@ -52,6 +52,8 @@ class QuickPayFormController extends ControllerBase {
   }
 
   /**
+   * Quickpay complete request.
+   *
    * @todo Handles a complete QuickPay Payments request.
    */
   public function quickPayFormComplete(OrderInterface $uc_order) {
@@ -79,6 +81,8 @@ class QuickPayFormController extends ControllerBase {
   }
 
   /**
+   * Quickpay cancel request.
+   *
    * @todo Handles a cancel QuickPay Payments request.
    */
   public function quickPayFormCancel(OrderInterface $uc_order) {

@@ -9,7 +9,8 @@ The module supports two different payment methods
  * QuickPay Embedded method and
  * QuickPay Form method
 
-QuickPay Embedded – QuickPay Embedded method accepts payment through Credit card.
+QuickPay Embedded – QuickPay Embedded method accepts payment
+through Credit card.
 It won’t redirect users to the QuickPay hosted payment window. That makes
 the payment process quick and easy.
 
@@ -20,7 +21,7 @@ QuickPay Form – QuickPay Form method lets you get payment via QuickPay
 hosted payment window. It supports multiple languages and accepts
 different payment methods.
 
-It supports multiple languages like English, Spanish, Danish, French, Chinese etc.
+It supports multiple languages like English, Spanish, Danish, French etc.
 You can opt for any of the payment method from Master card, visa card etc.
 
 This module does have the payment refund functionality.
@@ -30,7 +31,8 @@ That can be done manually as well as automatically.
 You can enable the auto capture in order to activate the
 instant refund of the payment.
 
-Auto capture payment option is a default setting for the QuickPay Embedded method.
+Auto capture payment option is a default setting for
+the QuickPay Embedded method.
 You can also do that in QuickPay Form method
 
 Supported Features
@@ -59,7 +61,8 @@ CONFIGURATION
  * Go to  Administration » Store » Configuration:
   - Click on Payment methods and select payment method which we have added.
 
- * Fill the important information in a form which is providing by quickpay payment.
+ * Fill the important information in a form which is providing
+   by quickpay payment.
    This form has contained third party API Keys which you will find out at:
    https://manage.quickpay.net/
 
@@ -67,4 +70,5 @@ MAINTAINERS
 -----------
  * KrishaWeb Technologies (https://www.drupal.org/u/krishaweb)
  * Girish Panchal (https://www.drupal.org/u/girishpanchal)
+ 
  
