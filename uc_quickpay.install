@@ -9,84 +9,84 @@
  * Implements hook_schema().
  */
 function uc_quickpay_schema() {
-  $schema = array();
-  $schema['uc_payment_quickpay_callback'] = array(
+  $schema = [];
+  $schema['uc_payment_quickpay_callback'] = [
     'description' => 'Logs For QuickPay Callback Notifications.',
-    'fields' => array(
-      'order_id' => array(
+    'fields' => [
+      'order_id' => [
         'description' => 'Order ID.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'payment_id' => array(
+      ],
+      'payment_id' => [
         'description' => 'Payment ID from Callback QuickPay.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'merchant_id' => array(
+      ],
+      'merchant_id' => [
         'description' => 'Merchant ID from Callback QuickPay.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'payment_type' => array(
+      ],
+      'payment_type' => [
         'description' => 'Payment type from Callback QuickPay.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'payment_brand' => array(
+      ],
+      'payment_brand' => [
         'description' => 'Payment Brand from Callback QuickPay.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'payment_amount' => array(
+      ],
+      'payment_amount' => [
         'description' => 'Payment Amount from Callback QuickPay.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'payment_status' => array(
+      ],
+      'payment_status' => [
         'description' => 'Payment Stauts from Callback QuickPay.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'customer_email' => array(
+      ],
+      'customer_email' => [
         'description' => 'E-mail address of the customer.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-      ),
-      'created_at' => array(
+      ],
+      'created_at' => [
         'description' => 'QuickPay callback timestamp.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ),
-    ),
-    'indexes' => array(
-      'order_id' => array('order_id'),
-    ),
-    'primary key' => array('order_id'),
-    'foreign keys' => array(
-      'uc_orders' => array(
+      ],
+    ],
+    'indexes' => [
+      'order_id' => ['order_id'],
+    ],
+    'primary key' => ['order_id'],
+    'foreign keys' => [
+      'uc_orders' => [
         'table' => 'uc_orders',
-        'columns' => array('order_id' => 'order_id'),
-      ),
-    ),
-  );
+        'columns' => ['order_id' => 'order_id'],
+      ],
+    ],
+  ];
   return $schema;
 }

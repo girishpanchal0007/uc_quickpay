@@ -8,7 +8,7 @@ namespace Drupal\uc_quickpay\Entity\QuickPayAPI;
 class QuickPayRequest {
 
   /**
-   * Contains QuickPay_Client instance.
+   * @todo Contains QuickPay_Client instance.
    *
    * @var \Drupal\uc_quickpay\Entity\QuickPayAPI\QuickPayRequest
    */
@@ -17,7 +17,7 @@ class QuickPayRequest {
   /**
    * Construct function.
    *
-   * Instantiates the object.
+   * @todo Instantiates the object.
    */
   public function __construct($client) {
     $this->client = $client;
@@ -26,7 +26,7 @@ class QuickPayRequest {
   /**
    * GET function.
    *
-   * Performs an API GET request.
+   * @todo Performs an API GET request.
    *
    * @var $path $query
    *   Resonse $path for string and $query for array.
@@ -34,7 +34,7 @@ class QuickPayRequest {
    * @return Response
    *   Get request when function is calling.
    */
-  public function get($path, $query = array()) {
+  public function get($path, $query = []) {
     // Add query parameters to $path?.
     if (!empty($query)) {
       $strpos = strpos($path, '?');
@@ -54,12 +54,12 @@ class QuickPayRequest {
   /**
    * POST function.
    *
-   * Performs an API POST request.
+   * @todo Performs an API POST request.
    *
    * @return Response
    *   Post request when function is calling.
    */
-  public function post($path, $form = array()) {
+  public function post($path, $form = []) {
     // Set the request params.
     $this->setUrl($path);
     // Start the request and return the response.
@@ -69,12 +69,12 @@ class QuickPayRequest {
   /**
    * PUT function.
    *
-   * Performs an API PUT request.
+   * @todo Performs an API PUT request.
    *
    * @return Response
    *   Put request when function is calling.
    */
-  public function put($path, $form = array()) {
+  public function put($path, $form = []) {
     // Set the request params.
     $this->setUrl($path);
     // Start the request and return the response.
@@ -84,12 +84,12 @@ class QuickPayRequest {
   /**
    * PATCH function.
    *
-   * Performs an API PATCH request.
+   * @todo Performs an API PATCH request.
    *
    * @return Response
    *   Patch request when function is calling.
    */
-  public function patch($path, $form = array()) {
+  public function patch($path, $form = []) {
     // Set the request params.
     $this->setUrl($path);
     // Start the request and return the response.
@@ -99,12 +99,12 @@ class QuickPayRequest {
   /**
    * DELETE function.
    *
-   * Performs an API DELETE request.
+   * @todo Performs an API DELETE request.
    *
    * @return Response
    *   Delete request when function is calling.
    */
-  public function delete($path, $form = array()) {
+  public function delete($path, $form = []) {
     // Set the request params.
     $this->setUrl($path);
     // Start the request and return the response.
@@ -114,7 +114,7 @@ class QuickPayRequest {
   /**
    * SetUrl function.
    *
-   * Takes an API request string and appends it to the API url.
+   * @todo Takes an API request string and appends it to the API url.
    */
   protected function setUrl($params) {
     curl_setopt($this->client->curl, CURLOPT_URL, QuickPayConstants::API_URL . trim($params, '/'));
@@ -123,7 +123,7 @@ class QuickPayRequest {
   /**
    * EXECUTE function.
    *
-   * Performs the prepared API request.
+   * @todo Performs the prepared API request.
    *
    * @var $request_type
    *   String for request and array for the form.
@@ -131,7 +131,7 @@ class QuickPayRequest {
    * @return Response
    *   Execute request when function is calling.
    */
-  protected function execute($request_type, $form = array()) {
+  protected function execute($request_type, $form = []) {
     // Set the HTTP request type.
     curl_setopt($this->client->curl, CURLOPT_CUSTOMREQUEST, $request_type);
     // Additional data is delivered,we will send it along with the API request.

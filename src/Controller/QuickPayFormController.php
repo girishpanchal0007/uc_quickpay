@@ -52,7 +52,7 @@ class QuickPayFormController extends ControllerBase {
   }
 
   /**
-   * Handles a complete QuickPay Payments request.
+   * @todo Handles a complete QuickPay Payments request.
    */
   public function quickPayFormComplete(OrderInterface $uc_order) {
     // Checking current session current order.
@@ -79,7 +79,7 @@ class QuickPayFormController extends ControllerBase {
   }
 
   /**
-   * Handles a cancel QuickPay Payments request.
+   * @todo Handles a cancel QuickPay Payments request.
    */
   public function quickPayFormCancel(OrderInterface $uc_order) {
     // Checking is that payment method is QuickPay Form.

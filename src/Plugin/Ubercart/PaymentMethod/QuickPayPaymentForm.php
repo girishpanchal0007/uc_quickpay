@@ -45,18 +45,18 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
    * {@inheritdoc}
    */
   public function getDisplayLabel($label) {
-    $build['label'] = array(
+    $build['label'] = [
       '#prefix' => ' ',
       '#plain_text' => $label,
-    );
+    ];
     $cc_types = $this->getEnabledTypes();
     foreach ($cc_types as $type => $description) {
-      $build['image'][$type] = array(
+      $build['image'][$type] = [
         '#theme' => 'image',
         '#uri' => drupal_get_path('module', 'uc_quickpay') . '/images/' . $type . '.gif',
         '#alt' => $description,
-        '#attributes' => array('class' => array('uc-quickpay-cctype', 'uc-quickpay-cctype-' . $type)),
-      );
+        '#attributes' => ['class' => ['uc-quickpay-cctype', 'uc-quickpay-cctype-' . $type]],
+      ];
     }
     return $build;
   }
@@ -81,45 +81,45 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['api'] = array(
+    $form['api'] = [
       '#type' => 'details',
       '#title' => $this->t('API credentials'),
       '#description' => $this->t('@link for information on obtaining credentials. You need to acquire an API Signature. If you have already requested API credentials, you can review your settings under the Integration section of your QuickPayGateway profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('http://tech.quickpay.net/api/'))->toString()]),
       '#open' => TRUE,
-    );
-    $form['api']['merchant_id'] = array(
+    ];
+    $form['api']['merchant_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Merchant ID'),
       '#default_value' => $this->configuration['api']['merchant_id'],
       '#description' => $this->t('This is your Merchant Account id.'),
-    );
-    $form['api']['private_key'] = array(
+    ];
+    $form['api']['private_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Private Key'),
       '#default_value' => $this->configuration['api']['private_key'],
       '#description' => $this->t('This is Merchant Private Key.'),
-    );
-    $form['api']['agreement_id'] = array(
+    ];
+    $form['api']['agreement_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Agreement ID'),
       '#default_value' => $this->configuration['api']['agreement_id'],
       '#description' => $this->t('This is the User Agreement id. The checksum must be signed with the API-key belonging to this Agreement.'),
-    );
-    $form['api']['payment_api_key'] = array(
+    ];
+    $form['api']['payment_api_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Payment Window API key'),
       '#default_value' => $this->configuration['api']['payment_api_key'],
       '#description' => $this->t('This is a payment window API key.'),
-    );
-    $form['api']['pre_order_id'] = array(
+    ];
+    $form['api']['pre_order_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Order id prefix'),
       '#default_value' => $this->configuration['api']['pre_order_id'],
       '#description' => $this->t('Prefix for order ids. Order ids must be uniqe when sent to QuickPay, use this to resolve clashes.'),
-    );
-    $form['language'] = array(
+    ];
+    $form['language'] = [
       '#type' => 'select',
-      '#options' => array(
+      '#options' => [
         'en' => $this->t('English'),
         'da' => $this->t('Danish'),
         'de' => $this->t('German'),
@@ -129,17 +129,17 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
         'nl' => $this->t('Dutch'),
         'pl' => $this->t('Polish'),
         'se' => $this->t('Swedish'),
-      ),
+      ],
       '#title' => $this->t('Payment Language'),
       '#default_value' => $this->configuration['language'],
       '#description' => $this->t('Set the language of the user interface. Defaults to English.'),
-    );
-    $form['autocapture'] = array(
+    ];
+    $form['autocapture'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Autocapture'),
       '#default_value' => $this->configuration['autocapture'],
       '#description' => $this->t('If set to 1, the payment will be captured automatically.'),
-    );
+    ];
     return $form;
   }
 
@@ -158,7 +158,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       $sanitized_key = $this->trimKey($raw_key);
       $form_state->setValue(['settings', $element_name], $sanitized_key);
       if (!$this->validateKey($form_state->getValue(['settings', $element_name]))) {
-        $form_state->setError($elements, $this->t('@name does not appear to be a valid QuickPay key', array('@name' => $element_name)));
+        $form_state->setError($elements, $this->t('@name does not appear to be a valid QuickPay key', ['@name' => $element_name]));
       }
     }
     parent::validateConfigurationForm($form, $form_state);
@@ -231,7 +231,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $country = $country = \Drupal::service('country_manager')->getCountry($bill_address->country)->getAlpha3();
     // Formate current with multiply 100.
     $amount_currency = uc_currency_format($order->getTotal(), FALSE, FALSE, FALSE);
-    $data = array();
+    $data = [];
     // Required parameter.
     $data['version'] = 'v10';
     $data['merchant_id'] = $this->configuration['api']['merchant_id'];
@@ -270,17 +270,17 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     // Add hidden field with new form.
     foreach ($data as $name => $value) {
       if (!empty($value)) {
-        $form[$name] = array('#type' => 'hidden', '#value' => $value);
+        $form[$name] = ['#type' => 'hidden', '#value' => $value];
       }
     }
     $form['#action'] = 'https://payment.quickpay.net';
-    $form['actions'] = array('#type' => 'actions');
+    $form['actions'] = ['#type' => 'actions'];
     // Text alter.
-    $form['actions']['submit'] = array(
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('QuickPay Payment'),
       '#id' => 'quickpay-submit',
-    );
+    ];
     return $form;
   }
 
@@ -293,7 +293,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   public function prepareApi() {
     // Checking API keys configuration.
     if (!_uc_quickpay_check_api_keys($this->getConfiguration())) {
-      \Drupal::logger('uc_quickpay')->error('QuickPay API keys are not configured. Payments cannot be made without them.', array());
+      \Drupal::logger('uc_quickpay')->error('QuickPay API keys are not configured. Payments cannot be made without them.', []);
       return FALSE;
     }
     return TRUE;
@@ -318,10 +318,10 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   /**
    * Flatten request parameter array.
    */
-  protected function flattenParams($obj, $result = array(), $path = array()) {
+  protected function flattenParams($obj, $result = [], $path = []) {
     if (is_array($obj)) {
       foreach ($obj as $k => $v) {
-        $result = array_merge($result, $this->flattenParams($v, $result, array_merge($path, array($k))));
+        $result = array_merge($result, $this->flattenParams($v, $result, array_merge($path, [$k])));
       }
     }
     else {

@@ -75,18 +75,18 @@ class QuickPayResponse {
       }
       $sentheaders = implode("\n", $lines);
     }
-    return array(
+    return [
       $this->statuscode,
-      array(
+      [
         'sent' => $sentheaders,
         'received' => $this->receivedheaders,
-      ),
+      ],
       $this->responsedata,
-    );
+    ];
   }
 
   /**
-   * Returns the response body as an array.
+   * @todo Returns the response body as an array.
    *
    * @return array
    *   Get response asArray.
@@ -95,11 +95,11 @@ class QuickPayResponse {
     if ($response = json_decode($this->responsedata, TRUE)) {
       return $response;
     }
-    return array();
+    return [];
   }
 
   /**
-   * Returns the response body as an array.
+   * @todo Returns the response body as an array.
    *
    * @return \stdClass
    *   Return response as object form json.
@@ -112,7 +112,7 @@ class QuickPayResponse {
   }
 
   /**
-   * Returns the http_status code.
+   * @todo Returns the http_status code.
    *
    * @return int
    *   HttpStatus code.
@@ -122,7 +122,7 @@ class QuickPayResponse {
   }
 
   /**
-   * Checks if the http status code indicates a successful or an error response.
+   * @todo Checks if the http status code indicates a successful or an error response.
    *
    * @return bool
    *   IsSuccess response code.

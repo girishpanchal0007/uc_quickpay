@@ -23,7 +23,7 @@ class QuickPay {
    *
    * Instantiates the main class.
    *
-   * Creates a client which is passed to the request construct.
+   * @todo Creates a client which is passed to the request construct.
    */
   public function __construct($authrstring = '') {
     $client = new QuickPayClients($authrstring);

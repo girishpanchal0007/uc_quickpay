@@ -63,7 +63,7 @@ class QuickPayCallbackController extends ControllerBase {
   }
 
   /**
-   * Handle Callback from QUickPay payment gateway.
+   * @todo Handle Callback from QUickPay payment gateway.
    */
   public function quickPayCallback() {
     // Get order id from cart order.
@@ -101,7 +101,7 @@ class QuickPayCallbackController extends ControllerBase {
         $payment_email = $data['invoice_address']['email'];
         // Callback response enter to the database.
         db_insert('uc_payment_quickpay_callback')
-          ->fields(array(
+          ->fields([
             'order_id' => $orderID,
             'payment_id' => $payment_id,
             'merchant_id' => $merchant_id,
@@ -111,7 +111,7 @@ class QuickPayCallbackController extends ControllerBase {
             'payment_status' => $payment_status,
             'customer_email' => $payment_email,
             'created_at' => REQUEST_TIME,
-          ))
+          ])
           ->execute();
       }
       else {
@@ -129,7 +129,7 @@ class QuickPayCallbackController extends ControllerBase {
   }
 
   /**
-   * Create checksum to compare with response checksum.
+   * @todo Create checksum to compare with response checksum.
    */
   protected function callbackChecksum($base, $private_key) {
     return hash_hmac("sha256", $base, $private_key);

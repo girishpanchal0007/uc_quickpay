@@ -1,19 +1,70 @@
-This is an QuickPay payment gateway module for Ubercart.
+INTRODUCTION
+------------
 
-Installation and Setup
-======================
+Ubercart QuickPay is the payment gateway module for Drupal version 8 and above.
+The module uses the Danish Payment Gateway ‘QuickPay’ to make payment.
 
-a) Download uc_quickpay module from https://drupal.org/projects/.
+The module supports two different payment methods
 
-b) Install and enable the module in the normal way for Drupal.
+ * QuickPay Embedded method and
+ * QuickPay Form method
 
-b) Visit your Ubercart Store Administration page, Configuration
-section, and add the QuickPay gate at the Payment Methods page.
-(admin/store/config/payment)
+QuickPay Embedded – QuickPay Embedded method accepts payment through Credit card.
+It won’t redirect users to the QuickPay hosted payment window. That makes
+the payment process quick and easy.
 
-c) Configure the gateway with your manage quickpay
-API keys from  https://manage.quickpay.net/.
+Checkout must be HTTPS secured and PCI verified in order to receive payment
+through QuickPay Embedded method for any Drupal system.
 
-d) Every site dealing with credit cards in any way should be using https. It's
-your responsibility to make this happen. (Actually, almost every site should
-be https everywhere at this time in the web's history.)
+QuickPay Form – QuickPay Form method lets you get payment via QuickPay
+hosted payment window. It supports multiple languages and accepts
+different payment methods.
+
+It supports multiple languages like English, Spanish, Danish, French, Chinese etc.
+You can opt for any of the payment method from Master card, visa card etc.
+
+This module does have the payment refund functionality.
+But, you can’t do partial refund using the QuickPay Embedded payment method.
+Payment must be captured by the system to make it valid for the refund.
+That can be done manually as well as automatically.
+You can enable the auto capture in order to activate the
+instant refund of the payment.
+
+Auto capture payment option is a default setting for the QuickPay Embedded method.
+You can also do that in QuickPay Form method
+
+Supported Features
+ * Supported multiple payment methods
+ * Language selection for payment window
+ * Payment auto capture
+ * Payment Refund
+
+
+REQUIREMENTS
+------------
+
+This module requires the following modules:
+ * Ubercart (https://www.drupal.org/project/ubercart)
+ * PCI verification required – Yes for QuickPay Embedded method
+
+INSTALLATION
+------------
+
+ * Install as you would normally install a contributed Drupal module.
+See: https://drupal.org/projects/uc_quickpay
+
+CONFIGURATION
+-------------
+
+ * Go to  Administration » Store » Configuration:
+  - Click on Payment methods and select payment method which we have added.
+
+ * Fill the important information in a form which is providing by quickpay payment.
+   This form has contained third party API Keys which you will find out at:
+   https://manage.quickpay.net/
+
+MAINTAINERS
+-----------
+ * KrishaWeb Technologies (https://www.drupal.org/u/krishaweb)
+ * Girish Panchal (https://www.drupal.org/u/girishpanchal)
+ 

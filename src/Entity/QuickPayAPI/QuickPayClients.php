@@ -36,7 +36,7 @@ class QuickPayClients {
   /**
    * Shutdown function.
    *
-   * Closes the current cURL connection.
+   * @todo Closes the current cURL connection.
    */
   public function shutdown() {
     if (!empty($this->curl)) {
@@ -47,23 +47,23 @@ class QuickPayClients {
   /**
    * Authenticate function.
    *
-   * Create a cURL instance with authentication headers.
+   * @todo Create a cURL instance with authentication headers.
    */
   protected function authenticate() {
     $this->curl = curl_init();
-    $headers = array(
+    $headers = [
       'Accept-Version: v10',
       'Accept: application/json',
-    );
+    ];
     if (!empty($this->authrstring)) {
       $headers[] = 'Authorization: Basic ' . base64_encode($this->authrstring);
     }
-    $options = array(
+    $options = [
       CURLOPT_RETURNTRANSFER => TRUE,
       CURLOPT_SSL_VERIFYPEER => TRUE,
       CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
       CURLOPT_HTTPHEADER => $headers,
-    );
+    ];
     curl_setopt_array($this->curl, $options);
   }
 
