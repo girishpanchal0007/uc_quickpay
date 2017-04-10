@@ -10,7 +10,7 @@
   $('input#edit-panes-payment-details-cc-number').removeAttr('name');
   $('input#edit-panes-payment-details-cc-cvv').removeAttr('name');
   $('input#cc-date-year').removeAttr('name');
-  if ($('#uc-cart-checkout-form .form-radios .js-form-type-radio .option img').hasClass('uc-quickpay-cctype')) {
+  if ($('#uc-cart-checkout-form .form-radios .js-form-type-radio .option img').hasClass('uc-quickpay-embedded')) {
     var merchantId = drupalSettings.uc_quickpay.merchant_id;
     var agreementId = drupalSettings.uc_quickpay.agreement_id;
     QuickPay.Embedded.Form($('.uc-cart-checkout-form'), {
@@ -39,4 +39,10 @@
       }
     });
   }
+  $(document).ajaxSuccess(function( event, xhr, settings ) {
+    var clickElement = event.target.activeElement.nextElementSibling.firstElementChild.className;
+    if (clickElement == "uc-quickpay-embedded uc-quickpay-cctype-maestro") {
+      location.reload();
+    }
+  });
 })(jQuery);

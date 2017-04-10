@@ -3,11 +3,12 @@
 namespace Drupal\uc_quickpay\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\uc_order\OrderInterface;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Psr\Log\LoggerInterface;
+use Drupal\Core\Logger\LoggerChannelFactory;
 
 /**
  * Returns response for QuickPay Form Payment Method.
@@ -42,10 +43,10 @@ class QuickPayCallbackController extends ControllerBase {
    *   The payment method.
    * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
    *   The session.
-   * @param \Psr\Log\LoggerInterface $logger
+   * @param Drupal\Core\Logger\LoggerChannelFactory $logger
    *   The logger.
    */
-  public function __construct(PaymentMethodManager $payment_method_manager, SessionInterface $session, LoggerInterface $logger) {
+  public function __construct(PaymentMethodManager $payment_method_manager, SessionInterface $session, LoggerChannelFactory $logger) {
     $this->paymentMethodManager = $payment_method_manager;
     $this->session = $session;
     $this->log = $logger;
@@ -67,13 +68,9 @@ class QuickPayCallbackController extends ControllerBase {
    *
    * @todo Handle Callback from QUickPay payment gateway.
    */
-  public function quickPayCallback() {
-    // Get order id from cart order.
-    $order_id = $this->session->get('cart_order');
-    // Load order using order id.
-    $order = Order::load($order_id);
+  public function quickPayCallback(OrderInterface $uc_order) {
     // Get private key configuration.
-    $plugin = $this->paymentMethodManager->createFromOrder($order);
+    $plugin = $this->paymentMethodManager->createFromOrder($uc_order);
     $adminconfiguration = $plugin->getConfiguration();
     // Get request body.
     $request_body = file_get_contents("php://input");
@@ -87,9 +84,9 @@ class QuickPayCallbackController extends ControllerBase {
         return;
       }
       // Get string length.
-      $order_length = strlen((string) $order->id());
+      $order_length = strlen((string) $uc_order->id());
       $orderID = substr($data['order_id'], -$order_length);
-      if ($orderID != $order->id()) {
+      if ($orderID != $uc_order->id()) {
         $this->log->error('QuickPay callback order_id is not matched.');
         return;
       }
@@ -117,11 +114,11 @@ class QuickPayCallbackController extends ControllerBase {
           ->execute();
       }
       else {
-        uc_order_comment_save($order->id(), 0, $this->t("QuickPay payment is not approved by QuickPay. You need to contact with site admin"), 'admin');
+        uc_order_comment_save($uc_order->id(), 0, $this->t("QuickPay payment is not approved by QuickPay. You need to contact with site admin"), 'admin');
       }
     }
     else {
-      uc_order_comment_save($order->id(), 0, $this->t('QuickPay payment is not match with callback response. You need to contact with site admin.',
+      uc_order_comment_save($uc_order->id(), 0, $this->t('QuickPay payment is not match with callback response. You need to contact with site admin.',
         [
           '@amount' => uc_currency_format($payment_amount, FALSE),
           '@currency' => $data['currency'],

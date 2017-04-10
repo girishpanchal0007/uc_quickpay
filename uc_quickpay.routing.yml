@@ -1,6 +1,6 @@
 # Callback route for QuickPay form ayments.
 uc_quickpay.qpf_callback:
-  path: '/uc_quickpay/callback'
+  path: '/uc_quickpay/callback/{uc_order}'
   defaults:
     _controller: '\Drupal\uc_quickpay\Controller\QuickPayCallbackController::quickPayCallback'
     _title: 'QuickPay Callback'

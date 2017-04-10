@@ -48,6 +48,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $build['label'] = [
       '#prefix' => ' ',
       '#plain_text' => $label,
+      '#suffix' => ' ',
     ];
     $cc_types = $this->getEnabledTypes();
     foreach ($cc_types as $type => $description) {
@@ -55,7 +56,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
         '#theme' => 'image',
         '#uri' => drupal_get_path('module', 'uc_quickpay') . '/images/' . $type . '.gif',
         '#alt' => $description,
-        '#attributes' => ['class' => ['uc-quickpay-cctype', 'uc-quickpay-cctype-' . $type]],
+        '#attributes' => ['class' => ['uc-quickpay-form', 'uc-quickpay-cctype-' . $type]],
       ];
     }
     return $build;
@@ -84,7 +85,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $form['api'] = [
       '#type' => 'details',
       '#title' => $this->t('API credentials'),
-      '#description' => $this->t('@link for information on obtaining credentials. You need to acquire an API Signature. If you have already requested API credentials, you can review your settings under the Integration section of your QuickPayGateway profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('http://tech.quickpay.net/api/'))->toString()]),
+      '#description' => $this->t('@link for information on obtaining credentials. You need to acquire an API Signature. If you have already logged-in your quickpay, you can review your settings under the Integration section of your QuickPayGateway profile. Quickpay Form Method must needed callback URL which you need to add setting under the Merchant e.g http://www.example.com/callback/', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('https://manage.quickpay.net/'))->toString()]),
       '#open' => TRUE,
     ];
     $form['api']['merchant_id'] = [
@@ -241,10 +242,10 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $data['currency'] = $order->getCurrency();
     $data['continueurl'] = Url::fromRoute('uc_quickpay.qpf_complete', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
     $data['cancelurl'] = Url::fromRoute('uc_quickpay.qpf_cancel', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
-    $data['callbackurl'] = Url::fromRoute('uc_quickpay.qpf_callback', [], ['absolute' => TRUE])->toString();
+    $data['callbackurl'] = Url::fromRoute('uc_quickpay.qpf_callback', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
     $data['language'] = $this->configuration['language'];
     if ($this->configuration['autocapture'] != NULL) {
-      $data['autocapture'] = $this->configuration['autocapture'] ? '1' : '0';
+      $data['autocapture'] = $this->configuration['autocapture'] ? 1 : 0;
     }
     $data['customer_email'] = $order->getEmail();
     $data['invoice_address[name]'] = $bill_address->first_name . " " . $bill_address->last_name;

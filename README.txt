@@ -59,16 +59,21 @@ CONFIGURATION
 -------------
 
  * Go to  Administration » Store » Configuration:
-  - Click on Payment methods and select payment method which we have added.
+  - Click on Payment methods and select payment method which are 
+    provided by the module.
 
- * Fill the important information in a form which is providing
-   by quickpay payment.
+ * Select any one payment method and fill some mandatory information
+   which provided by quickpay when you create an account.
    This form has contained third party API Keys which you will find out at:
    https://manage.quickpay.net/
+
+ * If you select "Form Payment method" you need to add callback URL
+   at Quickpay.
+   QuickPay Admin » Settings » Merchant.
+   e.g http://www.example.com/callback/
 
 MAINTAINERS
 -----------
  * KrishaWeb Technologies (https://www.drupal.org/u/krishaweb)
  * Girish Panchal (https://www.drupal.org/u/girishpanchal)
 
- 

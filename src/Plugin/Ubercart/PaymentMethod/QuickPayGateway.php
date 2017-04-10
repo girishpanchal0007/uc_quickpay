@@ -78,6 +78,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     $form['label'] = [
       '#prefix' => ' ',
       '#plain_text' => $label,
+      '#suffix' => ' ',
     ];
     $cc_types = $this->getEnabledTypes();
     foreach ($cc_types as $type => $description) {
@@ -85,7 +86,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         '#theme' => 'image',
         '#uri' => drupal_get_path('module', 'uc_quickpay') . '/images/' . $type . '.gif',
         '#alt' => $description,
-        '#attributes' => ['class' => ['uc-quickpay-cctype', 'uc-quickpay-cctype-' . $type]],
+        '#attributes' => ['class' => ['uc-quickpay-embedded', 'uc-quickpay-cctype-' . $type]],
       ];
     }
     return $form;
@@ -119,7 +120,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     $form['api'] = [
       '#type' => 'details',
       '#title' => $this->t('API credentials'),
-      '#description' => $this->t('@link for information on obtaining credentials. You need to acquire an API Signature. If you have already requested API credentials, you can review your settings under the Integration section of your QuickPayGateway profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('http://tech.quickpay.net/api/'))->toString()]),
+      '#description' => $this->t('@link for information on obtaining credentials. You need to acquire an API Signature. If you have already logged-in your quickpay, you can review your settings under the Integration section of your QuickPayGateway profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('https://manage.quickpay.net/'))->toString()]),
       '#open' => TRUE,
     ];
     $form['api']['merchant_id'] = [
@@ -494,7 +495,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       if ($authorize_obj->isSuccess()) {
         // To capture payment using capture class below.
         $payment_capture = $this->capture($order, $payment->id, $amount_currency);
-        $message = $this->t('QuickPay credit card payment was successfully: @amount', ['@amount' => uc_currency_format($amount)]);
+        $message = $this->t('QuickPay credit card payment was successfully: @amount @currency', ['@amount' => uc_currency_format($amount), '@currency' => $order->getCurrency()]);
         uc_order_comment_save($order->id(), $order->getOwnerId(), $message, 'admin');
         // Get string length.
         $order_length = strlen((string) $order->id());
