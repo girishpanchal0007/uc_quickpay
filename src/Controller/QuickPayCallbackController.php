@@ -4,7 +4,6 @@ namespace Drupal\uc_quickpay\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\uc_order\OrderInterface;
-use Drupal\uc_order\Entity\Order;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;

@@ -39,9 +39,9 @@
       }
     });
   }
-  $(document).ajaxSuccess(function( event, xhr, settings ) {
+  $(document).ajaxSuccess(function(event, xhr, settings) {
     var clickElement = event.target.activeElement.nextElementSibling.firstElementChild.className;
-    if (clickElement == "uc-quickpay-embedded uc-quickpay-cctype-maestro") {
+    if (clickElement == 'uc-quickpay-embedded uc-quickpay-cctype-maestro') {
       location.reload();
     }
   });
