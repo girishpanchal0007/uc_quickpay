@@ -19,7 +19,7 @@ payment_method.settings.quickpay_gateway:
       type: string
       label: 'Order id prefix'
     3d_secure:
-      type: string
+      type: boolean
       label: 'Select 3d_secure'
     continue_url:
       type: string
@@ -35,9 +35,9 @@ payment_method.settings.quickpay_form_gateway:
     merchant_id:
       type: string
       label: 'Merchant ID'
-    user_api_key:
+    private_key:
       type: string
-      label: 'API user key'
+      label: 'Private Key'
     agreement_id:
       type: string
       label: 'Agreement ID'
@@ -49,4 +49,7 @@ payment_method.settings.quickpay_form_gateway:
       label: 'Order id prefix'
     language:
       type: string
-      label: 'Select Language'
+      label: 'Payment Language'
+    autocapture:
+      type: boolean
+      label: 'Autocapture'
