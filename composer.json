@@ -1,0 +1,6 @@
+{
+  "name": "drupal/uc_quickpay",
+  "require": {
+    "quickpay/quickpay-php-client": "1.0.*"
+  }
+}

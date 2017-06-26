@@ -2,14 +2,17 @@
   position: relative;
 }
 .uc-order-view-update-form #edit-actions--2 {
-  position: absolute;
   bottom: 0px;
   left: 120px;
   margin: 0px;
+  position: absolute;
+}
+.js-form-type-select.js-form-item-panes-delivery-select-address.form-item-panes-delivery-select-address {
+  display: none;
 }
 @media (max-width: 600px) {
   .uc-order-view-update-form #edit-actions--2 {
-    position: relative;
     left: 0px;
+    position: relative;
   }
 }

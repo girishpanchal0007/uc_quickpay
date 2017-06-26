@@ -1,7 +1,7 @@
 name: Ubercart QuickPay
-description: Ubercart QuickPay is the payment gateway module for Drupal.
+description: Ubercart quickpay is a payment gateway for QuickPay.
 package: Ubercart - payment
 core: 8.x
 type: module
 dependencies:
-  - uc_quickpay:ubercart
+  - ubercart:uc_credit
