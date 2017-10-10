@@ -3,9 +3,10 @@
  * For create QuickPay token when checkout page appear.
  */
 
-(function($) {
+(function ($) {
+  "use strict";
   Drupal.behaviors.uc_quickpay = {
-    'attach': function(context) {
+    attach: function (context) {
       $('input#edit-panes-payment-details-cc-number').removeAttr('name');
       $('input#edit-panes-payment-details-cc-cvv').removeAttr('name');
       $('input#cc-date-year').removeAttr('name');
@@ -51,5 +52,5 @@
         }
       });
     }
-  }
+  };
 })(jQuery);

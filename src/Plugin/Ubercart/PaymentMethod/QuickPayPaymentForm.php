@@ -104,13 +104,13 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       '#type' => 'textfield',
       '#title' => $this->t('Agreement ID'),
       '#default_value' => $this->configuration['api']['agreement_id'],
-      '#description' => $this->t('This is the User Agreement id. The checksum must be signed with the API-key belonging to this Agreement.'),
+      '#description' => $this->t('This is a Payment Window Agreement id.'),
     ];
     $form['api']['payment_api_key'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Payment Window API key'),
+      '#title' => $this->t('API key'),
       '#default_value' => $this->configuration['api']['payment_api_key'],
-      '#description' => $this->t('This is a payment window API key.'),
+      '#description' => $this->t('This is Payment window API key.'),
     ];
     $form['api']['pre_order_id'] = [
       '#type' => 'textfield',

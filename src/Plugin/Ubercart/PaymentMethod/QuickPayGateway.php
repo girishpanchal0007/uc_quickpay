@@ -67,7 +67,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
   public function getTransactionTypes() {
     return [
       UC_CREDIT_AUTH_CAPTURE,
-      UC_CREDIT_AUTH_ONLY,
+      UC_CREDIT_REFERENCE_TXN
     ];
   }
 
@@ -139,13 +139,13 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       '#type' => 'textfield',
       '#title' => $this->t('Agreement ID'),
       '#default_value' => $this->configuration['api']['agreement_id'],
-      '#description' => $this->t('This is the User Agreement id. The checksum must be signed with the API-key belonging to this Agreement.'),
+      '#description' => $this->t('This is Payment Window Agreement id.'),
     ];
     $form['api']['payment_api_key'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Payment Window API key'),
+      '#title' => $this->t('API key'),
       '#default_value' => $this->configuration['api']['payment_api_key'],
-      '#description' => $this->t('This is a payment window API key.'),
+      '#description' => $this->t('This is Payment Window API key.'),
     ];
     $form['api']['pre_order_id'] = [
       '#type' => 'textfield',
