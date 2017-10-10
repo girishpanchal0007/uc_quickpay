@@ -1,6 +1,20 @@
 {
   "name": "drupal/uc_quickpay",
-  "require": {
-    "quickpay/quickpay-php-client": "1.0.*"
-  }
+  "description": "Ubercart quickpay is a payment gateway for QuickPay.",
+  "type": "drupal-module",
+  "homepage": "https://www.drupal.org/project/uc_quickpay",
+  "authors": [
+    {
+      "name": "krishaweb",
+      "homepage": "https://www.drupal.org/u/krishaweb"
+    },
+    {
+      "name": "girishpanchal",
+      "homepage": "https://www.drupal.org/u/girishpanchal"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/uc_quickpay"
+  },
+  "require": { }
 }
