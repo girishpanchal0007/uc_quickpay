@@ -70,7 +70,7 @@ class QuickPayFormController extends ControllerBase {
     // This lets us know it's a legitimate access of the complete page.
     $message = $this->t('QuickPay Form payment was successfully of : @amount @currency.',
       [
-        '@amount' => uc_currency_format($uc_order->getTotal()),
+        '@amount' => uc_currency_format($uc_order->getTotal(), FALSE),
         '@currency' => $uc_order->getCurrency(),
       ]
     );
@@ -94,7 +94,7 @@ class QuickPayFormController extends ControllerBase {
     // Checking current session current order.
     $message = $this->t('Quick Pay Form payment was cancelled occurred some unnecessary action: @amount @currency.',
       [
-        '@amount' => uc_currency_format($uc_order->getTotal(), FALSE, FALSE, FALSE),
+        '@amount' => uc_currency_format($uc_order->getTotal(), FALSE),
         '@currency' => $uc_order->getCurrency(),
       ]
     );

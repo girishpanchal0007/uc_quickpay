@@ -85,7 +85,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $form['api'] = [
       '#type' => 'details',
       '#title' => $this->t('API credentials'),
-      '#description' => $this->t('@link for information on obtaining credentials. You need to acquire an API Signature. If you have already logged-in your quickpay, you can review your settings under the Integration section of your QuickPayGateway profile. Quickpay Form Method must needed callback URL which you need to add setting under the Merchant e.g http://www.example.com/callback/', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('https://manage.quickpay.net/'))->toString()]),
+      '#description' => $this->t('@link for obtaining information of quickpay credentials. You need to acquire an API Signature. If you have already logged in your Quickpay then you can review your settings under the integration section of your QuickPay Gateway profile. Quickpay Form Method must needed callback URL which you need to add setting under the integration e.g http://www.example.com/callback/', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('https://manage.quickpay.net/'))->toString()]),
       '#open' => TRUE,
     ];
     $form['api']['merchant_id'] = [
@@ -94,29 +94,23 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       '#default_value' => $this->configuration['api']['merchant_id'],
       '#description' => $this->t('This is your Merchant Account id.'),
     ];
-    $form['api']['private_key'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Private Key'),
-      '#default_value' => $this->configuration['api']['private_key'],
-      '#description' => $this->t('This is Merchant Private Key.'),
-    ];
     $form['api']['agreement_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Agreement ID'),
       '#default_value' => $this->configuration['api']['agreement_id'],
-      '#description' => $this->t('This is a Payment Window Agreement id.'),
+      '#description' => $this->t('This is the User Agreement id. The checksum must be signed with the API-key belonging to this Agreement.'),
     ];
     $form['api']['payment_api_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('API key'),
       '#default_value' => $this->configuration['api']['payment_api_key'],
-      '#description' => $this->t('This is Payment window API key.'),
+      '#description' => $this->t('This is Payment Window API key.'),
     ];
     $form['api']['pre_order_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Order id prefix'),
       '#default_value' => $this->configuration['api']['pre_order_id'],
-      '#description' => $this->t('Prefix for order ids. Order ids must be uniqe when sent to QuickPay, use this to resolve clashes.'),
+      '#description' => $this->t('Prefix of order ids. Order ids must be uniqe when sent to QuickPay, Use this to resolve clashes.'),
     ];
     $form['language'] = [
       '#type' => 'select',
@@ -150,9 +144,9 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $elements = [
       'merchant_id',
-      'private_key',
       'agreement_id',
       'payment_api_key',
+      'pre_order_id',
     ];
     foreach ($elements as $element_name) {
       $raw_key = $form_state->getValue(['settings', 'api', $element_name]);
@@ -194,7 +188,6 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $elements = [
       'merchant_id',
-      'user_api_key',
       'agreement_id',
       'payment_api_key',
       'pre_order_id',

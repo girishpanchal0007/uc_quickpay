@@ -16,3 +16,9 @@
     position: relative;
   }
 }
+img.uc-quickpay-form {
+  vertical-align: middle;
+}
+img.uc-quickpay-form:first-child {
+  margin-left: 5px;
+}

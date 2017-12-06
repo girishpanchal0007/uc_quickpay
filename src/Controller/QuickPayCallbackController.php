@@ -75,54 +75,52 @@ class QuickPayCallbackController extends ControllerBase {
     $request_body = file_get_contents("php://input");
     // Checking checksum.
     $checksum = $this->callbackChecksum($request_body, $adminconfiguration['api']['private_key']);
-    if ($checksum == $_SERVER["HTTP_QUICKPAY_CHECKSUM_SHA256"]) {
-      // Store callback data.
-      $data = json_decode($request_body, TRUE);
-      if (!isset($data['id'])) {
-        $this->log->error('QuickPay callback payment_id is not found.');
-        return;
-      }
-      // Get string length.
-      $order_length = strlen((string) $uc_order->id());
-      $orderID = substr($data['order_id'], -$order_length);
-      if ($orderID != $uc_order->id()) {
-        $this->log->error('QuickPay callback order_id is not matched.');
-        return;
-      }
-      if ($data['operations'][0]['aq_status_msg'] == "Approved") {
-        $payment_id = $data['id'];
-        $merchant_id = $data['merchant_id'];
-        $payment_type = $data['metadata']['type'];
-        $payment_brand = $data['metadata']['brand'];
-        $payment_amount = $data['operations'][0]['amount'];
-        $payment_status = $data['operations'][0]['aq_status_msg'];
-        $payment_email = $data['invoice_address']['email'];
-        // Callback response enter to the database.
-        db_insert('uc_payment_quickpay_callback')
-          ->fields([
-            'order_id' => $orderID,
-            'payment_id' => $payment_id,
-            'merchant_id' => $merchant_id,
-            'payment_type' => $payment_type,
-            'payment_brand' => $payment_brand,
-            'payment_amount' => $payment_amount,
-            'payment_status' => $payment_status,
-            'customer_email' => $payment_email,
-            'created_at' => REQUEST_TIME,
-          ])
-          ->execute();
-      }
-      else {
-        uc_order_comment_save($uc_order->id(), 0, $this->t("QuickPay payment is not approved by QuickPay. You need to contact with site admin"), 'admin');
+    if (isset($_SERVER["HTTP_QUICKPAY_CHECKSUM_SHA256"])) {
+      if ($checksum == $_SERVER["HTTP_QUICKPAY_CHECKSUM_SHA256"]) {
+        // Store callback data.
+        $data = json_decode($request_body, TRUE);
+        if (!isset($data['id'])) {
+          $this->log->error('QuickPay callback response doesn&apos;t have payment id.');
+          return;
+        }
+        // Get string length.
+        $order_length = strlen((string) $uc_order->id());
+        $orderID = substr($data['order_id'], -$order_length);
+        if ($orderID != $uc_order->id()) {
+          $this->log->error('QuickPay callback response order id is not matched with current order id.');
+          return;
+        }
+        if ($data['operations'][0]['aq_status_msg'] == "Approved") {
+          $payment_id = $data['id'];
+          $merchant_id = $data['merchant_id'];
+          $payment_type = $data['metadata']['type'];
+          $payment_brand = $data['metadata']['brand'];
+          $payment_amount = $data['operations'][0]['amount'];
+          $payment_status = $data['operations'][0]['aq_status_msg'];
+          $payment_email = $data['invoice_address']['email'];
+          // Callback response enter to the database.
+          db_insert('uc_payment_quickpay_callback')
+            ->fields([
+              'order_id' => $orderID,
+              'payment_id' => $payment_id,
+              'merchant_id' => $merchant_id,
+              'payment_type' => $payment_type,
+              'payment_brand' => $payment_brand,
+              'payment_amount' => $payment_amount,
+              'payment_status' => $payment_status,
+              'customer_email' => $payment_email,
+              'created_at' => REQUEST_TIME,
+            ])
+            ->execute();
+        }
+        else {
+          uc_order_comment_save($uc_order->id(), 0, $this->t("The Quickpay response is not matched with the sent data. You need to contact the site administrator."), 'admin');
+        }
       }
     }
     else {
-      uc_order_comment_save($uc_order->id(), 0, $this->t('QuickPay payment is not match with callback response. You need to contact with site admin.',
-        [
-          '@amount' => uc_currency_format($payment_amount, FALSE),
-          '@currency' => $data['currency'],
-        ]
-      ));
+      uc_order_comment_save($uc_order->id(), 0, $this->t('QuickPay server is not responded. You need to contact with site administrator.'));
+      return FALSE;
     }
   }
 
