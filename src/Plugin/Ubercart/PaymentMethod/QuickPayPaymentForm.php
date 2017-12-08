@@ -93,24 +93,35 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       '#title' => $this->t('Merchant ID'),
       '#default_value' => $this->configuration['api']['merchant_id'],
       '#description' => $this->t('This is your Merchant Account id.'),
+      '#required' => TRUE,
+    ];
+    $form['api']['private_key'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Private Key'),
+      '#default_value' => $this->configuration['api']['private_key'],
+      '#description' => $this->t('This is Merchant Private Key.'),
+      '#required' => TRUE,
     ];
     $form['api']['agreement_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Agreement ID'),
       '#default_value' => $this->configuration['api']['agreement_id'],
       '#description' => $this->t('This is the User Agreement id. The checksum must be signed with the API-key belonging to this Agreement.'),
+      '#required' => TRUE,
     ];
     $form['api']['payment_api_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('API key'),
       '#default_value' => $this->configuration['api']['payment_api_key'],
       '#description' => $this->t('This is Payment Window API key.'),
+      '#required' => TRUE,
     ];
     $form['api']['pre_order_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Order id prefix'),
       '#default_value' => $this->configuration['api']['pre_order_id'],
       '#description' => $this->t('Prefix of order ids. Order ids must be uniqe when sent to QuickPay, Use this to resolve clashes.'),
+      '#required' => TRUE,
     ];
     $form['language'] = [
       '#type' => 'select',
@@ -144,6 +155,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $elements = [
       'merchant_id',
+      'private_key',
       'agreement_id',
       'payment_api_key',
       'pre_order_id',
@@ -188,6 +200,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $elements = [
       'merchant_id',
+      'private_key',
       'agreement_id',
       'payment_api_key',
       'pre_order_id',
@@ -235,11 +248,12 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $data['currency'] = $order->getCurrency();
     $data['continueurl'] = Url::fromRoute('uc_quickpay.qpf_complete', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
     $data['cancelurl'] = Url::fromRoute('uc_quickpay.qpf_cancel', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
-    $data['callbackurl'] = Url::fromRoute('uc_quickpay.qpf_callback', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString();
+    $data['callbackurl'] = Url::fromRoute('uc_quickpay.qpf_callback', [], ['absolute' => TRUE])->toString();
     $data['language'] = $this->configuration['language'];
     if ($this->configuration['autocapture'] != NULL) {
       $data['autocapture'] = $this->configuration['autocapture'] ? 1 : 0;
     }
+    $data['variables[uc_order_id]'] = $order->id();
     $data['customer_email'] = $order->getEmail();
     $data['invoice_address[name]'] = $bill_address->first_name . " " . $bill_address->last_name;
     $data['invoice_address[att]'] = $bill_address->street1;
