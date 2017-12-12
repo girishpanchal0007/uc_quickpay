@@ -68,10 +68,9 @@ class QuickPayFormController extends ControllerBase {
       return $this->redirect('uc_cart.cart');
     }
     // This lets us know it's a legitimate access of the complete page.
-    $message = $this->t('QuickPay Form payment was successfully of : @amount @currency.',
+    $message = $this->t('QuickPay Form payment was successfully of : @amount.',
       [
-        '@amount' => uc_currency_format($uc_order->getTotal(), FALSE),
-        '@currency' => $uc_order->getCurrency(),
+        '@amount' => uc_currency_format($uc_order->getTotal()),
       ]
     );
     // Comment order.
@@ -92,10 +91,9 @@ class QuickPayFormController extends ControllerBase {
       return $this->redirect('uc_cart.cart');
     }
     // Checking current session current order.
-    $message = $this->t('Quick Pay Form payment was cancelled occurred some unnecessary action: @amount @currency.',
+    $message = $this->t('Quick Pay Form payment was cancelled occurred some unnecessary action: @amount.',
       [
-        '@amount' => uc_currency_format($uc_order->getTotal(), FALSE),
-        '@currency' => $uc_order->getCurrency(),
+        '@amount' => uc_currency_format($uc_order->getTotal()),
       ]
     );
     // Comment order.

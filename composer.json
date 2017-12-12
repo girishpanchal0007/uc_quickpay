@@ -16,5 +16,7 @@
   "support": {
     "issues": "https://www.drupal.org/project/issues/uc_quickpay"
   },
-  "require": { }
+  "require": {
+    "quickpay/quickpay-php-client": "1.0.*"
+  }
 }

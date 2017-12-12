@@ -16,9 +16,23 @@
     position: relative;
   }
 }
+
+label .uc-quickpay-embedded {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 img.uc-quickpay-form {
   vertical-align: middle;
 }
-img.uc-quickpay-form:first-child {
+
+img.uc-quickpay-form:first-child, img.uc-quickpay-embedded:nth-child(2) {
   margin-left: 5px;
 }
+
+.form-item-panes-payment-details-cc-number span.card-brand {
+  margin: 0 8px;
+  color: #3b3b3b;
+  font-weight: bold;
+}
+    

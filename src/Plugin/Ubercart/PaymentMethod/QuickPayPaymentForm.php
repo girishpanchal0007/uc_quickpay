@@ -73,8 +73,8 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
         'agreement_id'    => '',
         'payment_api_key' => '',
       ],
-      'language'            => '',
-      'autocapture'         => '',
+      'language'          => '',
+      'autocapture'       => '',
     ];
   }
 

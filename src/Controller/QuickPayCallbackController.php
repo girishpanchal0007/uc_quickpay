@@ -117,7 +117,7 @@ class QuickPayCallbackController extends ControllerBase {
               ])
               ->execute();
             // order comment.
-            uc_order_comment_save($orderID, $order->getOwnerId(), $this->t('Your order was successfully with Payment ID: @payment_id',
+            uc_order_comment_save($orderID, $order->getOwnerId(), $this->t('Your order was successfully with Payment ID: @payment_id.',
               [
                 '@payment_id' => $payment_id,
               ]
@@ -126,14 +126,14 @@ class QuickPayCallbackController extends ControllerBase {
           }
           else {
             // order comment.
-            uc_order_comment_save($order->id(), $order->getOwnerId(), $this->t("The Quickpay response is not matched with the sent data. You need to contact the site administrator."), 'admin');
+            uc_order_comment_save($order->id(), 1, $this->t("The Quickpay response is not matched with the sent data. You need to contact the site administrator."), 'admin');
             return;
           }
         }
       }
       else {
         // order comment.
-        uc_order_comment_save($order->id(), $order->getOwnerId(), $this->t('QuickPay server is not responded. You need to contact with site administrator.'));
+        uc_order_comment_save($order->id(), 1, $this->t('QuickPay server is not responded. You need to contact with site administrator.'));
         return;
       }
     }

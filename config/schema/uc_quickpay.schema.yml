@@ -1,4 +1,4 @@
-# Schema for the configuration files of the uc_paytrek module.
+# Schema for the configuration files of the uc_quickpay module.
 payment_method.settings.quickpay_gateway:
   type: mapping
   label: 'QuickPay credit card configuration settings'
@@ -18,15 +18,15 @@ payment_method.settings.quickpay_gateway:
     pre_order_id:
       type: string
       label: 'Order id prefix'
-    3d_secure:
-      type: boolean
-      label: 'Select 3d_secure'
     continue_url:
       type: string
       label: 'Continue URL'
     cancel_url:
       type: string
       label: 'Cancel URL'
+    3d_secure:
+      type: boolean
+      label: 'Select 3d_secure'
 
 payment_method.settings.quickpay_form_gateway:
   type: mapping
