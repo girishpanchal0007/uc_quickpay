@@ -32,7 +32,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       'cvv' => TRUE,
       'owner' => FALSE,
       'start' => FALSE,
-      'issue' => TRUE,
+      'issue' => FALSE,
       'type' => FALSE,
     ];
   }
@@ -67,7 +67,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
   public function getTransactionTypes() {
     return [
       UC_CREDIT_AUTH_CAPTURE,
-      UC_CREDIT_REFERENCE_TXN
+      UC_CREDIT_REFERENCE_TXN,
     ];
   }
 

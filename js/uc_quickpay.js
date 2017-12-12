@@ -12,7 +12,7 @@
   var checkedInput = $('#uc-cart-checkout-form .form-radios .js-form-type-radio input:checked').val();
   var embeddedInput = $('#uc-cart-checkout-form .form-radios .js-form-type-radio .uc-quickpay-embedded').parent('.option').siblings('input').val();
   // checking condition.
-  if (checkedInput == embeddedInput) {
+  if (checkedInput === embeddedInput) {
     var merchantId = drupalSettings.uc_quickpay.merchant_id;
     var agreementId = drupalSettings.uc_quickpay.agreement_id;
     QuickPay.Embedded.Form($('.uc-cart-checkout-form'), {

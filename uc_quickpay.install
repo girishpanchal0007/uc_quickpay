@@ -5,6 +5,11 @@
  * Install, module to create database for the uc_quickpay module.
  */
 
+/**
+ * Custom function use for returning plugin data.
+ *
+ * @return  array $plugin_data.
+ */
 function uc_quickpay_get_quickpay_plugins() {
   // Balnk array.
   $plugin_data = [];
@@ -30,17 +35,17 @@ function uc_quickpay_requirements($phase) {
   // Actual version of Quick Pay API.
   $quickpay_api_version = "";
 
-  if (class_exists('\QuickPay\API\Constants')) {
-    $quickpay_api_version = \QuickPay\API\Constants::API_VERSION;
+  if (class_exists('QuickPay\API\Constants')) {
+    $quickpay_api_version = QuickPay\API\Constants::API_VERSION;
   }
   // Version compare.
   $version_is_ok = version_compare($quickpay_api_version, $required_version, '>=');
 
-  $requirements['uc_quickpay_library'] = array(
+  $requirements['uc_quickpay_library'] = [
     'title' => t('QuickPay PHP Library for Ubercart QuickPay'),
     'value' => t('Version @version', ['@version' => $quickpay_api_version]),
     'description' => t('QuickPay PHP Library is installed'),
-  );
+  ];
 
   $requirements['uc_quickpay_library']['value'] = !empty($quickpay_api_version) ? $quickpay_api_version : t('Not Installed');
   $requirements['uc_quickpay_library']['severity'] = $version_is_ok ? REQUIREMENT_OK : REQUIREMENT_ERROR;
@@ -51,10 +56,10 @@ function uc_quickpay_requirements($phase) {
   $plugins = uc_quickpay_get_quickpay_plugins();
   foreach ($plugins as $plugin) {
     $requirement_key = "uc_quickpay_keys_{$plugin['id']}";
-    $requirements[$requirement_key] = array(
+    $requirements[$requirement_key] = [
       'title' => t('QuickPay API Keys & Ids for uc_quickpay "@plugin" payment method', ['@plugin' => $plugin['id']]),
       'value' => t('Configured'),
-    );
+    ];
 
     if ($phase == 'runtime' && !uc_quickpay_check_api_keys_and_ids($plugin['settings'])) {
       $requirements[$requirement_key]['title'] = t('QuickPay API Keys.');

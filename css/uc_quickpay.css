@@ -26,7 +26,8 @@ img.uc-quickpay-form {
   vertical-align: middle;
 }
 
-img.uc-quickpay-form:first-child, img.uc-quickpay-embedded:nth-child(2) {
+img.uc-quickpay-form:first-child,
+img.uc-quickpay-embedded:nth-child(2) {
   margin-left: 5px;
 }
 
@@ -35,4 +36,3 @@ img.uc-quickpay-form:first-child, img.uc-quickpay-embedded:nth-child(2) {
   color: #3b3b3b;
   font-weight: bold;
 }
-    

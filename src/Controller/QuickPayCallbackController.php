@@ -3,7 +3,6 @@
 namespace Drupal\uc_quickpay\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -83,7 +82,7 @@ class QuickPayCallbackController extends ControllerBase {
         $order = Order::load($data['variables']['uc_order_id']);
         // Get string length.
         $order_length = strlen((string) $order->id());
-        $orderID = substr($data['order_id'], -$order_length);     
+        $orderID = substr($data['order_id'], -$order_length);
         // Get private key configuration.
         $plugin = $this->paymentMethodManager->createFromOrder($order);
         $adminconfiguration = $plugin->getConfiguration();
@@ -116,7 +115,7 @@ class QuickPayCallbackController extends ControllerBase {
                 'created_at' => REQUEST_TIME,
               ])
               ->execute();
-            // order comment.
+            // Order comment.
             uc_order_comment_save($orderID, $order->getOwnerId(), $this->t('Your order was successfully with Payment ID: @payment_id.',
               [
                 '@payment_id' => $payment_id,
@@ -125,14 +124,14 @@ class QuickPayCallbackController extends ControllerBase {
             return;
           }
           else {
-            // order comment.
+            // Order comment.
             uc_order_comment_save($order->id(), 1, $this->t("The Quickpay response is not matched with the sent data. You need to contact the site administrator."), 'admin');
             return;
           }
         }
       }
       else {
-        // order comment.
+        // Order comment.
         uc_order_comment_save($order->id(), 1, $this->t('QuickPay server is not responded. You need to contact with site administrator.'));
         return;
       }
