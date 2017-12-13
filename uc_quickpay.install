@@ -8,7 +8,8 @@
 /**
  * Custom function use for returning plugin data.
  *
- * @return  array $plugin_data.
+ * @return array
+ *   $plugin_data return plugins payment ids.
  */
 function uc_quickpay_get_quickpay_plugins() {
   // Balnk array.

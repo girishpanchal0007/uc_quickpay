@@ -59,9 +59,9 @@ INSTALLATION
  * Use composer to install QuickPay (Composer required drupal/uc_quickpay).
  * We have added required library in module composer file 
    which is "quickpay-php-client".
- * When composer will run required library will be downloaded automatically.
- * Install and enable as you would normally install and enable
-   a contributed Drupal module.
+ * Required library will be automatically downloaded
+   when you will run composer.
+ * Follow the standard method to install/enable it.
 
  See: https://drupal.org/projects/uc_quickpay
 
