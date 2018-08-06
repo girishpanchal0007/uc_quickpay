@@ -5,11 +5,13 @@
  * Install, module to create database for the uc_quickpay module.
  */
 
+use QuickPay\API\Constants;
+
 /**
  * Custom function use for returning plugin data.
  *
  * @return array
- *   $plugin_data return plugins payment ids.
+ *   Store quickpay_gateway method config in $plugin_data object.
  */
 function uc_quickpay_get_quickpay_plugins() {
   // Balnk array.
@@ -37,21 +39,22 @@ function uc_quickpay_requirements($phase) {
   $quickpay_api_version = "";
 
   if (class_exists('QuickPay\API\Constants')) {
-    $quickpay_api_version = QuickPay\API\Constants::API_VERSION;
+    $quickpay_api_version = Constants::API_VERSION;
   }
+
   // Version compare.
   $version_is_ok = version_compare($quickpay_api_version, $required_version, '>=');
 
   $requirements['uc_quickpay_library'] = [
-    'title' => t('QuickPay PHP Library for Ubercart QuickPay'),
+    'title' => t('QuickPay Library'),
     'value' => t('Version @version', ['@version' => $quickpay_api_version]),
-    'description' => t('QuickPay PHP Library is installed'),
+    'description' => t('QuickPay Library is installed.'),
   ];
 
-  $requirements['uc_quickpay_library']['value'] = !empty($quickpay_api_version) ? $quickpay_api_version : t('Not Installed');
+  $requirements['uc_quickpay_library']['value'] = !empty($quickpay_api_version) ? t('Version (@version)', ['@version' => $quickpay_api_version]) : t('Not Installed');
   $requirements['uc_quickpay_library']['severity'] = $version_is_ok ? REQUIREMENT_OK : REQUIREMENT_ERROR;
   if (!$version_is_ok) {
-    $requirements['uc_quickpay_library']['description'] = $version_is_ok ? t('QuickPay PHP Library is required.') : t("QuickPay PHP API library version is not enough. Version needs to be @version or higher", ['@version' => $required_version]);
+    $requirements['uc_quickpay_library']['description'] = !isset($version_is_ok) ? t('QuickPay Library is required.') : t("QuickPay library version is not enough. Version needs to be @version or higher", ['@version' => $required_version]);
   }
   // Calling custom function.
   $plugins = uc_quickpay_get_quickpay_plugins();
