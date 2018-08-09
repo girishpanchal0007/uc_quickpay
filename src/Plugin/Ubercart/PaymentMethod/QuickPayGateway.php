@@ -216,7 +216,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       $sanitized_key = $this->trimKey($raw_key);
       $form_state->setValue(['settings', $element_name], $sanitized_key);
       if (!$this->validateKey($form_state->getValue(['settings', $element_name]))) {
-        $form_state->setError($elements, $this->t('@name does not appear to be a valid QuickPay key',
+        $form_state->setError($element_keys, $this->t('@name does not appear to be a valid QuickPay key',
           [
             '@name' => $element_name,
           ]
