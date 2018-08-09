@@ -35,6 +35,10 @@ Auto capture payment option is a default setting for
 the QuickPay Embedded method.
 You can also do that in QuickPay Form method
 
+If you will enable both the method for the payment with QuickPay
+then you need to select payment method first on checkout page otherwise
+entered detail will be lost (Page will refrsh on select method).
+
 Cart detail validation is the must while using the QuickPay Embedded method.
 So, when users will select the QuickPay Embedded payment method,
 he page will automatically get refreshed to verify the card details

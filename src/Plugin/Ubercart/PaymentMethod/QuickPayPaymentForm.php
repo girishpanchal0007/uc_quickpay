@@ -73,8 +73,8 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
         'agreement_id'    => '',
         'payment_api_key' => '',
       ],
-      'language'          => '',
-      'autocapture'       => '',
+      'language'          => 'en',
+      'autocapture'       => FALSE,
     ];
   }
 
@@ -99,21 +99,21 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       '#type' => 'textfield',
       '#title' => $this->t('Private Key'),
       '#default_value' => $this->configuration['api']['private_key'],
-      '#description' => $this->t('This is Merchant Private Key.'),
+      '#description' => $this->t('This is your Merchant Private Key.'),
       '#required' => TRUE,
     ];
     $form['api']['agreement_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Agreement ID'),
       '#default_value' => $this->configuration['api']['agreement_id'],
-      '#description' => $this->t('This is the User Agreement id. The checksum must be signed with the API-key belonging to this Agreement.'),
+      '#description' => $this->t('This is your Payment Window Agreement id. The checksum must be signed with the API-key belonging to this Agreement.'),
       '#required' => TRUE,
     ];
     $form['api']['payment_api_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('API key'),
       '#default_value' => $this->configuration['api']['payment_api_key'],
-      '#description' => $this->t('This is Payment Window API key.'),
+      '#description' => $this->t('This is your Payment Window API key.'),
       '#required' => TRUE,
     ];
     $form['api']['pre_order_id'] = [
@@ -153,19 +153,38 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $elements = [
+    // Numeric validation for all the id's.
+    $element_ids = [
       'merchant_id',
-      'private_key',
       'agreement_id',
-      'payment_api_key',
       'pre_order_id',
     ];
-    foreach ($elements as $element_name) {
+    foreach ($element_ids as $element_id) {
+      $raw_key = $form_state->getValue(['settings', 'api', $element_id]);
+      if (!is_numeric($raw_key)) {
+        $form_state->setError($element_ids, $this->t('The @name @value is not valid. It must be numeric',
+          [
+            '@name' => $element_id,
+            '@value' => $raw_key,
+          ]
+        ));
+      }
+    }
+    // Key's validation.
+    $element_keys = [
+      'private_key',
+      'payment_api_key',
+    ];
+    foreach ($element_keys as $element_name) {
       $raw_key = $form_state->getValue(['settings', 'api', $element_name]);
       $sanitized_key = $this->trimKey($raw_key);
       $form_state->setValue(['settings', $element_name], $sanitized_key);
       if (!$this->validateKey($form_state->getValue(['settings', $element_name]))) {
-        $form_state->setError($elements, $this->t('@name does not appear to be a valid QuickPay key', ['@name' => $element_name]));
+        $form_state->setError($elements, $this->t('@name does not appear to be a valid QuickPay key',
+          [
+            '@name' => $element_name,
+          ]
+        ));
       }
     }
     parent::validateConfigurationForm($form, $form_state);

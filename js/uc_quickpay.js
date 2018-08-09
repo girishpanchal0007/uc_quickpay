@@ -19,6 +19,7 @@
       merchant_id: merchantId,
       agreement_id: agreementId,
       brandChanged: function (brand) {
+        $('.form-item-panes-payment-details-cc-number input').next().remove();
         $('.form-item-panes-payment-details-cc-number input').after('<span class="card-brand">' + brand + '</span>');
       },
       beforeCreateToken: function (form) {
@@ -47,9 +48,11 @@
     $('input#edit-panes-payment-details-cc-cvv').removeAttr('name');
     $('input#cc-date-year').removeAttr('name');
     if (event.target.activeElement.nextElementSibling) {
-      var clickElement = event.target.activeElement.nextElementSibling.firstElementChild.className;
-      if (clickElement === 'uc-quickpay uc-quickpay-embedded') {
-        location.reload();
+      if (event.target.activeElement.nextElementSibling.firstElementChild != null) {
+        var clickElement = event.target.activeElement.nextElementSibling.firstElementChild.className;
+        if ((clickElement === 'uc-quickpay uc-quickpay-embedded') || (clickElement === 'uc-quickpay-form uc-quickpay-cctype-maestro')) {
+          location.reload();
+        }
       }
     }
   });

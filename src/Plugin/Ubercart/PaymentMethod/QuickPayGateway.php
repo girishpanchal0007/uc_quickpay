@@ -189,19 +189,38 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $elements = [
+    // Numeric validation for all the id's.
+    $element_ids = [
       'merchant_id',
-      'user_api_key',
       'agreement_id',
-      'payment_api_key',
       'pre_order_id',
     ];
-    foreach ($elements as $element_name) {
+    foreach ($element_ids as $element_id) {
+      $raw_key = $form_state->getValue(['settings', 'api', $element_id]);
+      if (!is_numeric($raw_key)) {
+        $form_state->setError($element_ids, $this->t('The @name @value is not valid. It must be numeric',
+          [
+            '@name' => $element_id,
+            '@value' => $raw_key,
+          ]
+        ));
+      }
+    }
+    // Key's validation.
+    $element_keys = [
+      'user_api_key',
+      'payment_api_key',
+    ];
+    foreach ($element_keys as $element_name) {
       $raw_key = $form_state->getValue(['settings', 'api', $element_name]);
       $sanitized_key = $this->trimKey($raw_key);
       $form_state->setValue(['settings', $element_name], $sanitized_key);
       if (!$this->validateKey($form_state->getValue(['settings', $element_name]))) {
-        $form_state->setError($elements, $this->t('@name does not appear to be a valid.', ['@name' => $element_name]));
+        $form_state->setError($elements, $this->t('@name does not appear to be a valid QuickPay key',
+          [
+            '@name' => $element_name,
+          ]
+        ));
       }
     }
     parent::validateConfigurationForm($form, $form_state);
