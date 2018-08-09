@@ -7,7 +7,26 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\Entity\Order;
+use Drupal\Core\Routing\RouteMatchInterface;
 use QuickPay\QuickPay;
+
+/**
+ * Implements hook_help().
+ */
+function uc_quickpay_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the block module.
+    case 'help.page.uc_quickpay':
+      $output = '<p>' . t('Ubercart QuickPay is the payment gateway module for Drupal version 8 and above. The module uses the Danish Payment Gateway ‘QuickPay’ to make payment') . '</p>';
+      $output .= '<p><strong>' . t('The module supports two different payment methods') . '</strong></p>';
+      $output .= '<ul><li>' . t('QuickPay Embedded method') . '</li><li>' . t('QuickPay Form method') . '</li></ul>';
+      $output .= '<p>' . t('This module does have the payment refund functionality. But, you can’t do partial refund using the QuickPay Embedded payment method. Payment must be captured by the system to make it valid for the refund. That can be done manually as well as automatically. You can enable the auto capture in order to activate the instant refund of the payment.') . '</p>';
+      $output .= '<p>' . t('Auto capture payment option is a default setting for the QuickPay Embedded method. You can also do that in QuickPay Form method.') . '</p>';
+      $output .= '<p>' . t('Please refer README.txt included with the module for further information. You must install the Quickpay PHP client library. If you uncover anything that needs fixing, please inform us about that in the issue queue.') . '</p>';
+      $output .= '<p><strong>' . t('Cart detail validation is the must while using the QuickPay Embedded method. So, when users will select the QuickPay Embedded payment method, the page will automatically get refreshed to verify the card details and proceed with the payment process.') . '</strong></p>';
+      return $output;
+  }
+}
 
 /**
  * Implements hook_form_FORM_ID_alter() for uc_cart_checkout_form_alter().
