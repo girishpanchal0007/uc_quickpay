@@ -289,15 +289,27 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $data['autofee'] = $this->configuration['autofee'] ? 1 : 0;
     // Use callback variable to verify order id.
     $data['variables[uc_order_id]'] = $order->id();
-
     $data['customer_email'] = $order->getEmail();
-    $data['invoice_address[name]'] = $bill_address->first_name . " " . $bill_address->last_name;
+    // Invoice detail.
+    if (!empty($bill_address->first_name)) {
+      $data['invoice_address[name]'] = $bill_address->first_name . " " . $bill_address->last_name;
+    }
     $data['invoice_address[att]'] = $bill_address->street1;
-    $data['invoice_address[street]'] = $bill_address->street2;
+
+    if (!empty($bill_address->street2)) {
+      $data['invoice_address[street]'] = $bill_address->street2;
+    }
     $data['invoice_address[zip_code]'] = $bill_address->postal_code;
-    $data['invoice_address[city]'] = $bill_address->city;
+
+    if (!empty($bill_address->city)) {
+      $data['invoice_address[city]'] = $bill_address->city;
+    }
     $data['invoice_address[region]'] = $bill_address->zone;
     $data['invoice_address[country_code]'] = $country;
+
+    if (!empty($bill_address->phone)) {
+      $data['invoice_address[phone_number]'] = $bill_address->phone;
+    }
     $data['invoice_address[email]'] = $order->getEmail();
     // Static variable for loop.
     $i = 0;
