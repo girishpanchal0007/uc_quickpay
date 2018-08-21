@@ -16,8 +16,8 @@ use QuickPay\QuickPay;
  *
  * @UbercartPaymentMethod(
  *   id = "quickpay_gateway",
- *   name = @Translation("QuickPay Embedded"),
- *   label = @Translation("QuickPay Embedded"),
+ *   name = @Translation("Quickpay Embedded"),
+ *   label = @Translation("Quickpay Embedded"),
  * )
  */
 class QuickPayGateway extends CreditCardPaymentMethodBase {
@@ -79,7 +79,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
     $form['api'] = [
       '#type' => 'details',
       '#title' => $this->t('API credentials'),
-      '#description' => $this->t('@link for information on obtaining credentials. You need to acquire an API Signature. If you have already logged-in your quickpay, you can review your settings under the Integration section of your QuickPayGateway profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('https://manage.quickpay.net/'))->toString()]),
+      '#description' => $this->t('@link for information on obtaining credentials. You need to acquire an API signature. If you have already logged-in your quickpay, you can review your settings under the integration section of your quickpay gateway profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('https://manage.quickpay.net/'))->toString()]),
       '#open' => TRUE,
     ];
     $form['api']['merchant_id'] = [
@@ -114,7 +114,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       '#type' => 'textfield',
       '#title' => $this->t('Order id prefix'),
       '#default_value' => $this->configuration['api']['pre_order_id'],
-      '#description' => $this->t('Prefix for order ids. Order ids must be uniqe when sent to QuickPay, use this to resolve clashes.'),
+      '#description' => $this->t('Prefix for order ids. Order ids must be uniqe when sent to Quickpay, use this to resolve clashes.'),
       '#required' => TRUE,
     ];
     $form['callbacks'] = [
@@ -181,7 +181,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
       $sanitized_key = $this->trimKey($raw_key);
       $form_state->setValue(['settings', $element_name], $sanitized_key);
       if (!$this->validateKey($form_state->getValue(['settings', $element_name]))) {
-        $form_state->setError($element_keys, $this->t('@name does not appear to be a valid QuickPay key',
+        $form_state->setError($element_keys, $this->t('@name does not appear to be a valid Quickpay key',
           [
             '@name' => $element_name,
           ]
@@ -334,7 +334,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
    * {@inheritdoc}
    */
   public function cartReviewTitle() {
-    return $this->t('QuickPay Credit Card');
+    return $this->t('Quickpay Credit Card');
   }
 
   /**
@@ -486,7 +486,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
         if ($txn_type == 'auth_capture') {
           // To capture payment using capture class below.
           $payment_capture = $this->capture($order, $payment->id, $authorize_data->operations[0]->amount);
-          $message = $this->t('Quickpay credit card payment was successfully: @amount.', ['@amount' => uc_currency_format($amount)]);
+          $message = $this->t('Quickpay credit card payment has been successful amount: @amount.', ['@amount' => uc_currency_format($amount)]);
           uc_order_comment_save($order->id(), $order->getOwnerId(), $message, 'admin');
           // Get string length.
           $order_length = strlen((string) $order->id());
@@ -509,7 +509,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
           $result = [
             'success' => TRUE,
             'comment' => $this->t('Payment charged with capture,'),
-            'message' => $this->t('Quickpay credit card payment was successfully with payment capture.'),
+            'message' => $this->t('Quickpay credit card payment has been successful with payment capture.'),
             'uid' => $order->getOwnerId(),
           ];
           // Return result.
@@ -537,7 +537,7 @@ class QuickPayGateway extends CreditCardPaymentMethodBase {
           $result = [
             'success' => TRUE,
             'comment' => $this->t('Payment charged without capture,'),
-            'message' => $this->t('Quickpay credit card payment was successfully without payment capture.'),
+            'message' => $this->t('Quickpay credit card payment has been successful without payment capture.'),
             'uid' => $order->getOwnerId(),
           ];
           // Return result.

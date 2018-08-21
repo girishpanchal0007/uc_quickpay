@@ -15,8 +15,8 @@ use Drupal\uc_payment\OffsitePaymentMethodPluginInterface;
  *
  * @UbercartPaymentMethod(
  *   id = "quickpay_form_gateway",
- *   name = @Translation("QuickPay Form"),
- *   label = @Translation("QuickPay Form"),
+ *   name = @Translation("Quickpay Form"),
+ *   label = @Translation("Quickpay Form"),
  * )
  */
 class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaymentMethodPluginInterface {
@@ -62,7 +62,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $form['api'] = [
       '#type' => 'details',
       '#title' => $this->t('API credentials'),
-      '#description' => $this->t('@link for obtaining information of quickpay credentials. You need to acquire an API Signature. If you have already logged in your Quickpay then you can review your settings under the integration section of your QuickPay Gateway profile. Quickpay Form Method must needed callback URL which you need to add setting under the integration e.g http://www.example.com/callback/', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('https://manage.quickpay.net/'))->toString()]),
+      '#description' => $this->t('@link for obtaining information of quickpay credentials. You need to acquire an API Signature. If you have already logged in your Quickpay then you can review your settings under the integration section of your Quickpay Gateway profile. Quickpay Form Method must needed callback URL which you need to add setting under the integration e.g http://www.example.com/callback/', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('https://manage.quickpay.net/'))->toString()]),
       '#open' => TRUE,
     ];
     $form['api']['merchant_id'] = [
@@ -97,7 +97,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       '#type' => 'textfield',
       '#title' => $this->t('Order id prefix'),
       '#default_value' => $this->configuration['api']['pre_order_id'],
-      '#description' => $this->t('Prefix of order ids. Order ids must be uniqe when sent to QuickPay, Use this to resolve clashes.'),
+      '#description' => $this->t('Prefix of order ids. Order ids must be uniqe when sent to Quickpay, Use this to resolve clashes.'),
       '#required' => TRUE,
     ];
     $form['language'] = [
@@ -192,7 +192,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
       $sanitized_key = $this->trimKey($raw_key);
       $form_state->setValue(['settings', $element_name], $sanitized_key);
       if (!$this->validateKey($form_state->getValue(['settings', $element_name]))) {
-        $form_state->setError($element_keys, $this->t('@name does not appear to be a valid QuickPay key',
+        $form_state->setError($element_keys, $this->t('@name does not appear to be a valid Quickpay key',
           [
             '@name' => $element_name,
           ]
@@ -335,7 +335,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     // Text alter.
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('QuickPay Payment'),
+      '#value' => $this->t('Quickpay Payment'),
       '#id' => 'quickpay-submit',
     ];
     return $form;
@@ -471,7 +471,7 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
   public function prepareApi() {
     // Checking API keys configuration.
     if (!_uc_quickpay_check_api_keys($this->getConfiguration())) {
-      \Drupal::logger('uc_quickpay')->error('QuickPay API keys are not configured. Payments cannot be made without them.', []);
+      \Drupal::logger('uc_quickpay')->error('Quickpay API keys are not configured. Payments can not be made without them.', []);
       return FALSE;
     }
     return TRUE;

@@ -76,7 +76,7 @@ class QuickPayCallbackController extends ControllerBase {
       $data = json_decode($request_body, TRUE);
       if (!empty($data)) {
         if (empty($data['id'])) {
-          $this->log->error('QuickPay callback response doesn&apos;t have payment id.');
+          $this->log->error('Quickpay callback response doesn&apos;t have payment id. Please contact to the site administrator.');
           return;
         }
         // Load order using callback uc_order_id.
@@ -91,7 +91,7 @@ class QuickPayCallbackController extends ControllerBase {
         $checksum = $this->callbackChecksum($request_body, $adminconfiguration['api']['private_key']);
         if ($checksum == Xss::filter($_SERVER["HTTP_QUICKPAY_CHECKSUM_SHA256"])) {
           if ($orderID != $order->id()) {
-            $this->log->error('QuickPay callback response order id is not matched with current order id.');
+            $this->log->error('Quickpay callback response order id is not matched with current order id. Please contact to the site administrator.');
             return;
           }
           if ($data['operations'][0]['aq_status_msg'] == "Approved") {
@@ -117,10 +117,8 @@ class QuickPayCallbackController extends ControllerBase {
               ])
               ->execute();
 
-            // Update order status.
-            $order->setStatusId('payment_received')->save();
             // Order comment.
-            uc_order_comment_save($orderID, $order->getOwnerId(), $this->t('Your order was successfully with Payment ID: @payment_id.',
+            uc_order_comment_save($orderID, $order->getOwnerId(), $this->t('Your order has been successful with Payment ID : @payment_id.',
               [
                 '@payment_id' => $payment_id,
               ]
@@ -136,7 +134,7 @@ class QuickPayCallbackController extends ControllerBase {
       }
       else {
         // Order comment.
-        uc_order_comment_save($order->id(), 1, $this->t('QuickPay server is not responded. You need to contact with site administrator.'));
+        uc_order_comment_save($order->id(), 1, $this->t('Quickpay server is not responded. You need to contact with site administrator.'));
         return;
       }
     }
