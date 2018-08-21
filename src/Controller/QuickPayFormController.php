@@ -76,6 +76,8 @@ class QuickPayFormController extends ControllerBase {
     // Comment order.
     uc_order_comment_save($uc_order->id(), $uc_order->getOwnerId(), $message, 'admin');
     $this->session->set('uc_checkout_complete_' . $uc_order->id(), TRUE);
+    // Update order status.
+    $uc_order->setStatusId('payment_received')->save();
     return $this->redirect('uc_cart.checkout_complete');
   }
 
@@ -100,6 +102,8 @@ class QuickPayFormController extends ControllerBase {
     uc_order_comment_save($uc_order->id(), $uc_order->getOwnerId(), $message, 'admin');
     // Remove session for the current order.
     $this->session->remove('cart_order');
+    // Update order status.
+    $uc_order->setStatusId('canceled')->save();
     drupal_set_message($this->t('An error has occurred in your QuickPay payment. Please review your cart and try again.'));
     return $this->redirect('uc_cart.cart');
   }

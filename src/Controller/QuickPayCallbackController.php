@@ -7,6 +7,7 @@ use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
+use Drupal\Component\Utility\Xss;
 use Drupal\uc_order\Entity\Order;
 
 /**
@@ -88,7 +89,7 @@ class QuickPayCallbackController extends ControllerBase {
         $adminconfiguration = $plugin->getConfiguration();
         // Checking checksum.
         $checksum = $this->callbackChecksum($request_body, $adminconfiguration['api']['private_key']);
-        if ($checksum == $_SERVER["HTTP_QUICKPAY_CHECKSUM_SHA256"]) {
+        if ($checksum == Xss::filter($_SERVER["HTTP_QUICKPAY_CHECKSUM_SHA256"])) {
           if ($orderID != $order->id()) {
             $this->log->error('QuickPay callback response order id is not matched with current order id.');
             return;
@@ -115,6 +116,9 @@ class QuickPayCallbackController extends ControllerBase {
                 'created_at' => REQUEST_TIME,
               ])
               ->execute();
+
+            // Update order status.
+            $uc_order->setStatusId('payment_received')->save();
             // Order comment.
             uc_order_comment_save($orderID, $order->getOwnerId(), $this->t('Your order was successfully with Payment ID: @payment_id.',
               [
