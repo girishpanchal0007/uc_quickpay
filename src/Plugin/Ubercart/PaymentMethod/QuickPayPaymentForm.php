@@ -132,13 +132,14 @@ class QuickPayPaymentForm extends PaymentMethodPluginBase implements OffsitePaym
     $options = [];
     // Add card label for payment method.
     foreach ($this->getQuickpayCardTypes() as $key => $card) {
-      $options[$key] = empty($card['image']) ? $card['name'] : '<img src="' . $card['image'] . '" rel="' . $key . '" /> ' . $card['name'];
+      $options[$key] = empty($card['image']) ? (string) $card['name'] : '<img src="' . $card['image'] . '" rel="' . $key . '" /> ' . $card['name'];
     }
     $form['accepted_cards'] = [
       '#type' => 'checkboxes',
+      '#multiple' => TRUE,
       '#options' => $options,
       '#title' => $this->t('Select Accepted Cards'),
-      '#default_value' => $this->configuration['accepted_cards'],
+      '#default_value' => !empty($this->configuration['accepted_cards']) ? $this->configuration['accepted_cards'] : [],
       '#states' => [
         'visible' => [
           ':input[name="settings[payment_method]"]' => ['value' => 'selected'],

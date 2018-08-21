@@ -50,7 +50,7 @@
     if (event.target.activeElement.nextElementSibling) {
       if (event.target.activeElement.nextElementSibling.firstElementChild != null) {
         var clickElement = event.target.activeElement.nextElementSibling.firstElementChild.className;
-        if ((clickElement === 'uc-quickpay uc-quickpay-embedded') || (clickElement === 'uc-quickpay-form')) {
+        if ((clickElement === 'uc-quickpay-embedded') || (clickElement === 'uc-quickpay-form')) {
           location.reload();
         }
       }
