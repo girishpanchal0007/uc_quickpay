@@ -118,7 +118,7 @@ class QuickPayCallbackController extends ControllerBase {
               ->execute();
 
             // Update order status.
-            $uc_order->setStatusId('payment_received')->save();
+            $order->setStatusId('payment_received')->save();
             // Order comment.
             uc_order_comment_save($orderID, $order->getOwnerId(), $this->t('Your order was successfully with Payment ID: @payment_id.',
               [
