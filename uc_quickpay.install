@@ -45,31 +45,30 @@ function uc_quickpay_requirements($phase) {
   // Version compare.
   $version_is_ok = version_compare($quickpay_api_version, $required_version, '>=');
 
-  $requirements['uc_quickpay_library'] = [
-    'title' => t('QuickPay Library'),
-    'value' => t('Version @version', ['@version' => $quickpay_api_version]),
-    'description' => t('QuickPay Library is installed.'),
+  $requirements['uc_quickpay_status'] = [
+    'title' => t('Quickpay Library'),
+    'value' => !empty($quickpay_api_version) ? t('Version (@version)', ['@version' => $quickpay_api_version]) : t('Not Installed'),
+    'description' => t('Quickpay library is installed.'),
   ];
 
-  $requirements['uc_quickpay_library']['value'] = !empty($quickpay_api_version) ? t('Version (@version)', ['@version' => $quickpay_api_version]) : t('Not Installed');
-  $requirements['uc_quickpay_library']['severity'] = $version_is_ok ? REQUIREMENT_OK : REQUIREMENT_ERROR;
   if (!$version_is_ok) {
-    $requirements['uc_quickpay_library']['description'] = !isset($version_is_ok) ? t('QuickPay Library is required.') : t("QuickPay library version is not enough. Version needs to be @version or higher", ['@version' => $required_version]);
+    $requirements['uc_quickpay_library']['description'] = empty($version_is_ok) ? t('Quickpay library is required. Please refer to README.txt.') : t("Quickpay library version is not enough. Version needs to be @version or higher.", ['@version' => $required_version]);
+    $requirements['uc_quickpay_library']['severity'] = $version_is_ok ? REQUIREMENT_OK : REQUIREMENT_ERROR;
   }
   // Calling custom function.
   $plugins = uc_quickpay_get_quickpay_plugins();
   foreach ($plugins as $plugin) {
     $requirement_key = "uc_quickpay_keys_{$plugin['id']}";
     $requirements[$requirement_key] = [
-      'title' => t('QuickPay API Keys & Ids for uc_quickpay "@plugin" payment method', ['@plugin' => $plugin['id']]),
+      'title' => t('Quickpay API Keys & Ids for uc_quickpay "@plugin" payment method', ['@plugin' => $plugin['id']]),
       'value' => t('Configured'),
     ];
 
     if ($phase == 'runtime' && !uc_quickpay_check_api_keys_and_ids($plugin['settings'])) {
-      $requirements[$requirement_key]['title'] = t('QuickPay API Keys.');
-      $requirements[$requirement_key]['value'] = t('Not configured');
+      $requirements[$requirement_key]['title'] = t('Quickpay API Keys.');
+      $requirements[$requirement_key]['value'] = t('Not configured.');
       $requirements[$requirement_key]['severity'] = REQUIREMENT_ERROR;
-      $requirements[$requirement_key]['description'] = t('The QuickPay API keys & Ids are not configured for the @name payment method.', ['@name' => $plugin['id']]);
+      $requirements[$requirement_key]['description'] = t('The Quickpay API keys & Ids are not configured for the @name payment method.', ['@name' => $plugin['id']]);
     }
   }
 

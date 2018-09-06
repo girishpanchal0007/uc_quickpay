@@ -62,7 +62,8 @@ INSTALLATION
 
  * Use composer to install QuickPay (composer require drupal/uc_quickpay).
  * If the composer is not installed then first you need to install
-   composer after that you need to run the library install command.
+   composer after that you need to install quickpay library using
+   (composer require quickpay/quickpay-php-client).
  * After installing QuickPay library, Enable Ubercart QuickPay module.
  * Follow the standard method to install/enable it.
 
